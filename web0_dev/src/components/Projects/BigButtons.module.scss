@@ -1,0 +1,43 @@
+.header {
+	font-size: calc(14 / 16 * 1rem);
+	font-weight: 600;
+	line-height: calc(20 / 16 * 1rem);
+}
+
+.buttonWrapper {
+	display: flex;
+	gap: 28px;
+	.button {
+		border-radius: 16px;
+		flex-grow: 1;
+		padding: 24px;
+		position: relative;
+		h3 {
+			width: fit-content;
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 600;
+			line-height: calc(20 / 16 * 1rem);
+			margin-bottom: 8px;
+		}
+		h4 {
+			width: fit-content;
+
+			font-size: calc(24 / 16 * 1rem);
+			font-weight: 600;
+			line-height: calc(36 / 16 * 1rem);
+		}
+		.icon {
+			position: absolute;
+			top: 24px;
+			right: 24px;
+		}
+	}
+	.orange {
+		background-color: rgba(200, 90, 20, 0.9);
+		color: var(--whiteSpecial);
+	}
+	.white {
+		background-color: var(--whiteSpecial);
+		color: var(--main);
+	}
+}

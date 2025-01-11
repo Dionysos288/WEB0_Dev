@@ -1,0 +1,48 @@
+.galleryWrapper {
+	display: grid;
+	align-items: center;
+	grid-template-columns: 1fr 0.1fr;
+	gap: 30px;
+	.imgWrapper {
+		position: relative;
+
+		width: 100%;
+		aspect-ratio: 15/10;
+		.abs {
+			padding: 0 12px;
+			width: 100%;
+			position: absolute;
+			display: flex;
+			justify-content: space-between;
+			top: 50%;
+			left: 0;
+			z-index: 100;
+			transform: translateY(-50%);
+			.click {
+				padding: 4px;
+			}
+		}
+		img {
+			border-radius: 16px;
+			object-fit: cover;
+		}
+	}
+	.gallery {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		.galleryItem {
+			position: relative;
+			width: 100%;
+			aspect-ratio: 15/10;
+
+			img {
+				object-fit: cover;
+				border-radius: 8px;
+			}
+		}
+		.active img {
+			border: 2px solid rgba(200, 90, 20, 0.6);
+		}
+	}
+}

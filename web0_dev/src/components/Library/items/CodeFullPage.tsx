@@ -11,7 +11,7 @@ const CodeFullPage = () => {
 			<EditorScreen fullscreen={true} />
 			<Spacing space={28} />
 
-			<Toolbar figma={true} dependency={true} />
+			<Toolbar figma={false} dependency={true} />
 		</>
 	);
 };

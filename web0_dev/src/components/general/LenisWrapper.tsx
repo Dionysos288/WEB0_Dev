@@ -1,32 +1,23 @@
 'use client';
-import { ReactLenis } from 'lenis/react';
-import type { LenisRef } from 'lenis/react';
-import { cancelFrame, frame } from 'motion';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import Lenis from 'lenis';
 
-const LenisWrapper = ({
-	children,
-}: Readonly<{
-	children: React.ReactNode;
-}>) => {
-	const lenisRef = useRef<LenisRef>(null);
+import { ReactNode } from 'react';
 
+interface LenisWrapperProps {
+	children: ReactNode;
+}
+
+export default function LenisWrapper({ children }: LenisWrapperProps) {
 	useEffect(() => {
-		function update(data: { timestamp: number }) {
-			const time = data.timestamp;
-			lenisRef.current?.lenis?.raf(time);
-		}
+		const lenis = new Lenis();
 
-		frame.update(update, true);
+		const raf = (time: number) => {
+			lenis.raf(time);
+			requestAnimationFrame(raf);
+		};
 
-		return () => cancelFrame(update);
+		requestAnimationFrame(raf);
 	}, []);
-
-	return (
-		<ReactLenis options={{ autoRaf: false }} ref={lenisRef}>
-			{children}
-		</ReactLenis>
-	);
-};
-
-export default LenisWrapper;
+	return <>{children}</>;
+}
