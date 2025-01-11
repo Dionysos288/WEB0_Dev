@@ -1,0 +1,43 @@
+.GalleryContainer {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+	gap: 28px;
+	row-gap: 26px;
+	.item {
+		position: relative;
+		.GalleryItem {
+			aspect-ratio: 16/9;
+			background-color: #f7f9fb;
+			border-radius: 8px;
+		}
+		.banner {
+			position: absolute;
+			top: 16px;
+			left: 18px;
+			padding: 1px 4px;
+			border-radius: 4px;
+			background-color: #e5ecf6;
+			p {
+				font-size: calc(12 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(18 / 16 * 1rem);
+				color: var(--main-60);
+			}
+		}
+		.under {
+			display: flex;
+			justify-content: space-between;
+			margin-top: 8px;
+			h6 {
+				font-size: calc(12 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(18 / 16 * 1rem);
+				color: var(--main);
+			}
+			.svgs {
+				display: flex;
+				gap: 12px;
+			}
+		}
+	}
+}

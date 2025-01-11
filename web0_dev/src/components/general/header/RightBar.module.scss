@@ -1,0 +1,66 @@
+.rightBar {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	padding: 22px 20px;
+	border-left: 1px solid rgba(72, 70, 67, 0.1);
+	max-width: 280px;
+	min-width: 280px;
+	.notifications,
+	.activities,
+	.Contacts {
+		display: flex;
+		gap: 8px;
+		flex-direction: column;
+		h4 {
+			padding-left: 4px;
+			margin-bottom: 8px;
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 600;
+			line-height: calc(20 / 16 * 1rem);
+		}
+		.hor {
+			padding: 4px;
+			display: flex;
+			gap: 8px;
+			position: relative;
+			.line {
+				position: absolute;
+				border-radius: 360px;
+				bottom: -4px;
+				left: 16px;
+				width: 1px;
+				height: 14px;
+				background-color: var(--main-20);
+			}
+			.block {
+				border-radius: 8px;
+				position: relative;
+				width: 24px;
+				height: 24px;
+			}
+			.imageWrapper {
+				img {
+					object-fit: cover;
+					border-radius: 360px;
+				}
+			}
+			.vert {
+				h5 {
+					font-size: calc(14 / 16 * 1rem);
+					font-weight: 400;
+					line-height: calc(20 / 16 * 1rem);
+				}
+				p {
+					font-size: calc(12 / 16 * 1rem);
+					font-weight: 400;
+					line-height: calc(18 / 16 * 1rem);
+					color: var(--main-50);
+				}
+			}
+		}
+		.horSpec {
+			align-items: center;
+		}
+	}
+}

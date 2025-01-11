@@ -1,0 +1,26 @@
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 22px 28px;
+	border-bottom: 1px solid rgba(72, 70, 67, 0.1);
+	margin-bottom: 20px;
+
+	.emoji {
+		padding: 4px;
+	}
+	.leftSide {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+	.rightSide {
+		display: flex;
+		gap: 20px;
+		align-items: center;
+		.emojis {
+			display: flex;
+			gap: 8px;
+		}
+	}
+}

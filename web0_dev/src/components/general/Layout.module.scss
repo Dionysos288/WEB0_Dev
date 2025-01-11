@@ -1,0 +1,22 @@
+.layout {
+	display: flex;
+	.main {
+		min-height: 100vh;
+		min-height: 100svh;
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+
+		main {
+			min-height: calc(100vh - 167px);
+			min-height: calc(100svh - 167px);
+			margin: 0 28px;
+			@media (max-width: 430px) {
+				margin: 0 16px;
+
+				min-height: calc(100vh - 104px);
+				min-height: calc(100svh - 104px);
+			}
+		}
+	}
+}

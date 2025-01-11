@@ -1,0 +1,26 @@
+.title {
+	font-size: calc(16 / 16 * 1rem);
+	font-weight: 600;
+	line-height: calc(20 / 16 * 1rem);
+	margin-bottom: 12px;
+}
+.filterContainer {
+	border-radius: 8px;
+	background-color: #f7f9fb;
+	padding: 8px;
+	display: flex;
+	justify-content: space-between;
+	.leftSide {
+		display: flex;
+		gap: 8px;
+		.buttons {
+			display: flex;
+			gap: 4px;
+			align-items: center;
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 400;
+			line-height: calc(20 / 16 * 1rem);
+			color: var(--main);
+		}
+	}
+}
