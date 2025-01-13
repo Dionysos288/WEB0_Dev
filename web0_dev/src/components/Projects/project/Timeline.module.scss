@@ -111,11 +111,10 @@
 				justify-content: space-between;
 				flex-wrap: wrap;
 				gap: 2px;
-				padding: 6px 8px;
+				padding: 6px 8px 7px 8px;
 				border-radius: 4px;
-				padding-bottom: 8px;
 				.leftSide {
-					font-size: calc(10 / 16 * 1rem);
+					font-size: calc(11 / 16 * 1rem);
 					font-weight: 400;
 					line-height: calc(20 / 16 * 1rem);
 				}
