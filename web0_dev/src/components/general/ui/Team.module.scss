@@ -1,0 +1,27 @@
+.TeamWrapper {
+	display: flex;
+	.member {
+		margin-right: -6px;
+		img {
+			border: 1px solid var(--lightBlue);
+
+			object-fit: cover;
+			border-radius: 360px;
+		}
+	}
+	.extra {
+		border: 1px solid var(--lightBlue);
+		border-radius: 360px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 26px;
+		height: 26px;
+		background-color: var(--purple);
+		p {
+			font-size: calc(12 / 16 * 1rem);
+			font-weight: 400;
+			line-height: calc(18 / 16 * 1rem);
+		}
+	}
+}

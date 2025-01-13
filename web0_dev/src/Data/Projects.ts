@@ -1,11 +1,13 @@
 const projects = [
 	{
+		id: '1',
 		title: 'Coffee detail page kjhsdg sdfjhgsdfsdfsqfsf sdfsdfsd sfsdfsdf',
 		due: 'jun 20, 2024',
 		team: ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'],
 		phase: 'completed',
+		budget: '15,000',
 		Alltasks: 45,
-		completed: 45,
+		completed: 25,
 	},
 	{
 		title: 'Coffee detail page',

@@ -37,3 +37,4 @@ export { default as Folder } from './Folder.svg';
 export { default as Money } from './Money.svg';
 export { default as Team } from './Team.svg';
 export { default as PlusSpecial } from './PlusSpecial.svg';
+export { default as Topfile } from './Topfile.svg';

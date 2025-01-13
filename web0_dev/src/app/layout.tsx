@@ -6,7 +6,7 @@ import Layout from '@/components/general/Layout';
 import LenisWrapper from '@/components/general/LenisWrapper';
 
 const inter = Inter({
-	weight: ['400', '500', '600'],
+	weight: ['400', '500', '600', '800'],
 	variable: '--inter',
 	subsets: ['latin'],
 	display: 'swap',

@@ -56,7 +56,6 @@
 			justify-content: space-between;
 			align-items: center;
 			.leftSide {
-				display: flex;
 				.member {
 					margin-right: -6px;
 					img {
@@ -90,7 +89,6 @@
 				div {
 					width: 6px;
 					height: 6px;
-					background-color: red;
 					border-radius: 360px;
 				}
 				p {

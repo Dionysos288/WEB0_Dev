@@ -3,7 +3,9 @@ import Image from 'next/image';
 import Spacing from '../general/Spacing';
 import styles from './ProjectGallery.module.scss';
 import Link from 'next/link';
-import { Plus, PlusSpecial } from '@/svgs';
+import Team from '../general/ui/Team';
+import { PlusSpecial } from '@/svgs';
+
 const ProjectGallery = () => {
 	return (
 		<div className={styles.projectWrapper}>
@@ -31,28 +33,7 @@ const ProjectGallery = () => {
 					<Spacing space={16} />
 					<div className={styles.middlePart}>
 						<div className={styles.leftSide}>
-							{project.team.map((member, index) => {
-								if (project.team.length > 3 && index === 2) {
-									return (
-										<div className={styles.extra} key={index}>
-											<p>+{project.team.length - 2}</p>
-										</div>
-									);
-								} else if (index < 2 || project.team.length <= 3) {
-									return (
-										<div key={index} className={styles.member}>
-											<Image
-												src={'https://placehold.co/24x24'}
-												alt={member}
-												width={26}
-												height={26}
-											/>
-										</div>
-									);
-								} else {
-									return null;
-								}
-							})}
+							<Team team={project.team} />
 						</div>
 						{project.phase === 'completed' && (
 							<div className={`${styles.status} ${styles.completed}`}>
@@ -140,7 +121,13 @@ const ProjectGallery = () => {
 							<p>{project.Alltasks}</p>
 							<span>Total Tasks</span>
 						</div>
-						<p>{(project.completed / project.Alltasks).toFixed(2) * 100}%</p>
+						<p>
+							{(
+								(Number(project.completed) / Number(project.Alltasks)) *
+								100
+							).toFixed(0)}
+							%
+						</p>{' '}
 					</div>
 				</Link>
 			))}
