@@ -12,7 +12,7 @@ const Gallery = () => {
 						<p>Websites</p>
 					</div>
 					<div className={styles.under}>
-						<h6>Cool Button Hover</h6>
+						<h3>Cool Button Hover</h3>
 						<div className={styles.svgs}>
 							<button>
 								<PlusRound />

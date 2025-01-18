@@ -27,12 +27,12 @@ const TopMenu: React.FC<TopMenuProps> = ({
 			</div>
 			<div className={styles.rightSide}>
 				<button className={styles.addItem}>
-					<Plus style={{ fill: '#484643', opacity: '0.6' }} />
-					<h5>{AddItem}</h5>
+					<Plus fill={'var(--main)'} opacity={'0.6'} />
+					<span>{AddItem}</span>
 				</button>
 				<div className={styles.extraItems}>
 					<SVG>
-						<Dots style={{ fill: '#484643', opacity: '0.6' }} />
+						<Dots fill={'var(--main)'} opacity={'0.6'} />
 					</SVG>
 				</div>
 			</div>

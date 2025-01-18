@@ -1,9 +1,9 @@
 import projects from '@/Data/Projects';
 import Image from 'next/image';
-import Spacing from '../general/Spacing';
+import Spacing from '../General/Spacing';
 import styles from './ProjectGallery.module.scss';
 import Link from 'next/link';
-import Team from '../general/ui/Team';
+import Team from '../General/ui/Team';
 import { PlusSpecial } from '@/svgs';
 
 const ProjectGallery = () => {
@@ -11,15 +11,15 @@ const ProjectGallery = () => {
 		<div className={styles.projectWrapper}>
 			<button className={styles.addProject}>
 				<div className={styles.flex}>
-					<PlusSpecial />
-					<h5>New Project</h5>
+					<PlusSpecial fill={'var(--black)'} />
+					<span>New Project</span>
 				</div>
 			</button>
 			{projects.map((project, index) => (
 				<Link href={'/'} key={index} className={styles.project}>
 					<div className={styles.topPart}>
 						<div className={styles.projectInfo}>
-							<h5>{project.title}</h5>
+							<h2>{project.title}</h2>
 							<Spacing space={4} />
 							<p>{project.due}</p>
 						</div>

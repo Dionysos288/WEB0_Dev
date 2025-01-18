@@ -5,6 +5,7 @@ const BreadCrumbs = () => {
 	const list = ['Dashboard', 'Users', 'User Profile'];
 	return (
 		<>
+			{/* last item should be h1 */}
 			{list.map((item, index) => (
 				<span
 					key={index}

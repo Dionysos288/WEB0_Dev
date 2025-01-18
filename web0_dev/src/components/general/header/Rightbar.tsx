@@ -6,7 +6,7 @@ const RightBar = () => {
 		<div className={styles.rightBarWrapper}>
 			<div className={styles.rightBar}>
 				<div className={styles.notifications}>
-					<h4>Notifications</h4>
+					<h2>Notifications</h2>
 					<div className={styles.hor}>
 						<div
 							className={styles.block}
@@ -22,8 +22,8 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>You have A bug that needs...</h5>
-							<p>Just now</p>
+							<p>You have A bug that needs...</p>
+							<p className={styles.special}>Just now</p>
 						</div>
 					</div>
 					<div className={styles.hor}>
@@ -41,8 +41,8 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>New User Registered</h5>
-							<p>59 minutes ago</p>
+							<p>New User Registered</p>
+							<p className={styles.special}>59 minutes ago</p>
 						</div>
 					</div>
 					<div className={styles.hor}>
@@ -60,8 +60,8 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>You have a bug that needs...</h5>
-							<p>12 hours ago</p>
+							<p>You have a bug that needs...</p>
+							<p className={styles.special}>12 hours ago</p>
 						</div>
 					</div>
 					<div className={styles.hor}>
@@ -79,13 +79,13 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>Andi Lane subscribed to you</h5>
-							<p>Today, 11:59 AM</p>
+							<p>Andi Lane subscribed to you</p>
+							<p className={styles.special}>Today, 11:59 AM</p>
 						</div>
 					</div>
 				</div>
 				<div className={styles.activities}>
-					<h4>Activities</h4>
+					<h2>Activities</h2>
 					<div className={styles.hor}>
 						<div className={styles.line}></div>
 						<div className={styles.imageWrapper}>
@@ -97,8 +97,8 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>Edited the details of Project X</h5>
-							<p>Just now</p>
+							<p>Edited the details of Project X</p>
+							<p className={styles.special}>Just now</p>
 						</div>
 					</div>
 					<div className={styles.hor}>
@@ -112,8 +112,8 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>Released a new version</h5>
-							<p>59 minutes ago</p>
+							<p>Released a new version</p>
+							<p className={styles.special}>59 minutes ago</p>
 						</div>
 					</div>
 					<div className={styles.hor}>
@@ -127,8 +127,8 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>Submitted a bug</h5>
-							<p>12 hours ago</p>
+							<p>Submitted a bug</p>
+							<p className={styles.special}>12 hours ago</p>
 						</div>
 					</div>
 					<div className={styles.hor}>
@@ -141,13 +141,13 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>Modified A data in Page X</h5>
-							<p>Today, 11:59 AM</p>
+							<p>Modified A data in Page X</p>
+							<p className={styles.special}>Today, 11:59 AM</p>
 						</div>
 					</div>
 				</div>
 				<div className={styles.Contacts}>
-					<h4>Contacts</h4>
+					<h2>Contacts</h2>
 					<div className={`${styles.hor} ${styles.horSpec}`}>
 						<div className={styles.imageWrapper}>
 							<Image
@@ -158,7 +158,7 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>Dion Zeneli</h5>
+							<p>Dion Zeneli</p>
 						</div>
 					</div>
 					<div className={`${styles.hor} ${styles.horSpec}`}>
@@ -171,7 +171,7 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>Dren Zeneli</h5>
+							<p>Dren Zeneli</p>
 						</div>
 					</div>
 					<div className={`${styles.hor} ${styles.horSpec}`}>
@@ -184,7 +184,7 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>Berkay alkan</h5>
+							<p>Berkay alkan</p>
 						</div>
 					</div>
 					<div className={`${styles.hor} ${styles.horSpec}`}>
@@ -197,7 +197,7 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>Serkan Celik</h5>
+							<p>Serkan Celik</p>
 						</div>
 					</div>
 					<div className={`${styles.hor} ${styles.horSpec}`}>
@@ -210,7 +210,7 @@ const RightBar = () => {
 							/>
 						</div>
 						<div className={styles.vert}>
-							<h5>Haktan Dongel</h5>
+							<p>Haktan Dongel</p>
 						</div>
 					</div>
 				</div>

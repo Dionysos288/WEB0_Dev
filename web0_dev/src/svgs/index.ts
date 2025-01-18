@@ -38,3 +38,8 @@ export { default as Money } from './Money.svg';
 export { default as Team } from './Team.svg';
 export { default as PlusSpecial } from './PlusSpecial.svg';
 export { default as Topfile } from './Topfile.svg';
+export { default as Views } from './Views.svg';
+export { default as Clock } from './Clock.svg';
+export { default as Message } from './Message.svg';
+export { default as Paint } from './Paint.svg';
+export { default as Calender } from './Calender.svg';

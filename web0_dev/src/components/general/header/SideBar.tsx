@@ -32,7 +32,7 @@ const SideBar = () => {
 							height={24}
 						/>
 					</div>
-					<h3>Dion Zeneli</h3>
+					<p>Dion Zeneli</p>
 				</div>
 				<div className={styles.highlight}>
 					<div className={styles.favorites}>
@@ -41,76 +41,76 @@ const SideBar = () => {
 								if (!favState) toggleFav();
 							}}
 						>
-							<h4 className={favState ? styles.active : styles.normal}>
+							<h2 className={favState ? styles.active : styles.normal}>
 								Favorites
-							</h4>
+							</h2>
 						</button>
 						<button
 							onClick={() => {
 								if (favState) toggleFav();
 							}}
 						>
-							<h4 className={favState ? styles.normal : styles.active}>
+							<h2 className={favState ? styles.normal : styles.active}>
 								Recently
-							</h4>
+							</h2>
 						</button>
 					</div>
 					<div className={styles.items}>
 						{items.map((item, index) => (
 							<Link href={'/'} className={styles.horizontal} key={index}>
 								<div className={styles.circle}></div>
-								<h5 className={styles.item}>{item}</h5>
+								<p className={styles.item}>{item}</p>
 							</Link>
 						))}
 					</div>
 				</div>
 				<div className={styles.dashboards}>
-					<h4>Dashboards</h4>
+					<h2>Dashboards</h2>
 					<Link href={''} className={styles.hor}>
 						<Arrow style={{ fill: '#484643', opacity: 0 }} />
 
 						<ChartPie style={{ fill: '#484643' }} />
-						<h5>Home</h5>
+						<p>Home</p>
 					</Link>
 					<div className={styles.hor}>
 						<Arrow style={{ fill: '#484643', opacity: 0.3 }} />
 						<Library style={{ fill: '#484643' }} />
 
-						<h5>Library</h5>
+						<p>Library</p>
 					</div>
 					<div className={styles.hor}>
 						<Arrow style={{ fill: '#484643', opacity: 0.3 }} />
 						<Projects style={{ fill: '#484643' }} />
 
-						<h5>Projects</h5>
+						<p>Projects</p>
 					</div>
 					<div className={styles.hor}>
 						<Arrow style={{ fill: '#484643', opacity: 0.3 }} />
 						<Leads style={{ fill: '#484643' }} />
 
-						<h5>Leads</h5>
+						<p>Leads</p>
 					</div>
 				</div>
 				<div className={styles.dashboards}>
-					<h4>Pages</h4>
+					<h2>Pages</h2>
 
 					<div className={styles.hor}>
 						<Arrow style={{ fill: '#484643', opacity: 0.3 }} />
 						<Account style={{ fill: '#484643' }} />
 
-						<h5>Account</h5>
+						<p>Account</p>
 					</div>
 					<div className={styles.hor}>
 						<Arrow style={{ fill: '#484643', opacity: 0.3 }} />
 						<Notes style={{ fill: '#484643' }} />
 
-						<h5>Notes</h5>
+						<p>Notes</p>
 					</div>
 					<div className={styles.hor}>
 						<Arrow style={{ fill: '#484643', opacity: 0.3 }} />
 						<Social style={{ fill: '#484643' }} />
 
-						<h5>Social</h5>
+						<p>Social</p>
 					</div>
 				</div>
 			</div>

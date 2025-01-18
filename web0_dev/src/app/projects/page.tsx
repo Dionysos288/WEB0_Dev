@@ -1,4 +1,4 @@
-import Spacing from '@/components/general/Spacing';
+import Spacing from '@/components/General/Spacing';
 import BigButtons from '@/components/Projects/BigButtons';
 import ProjectGallery from '@/components/Projects/ProjectGallery';
 

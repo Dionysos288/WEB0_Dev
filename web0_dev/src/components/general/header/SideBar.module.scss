@@ -21,7 +21,7 @@
 				border-radius: 360px;
 			}
 		}
-		h3 {
+		p {
 			font-size: calc(14 / 16 * 1rem);
 			font-weight: 400;
 			line-height: calc(20 / 16 * 1rem);
@@ -34,7 +34,7 @@
 		.favorites {
 			display: flex;
 			gap: 4px;
-			h4 {
+			h2 {
 				font-size: calc(14 / 16 * 1rem);
 				font-weight: 400;
 				line-height: calc(20 / 16 * 1rem);
@@ -74,7 +74,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 4px;
-		h4 {
+		h2 {
 			font-size: calc(14 / 16 * 1rem);
 			font-weight: 400;
 			line-height: calc(20 / 16 * 1rem);
@@ -87,7 +87,7 @@
 			align-items: center;
 			gap: 4px;
 			padding: 4px 8px;
-			h5 {
+			p {
 				font-size: calc(14 / 16 * 1rem);
 				font-weight: 400;
 				line-height: calc(20 / 16 * 1rem);

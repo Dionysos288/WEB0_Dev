@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import ConsoleLogger from '@/components/general/Consolelogger';
-import Layout from '@/components/general/Layout';
-import LenisWrapper from '@/components/general/LenisWrapper';
+import ConsoleLogger from '@/components/General/Consolelogger';
+import Layout from '@/components/General/Layout';
+import LenisWrapper from '@/components/General/LenisWrapper';
 
 const inter = Inter({
 	weight: ['400', '500', '600', '800'],

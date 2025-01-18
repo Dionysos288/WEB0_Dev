@@ -4,15 +4,15 @@ const BigButton = () => {
 	return (
 		<div className={styles.ButtonContainer}>
 			<button className={styles.orange}>
-				<h3>Design Assets</h3>
-				<h4>237</h4>
+				<h2>Design Assets</h2>
+				<p>237</p>
 				<div className={styles.icon}>
 					<Design style={{ fill: '#EDE9DD' }} />
 				</div>
 			</button>
 			<button className={styles.white}>
-				<h3>Design Assets</h3>
-				<h4>237</h4>
+				<h2>Design Assets</h2>
+				<p>237</p>
 				<div className={styles.icon}>
 					<Code style={{ fill: '#484643' }} />
 				</div>

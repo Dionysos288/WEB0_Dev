@@ -1,4 +1,4 @@
-import TopMenu from '@/components/general/TopMenu';
+import TopMenu from '@/components/General/TopMenu';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

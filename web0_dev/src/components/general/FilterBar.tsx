@@ -1,14 +1,21 @@
 import SVG from './SVG';
 import styles from './FilterBar.module.scss';
-import { PlusXL, Filter, Sort, ArrowDown, Search } from '@/svgs';
+import { PlusXL, Filter, Sort, ArrowDown, Search, Views } from '@/svgs';
 interface FilterBarProps {
 	title?: string;
+	views?: boolean;
+	search?: boolean;
 	ExtraFilters?: string[];
 }
-const FilterBar: React.FC<FilterBarProps> = ({ title, ExtraFilters }) => {
+const FilterBar: React.FC<FilterBarProps> = ({
+	title,
+	views = false,
+	search = true,
+	ExtraFilters,
+}) => {
 	return (
 		<>
-			{title && <h4 className={styles.title}>{title}</h4>}
+			{title && <h2 className={styles.title}>{title}</h2>}
 			<div className={styles.filterContainer}>
 				<div className={styles.leftSide}>
 					<SVG>
@@ -33,10 +40,17 @@ const FilterBar: React.FC<FilterBarProps> = ({ title, ExtraFilters }) => {
 					<SVG>
 						<Sort style={{ fill: '#484643' }} />
 					</SVG>
+					{views && (
+						<SVG>
+							<Views style={{ fill: '#484643' }} />
+						</SVG>
+					)}
 				</div>
-				<SVG>
-					<Search style={{ fill: '#484643' }} />
-				</SVG>
+				{search && (
+					<SVG>
+						<Search style={{ fill: '#484643' }} />
+					</SVG>
+				)}
 			</div>
 		</>
 	);

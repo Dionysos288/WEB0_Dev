@@ -1,7 +1,43 @@
-const projects = [
+import { projectType } from '@/components/project/types/types';
+
+const projects: projectType[] = [
 	{
 		id: '1',
-		title: 'Coffee detail page kjhsdg sdfjhgsdfsdfsqfsf sdfsdfsd sfsdfsdf',
+		title: 'Coffee detail page',
+		start: 'jan 25, 2024',
+		due: 'jun 20, 2024',
+		team: ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'],
+		phase: 'progress',
+		budget: '15,000',
+		Alltasks: 45,
+		completed: 25,
+	},
+	{
+		id: '2',
+		title: 'Coffee detail page',
+		start: 'jan 25, 2024',
+		due: 'jun 20, 2024',
+		team: ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'],
+		phase: 'pending',
+		budget: '15,000',
+		Alltasks: 45,
+		completed: 25,
+	},
+	{
+		id: '3',
+		title: 'Coffee detail page',
+		start: 'jan 25, 2024',
+		due: 'jun 20, 2024',
+		team: ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'],
+		phase: 'rejected',
+		budget: '15,000',
+		Alltasks: 45,
+		completed: 25,
+	},
+	{
+		id: '4',
+		title: 'Coffee detail page',
+		start: 'jan 25, 2024',
 		due: 'jun 20, 2024',
 		team: ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'],
 		phase: 'completed',
@@ -10,48 +46,26 @@ const projects = [
 		completed: 25,
 	},
 	{
+		id: '5',
 		title: 'Coffee detail page',
-		due: 'jun 20, 2024',
-		team: ['John Doe', 'Jane Doe', 'John Smith'],
-		phase: 'rejected',
-
-		Alltasks: 45,
-		completed: 23,
-	},
-	{
-		title: 'Coffee detail page',
-		due: 'jun 20, 2024',
-		team: ['John Doe'],
-		phase: 'progress',
-
-		Alltasks: 45,
-		completed: 20,
-	},
-	{
-		title: 'Coffee detail page',
+		start: 'jan 25, 2024',
 		due: 'jun 20, 2024',
 		team: ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'],
 		phase: 'pending',
+		budget: '15,000',
 		Alltasks: 45,
-		completed: 45,
+		completed: 25,
 	},
 	{
+		id: '6',
 		title: 'Coffee detail page',
+		start: 'jan 25, 2024',
 		due: 'jun 20, 2024',
-		team: ['John Doe', 'Jane Doe', 'John Smith'],
-		phase: 'rejected',
-
-		Alltasks: 45,
-		completed: 23,
-	},
-	{
-		title: 'Coffee detail page',
-		due: 'jun 20, 2024',
-		team: ['John Doe'],
+		team: ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith'],
 		phase: 'progress',
-
+		budget: '15,000',
 		Alltasks: 45,
-		completed: 20,
+		completed: 25,
 	},
 ];
 export default projects;

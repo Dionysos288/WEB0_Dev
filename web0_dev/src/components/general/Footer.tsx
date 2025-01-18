@@ -4,7 +4,7 @@ const Footer = () => {
 	const year = new Date().getFullYear();
 	return (
 		<footer className={styles.footer}>
-			<h6>©{year} WEB0</h6>
+			<p>©{year} WEB0</p>
 			<Link href={'/'}>Contact Us</Link>
 		</footer>
 	);
