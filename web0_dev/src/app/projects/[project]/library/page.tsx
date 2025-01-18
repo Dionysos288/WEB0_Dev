@@ -1,13 +1,9 @@
 import projects from '@/Data/Projects';
 import type { Metadata } from 'next';
 
+import FilterBar from '@/components/General/FilterBar';
 import Spacing from '@/components/General/Spacing';
-import Timeline from '@/components/project/components/Timeline';
-import ClientProjectHeader from '@/components/project/client-portal/ClientProjectHeader';
-import Phases from '@/components/project/client-portal/Phases';
-import { phases } from '@/Data/phases';
-import Files from '@/components/project/client-portal/Files';
-import { projectFiles } from '@/Data/ProjectFiles';
+import Gallery from '@/components/Library/Gallery';
 export async function generateMetadata({
 	params,
 }: {
@@ -23,14 +19,10 @@ const page = ({ params }: { params: { project: string } }) => {
 	if (project) {
 		return (
 			<>
-				<ClientProjectHeader project={project} />
-				<Spacing space={28} />
-				<Phases phases={phases} />
-				<Spacing space={28} />
-				<Files files={projectFiles} />
+				<FilterBar views={true} />
 				<Spacing space={28} />
 
-				<Timeline />
+				<Gallery />
 			</>
 		);
 	}

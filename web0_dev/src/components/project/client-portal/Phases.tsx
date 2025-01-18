@@ -1,9 +1,9 @@
 import Spacing from '@/components/General/Spacing';
-import { phaseType } from '../types/types';
+import { PhaseStatus, phaseType } from '../types/types';
 import styles from './Phases.module.scss';
 import { Paint, Calender } from '@/svgs';
 const Phases = ({ phases }: { phases: phaseType[] }) => {
-	const getPhaseStyles = (status: string): React.CSSProperties => {
+	const getPhaseStyles = (status: PhaseStatus): React.CSSProperties => {
 		return {
 			'--colorBG':
 				status === 'Completed'
@@ -28,7 +28,7 @@ const Phases = ({ phases }: { phases: phaseType[] }) => {
 	return (
 		<>
 			<h2 className={styles.title}>Phases</h2>
-			<Spacing space={10} />
+			<Spacing space={12} />
 			<div className={styles.phases}>
 				{phases.map((phase) => (
 					<div key={phase.id} className={styles.phase}>

@@ -43,3 +43,4 @@ export { default as Clock } from './Clock.svg';
 export { default as Message } from './Message.svg';
 export { default as Paint } from './Paint.svg';
 export { default as Calender } from './Calender.svg';
+export { default as Document } from './Document.svg';

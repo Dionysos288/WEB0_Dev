@@ -1,11 +1,13 @@
-const phases = [
+import { phaseType } from '@/components/project/types/types';
+
+const phases: phaseType[] = [
 	{
 		id: 1,
 		name: 'Designing 1',
 		description: 'Designing 1 description',
 		startDate: '2020/01/01',
 		endDate: '2020/01/31',
-		status: 'Not started',
+		status: 'Not Started',
 	},
 	{
 		id: 2,
@@ -29,7 +31,7 @@ const phases = [
 		description: 'Designing 1 description',
 		startDate: '2020/01/01',
 		endDate: '2020/01/31',
-		status: 'Not started',
+		status: 'Not Started',
 	},
 	{
 		id: 5,

@@ -1,10 +1,13 @@
+type ProjectStatus = 'progress' | 'rejected' | 'pending' | 'completed';
+type PhaseStatus = 'Completed' | 'Active' | 'Not Started';
+
 interface projectType {
 	id: string;
 	title: string;
 	start: string;
 	due: string;
 	team: string[];
-	phase: 'progress' | 'rejected' | 'pending' | 'completed';
+	phase: ProjectStatus;
 	budget: string;
 	Alltasks: number;
 	completed: number;
@@ -15,7 +18,12 @@ interface phaseType {
 	description: string;
 	startDate: string;
 	endDate: string;
-	status: 'Not Started' | 'Active' | 'Completed';
+	status: PhaseStatus;
+}
+interface fileType {
+	id: number;
+	name: string;
+	description: string;
 }
 
-export type { projectType, phaseType };
+export type { projectType, phaseType, fileType, ProjectStatus, PhaseStatus };

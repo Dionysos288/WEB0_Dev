@@ -47,9 +47,17 @@
 				font-weight: 400;
 				line-height: calc(20 / 16 * 1rem);
 			}
+			.progress,
+			.progressSpecial {
+				border-radius: 8px;
+			}
+			.progressSpecial {
+				padding: 2px 32px;
+				background-color: var(--background);
+			}
 			.progress {
 				padding: 2px 8px;
-				border-radius: 8px;
+
 				background-color: var(--main-5);
 				overflow: hidden;
 				position: relative;
@@ -84,6 +92,8 @@
 			}
 		}
 		.column {
+			margin: auto 0;
+
 			h3 {
 				font-size: calc(14 / 16 * 1rem);
 				font-weight: 400;
@@ -95,6 +105,20 @@
 				line-height: calc(28 / 16 * 1rem);
 				span {
 					color: var(--main-30);
+				}
+			}
+			.revision {
+				padding: 10px 14px;
+				background-color: var(--orange);
+				border-radius: 8px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				span {
+					font-size: calc(10 / 16 * 1rem);
+					font-weight: 500;
+					line-height: calc(14 / 16 * 1rem);
+					color: var(--white);
 				}
 			}
 		}
