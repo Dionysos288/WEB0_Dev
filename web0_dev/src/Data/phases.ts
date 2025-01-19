@@ -1,4 +1,4 @@
-import { phaseType } from '@/components/project/types/types';
+import { phaseType } from '@/components/types/types';
 
 const phases: phaseType[] = [
 	{

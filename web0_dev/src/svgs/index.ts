@@ -44,3 +44,6 @@ export { default as Message } from './Message.svg';
 export { default as Paint } from './Paint.svg';
 export { default as Calender } from './Calender.svg';
 export { default as Document } from './Document.svg';
+export { default as DatePicker } from './DatePicker.svg';
+export { default as Jpg } from './files/Jpg.svg';
+export { default as Edit } from './Edit.svg';

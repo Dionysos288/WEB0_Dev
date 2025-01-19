@@ -1,0 +1,19 @@
+.wrapper {
+	padding: 24px;
+	border-radius: 16px;
+	background-color: var(--lightBlue);
+
+	.topSide {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		h2 {
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 600;
+			line-height: calc(20 / 16 * 1rem);
+		}
+	}
+	.helper {
+		margin-left: -33px;
+	}
+}

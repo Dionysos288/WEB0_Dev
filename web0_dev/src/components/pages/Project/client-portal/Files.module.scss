@@ -1,0 +1,83 @@
+.title {
+	font-size: calc(16 / 16 * 1rem);
+	font-weight: 600;
+	line-height: calc(20 / 16 * 1rem);
+}
+.files {
+	display: flex;
+	gap: 16px;
+	overflow-x: auto;
+	scrollbar-width: none;
+	padding-bottom: 10px;
+
+	&:hover {
+		scrollbar-width: auto;
+	}
+	&::-webkit-scrollbar {
+		height: 8px;
+	}
+	&::-webkit-scrollbar-button {
+		display: none;
+	}
+	&::-webkit-scrollbar-track {
+		background: var(--main-5);
+		border-radius: 360px;
+	}
+	&::-webkit-scrollbar-thumb {
+		background: var(--main-10);
+		border-radius: 360px;
+	}
+	&::-webkit-scrollbar-thumb:hover {
+		background: var(--main-20);
+	}
+	.fileAdd,
+	.file {
+		min-width: 278px;
+		padding: 24px;
+		border-radius: 16px;
+	}
+	.fileAdd {
+		min-height: 112px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		border: 1px dashed var(--main-25);
+		span {
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 600;
+			line-height: calc(20 / 16 * 1rem);
+			color: var(--main-90);
+		}
+	}
+	.file {
+		background-color: var(--lightBlue);
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		.topSide {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+
+			h3 {
+				font-size: calc(18 / 16 * 1rem);
+				width: 80%;
+				font-weight: 600;
+				line-height: calc(20 / 16 * 1rem);
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+		}
+		.description {
+			font-size: calc(12 / 16 * 1rem);
+			font-weight: 400;
+			line-height: calc(36 / 16 * 1rem);
+			color: var(--main-40);
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+}

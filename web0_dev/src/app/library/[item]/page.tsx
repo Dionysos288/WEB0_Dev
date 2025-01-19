@@ -1,8 +1,8 @@
-import CodeFullPage from '@/components/Library-Items/code/CodeFullPage';
-import CodeSplitPage from '@/components/Library-Items/code/CodeSplitPage';
-import ColorPage from '@/components/Library-Items/color/ColorPage';
-import ImageV1Page from '@/components/Library-Items/gallery/ImageV1Page';
-import ImageV2Page from '@/components/Library-Items/gallery/ImageV2Page';
+import CodeFullPage from '@/components/pages/Library-Items/code/CodeFullPage';
+import CodeSplitPage from '@/components/pages/Library-Items/code/CodeSplitPage';
+import ColorPage from '@/components/pages/Library-Items/color/ColorPage';
+import ImageV1Page from '@/components/pages/Library-Items/gallery/ImageV1Page';
+import ImageV2Page from '@/components/pages/Library-Items/gallery/ImageV2Page';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({

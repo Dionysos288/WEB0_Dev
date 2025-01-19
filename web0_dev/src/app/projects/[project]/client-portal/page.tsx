@@ -2,11 +2,11 @@ import projects from '@/Data/Projects';
 import type { Metadata } from 'next';
 
 import Spacing from '@/components/General/Spacing';
-import Timeline from '@/components/project/components/Timeline';
-import ClientProjectHeader from '@/components/project/client-portal/ClientProjectHeader';
-import Phases from '@/components/project/client-portal/Phases';
+import Timeline from '@/components/pages/Project/components/Timeline';
+import ClientProjectHeader from '@/components/pages/Project/client-portal/ClientProjectHeader';
+import Phases from '@/components/pages/Project/client-portal/Phases';
 import { phases } from '@/Data/phases';
-import Files from '@/components/project/client-portal/Files';
+import Files from '@/components/pages/Project/client-portal/Files';
 import { projectFiles } from '@/Data/ProjectFiles';
 export async function generateMetadata({
 	params,

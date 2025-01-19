@@ -79,7 +79,7 @@ const SideBar = () => {
 						<p>Library</p>
 					</div>
 					<div className={styles.hor}>
-						<Arrow style={{ fill: '#484643', opacity: 0.3 }} />
+						<Arrow style={{ fill: '#484643', opacity: 0 }} />
 						<Projects style={{ fill: '#484643' }} />
 
 						<p>Projects</p>
@@ -88,7 +88,7 @@ const SideBar = () => {
 						<Arrow style={{ fill: '#484643', opacity: 0.3 }} />
 						<Leads style={{ fill: '#484643' }} />
 
-						<p>Leads</p>
+						<p>Clients</p>
 					</div>
 				</div>
 				<div className={styles.dashboards}>

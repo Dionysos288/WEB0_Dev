@@ -1,5 +1,5 @@
-import BigButton from '@/components/Library/BigButtons';
-import Gallery from '@/components/Library/Gallery';
+import BigButton from '@/components/pages/Library/BigButtons';
+import Gallery from '@/components/pages/Library/Gallery';
 import FilterBar from '@/components/General/FilterBar';
 import Spacing from '@/components/General/Spacing';
 
