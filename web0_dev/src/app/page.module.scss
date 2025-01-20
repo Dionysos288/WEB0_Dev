@@ -1,3 +1,11 @@
-.divv {
-	font-family: var(--inter);
+.title {
+	font-size: calc(20 / 16 * 1rem);
+	font-weight: 500;
+	line-height: calc(18 / 16 * 1rem);
+}
+
+.charts {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 28px;
 }

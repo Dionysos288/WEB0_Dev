@@ -1,5 +1,14 @@
 .layout {
 	display: flex;
+	.sidebar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		transition: transform 0.4s var(--ease-in-out-cubic);
+	}
+	.closedLeft {
+		transform: translateX(-100%);
+	}
 	.main {
 		min-height: 100vh;
 		min-height: 100svh;
@@ -7,17 +16,46 @@
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
+		transition: padding-left 0.4s var(--ease-in-out-cubic),
+			padding-right 0.4s var(--ease-in-out-cubic);
 
-		main {
+		main,
+		.standard,
+		.leftOpen,
+		.rightOpen {
 			min-height: calc(100vh - 189px);
 			min-height: calc(100svh - 189px);
-			margin: 0 28px;
+			transition: margin-left 0.4s var(--ease-in-out-cubic),
+				margin-right 0.4s var(--ease-in-out-cubic);
 			@media (max-width: 430px) {
-				margin: 0 16px;
-
 				min-height: calc(100vh - 104px);
 				min-height: calc(100svh - 104px);
 			}
 		}
+		.standard {
+			margin: 0 28px;
+		}
+		.leftOpen {
+			margin-left: 4%;
+		}
+		.rightOpen {
+			margin-right: 4%;
+		}
+		.standard,
+		.leftOpen,
+		.rightOpen {
+			@media (max-width: 430px) {
+				margin: 0 16px;
+			}
+		}
+	}
+	.rightBar {
+		position: fixed;
+		top: 0;
+		right: 0;
+		transition: transform 0.4s var(--ease-in-out-cubic);
+	}
+	.closedRight {
+		transform: translateX(100%);
 	}
 }

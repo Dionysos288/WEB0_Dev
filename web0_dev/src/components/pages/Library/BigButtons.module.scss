@@ -6,6 +6,8 @@
 		flex-grow: 1;
 		padding: 24px;
 		position: relative;
+		border: 1px solid var(--main-10);
+		box-shadow: var(--boxShadow-md);
 		h2 {
 			width: fit-content;
 			font-size: calc(14 / 16 * 1rem);

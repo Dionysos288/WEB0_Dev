@@ -15,7 +15,7 @@ export async function generateMetadata({
 		description: `View ${params} on Web0`,
 	};
 }
-const page = ({ params }: { params: { item: string } }) => {
+const page = async ({ params }: { params: { item: string } }) => {
 	if (params.item === 'imageV1') {
 		return <ImageV1Page />;
 	} else if (params.item === 'imageV2') {

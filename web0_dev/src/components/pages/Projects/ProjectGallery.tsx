@@ -10,13 +10,15 @@ const ProjectGallery = () => {
 	return (
 		<div className={styles.projectWrapper}>
 			<button className={styles.addProject}>
-				<div className={styles.flex}>
-					<PlusSpecial fill={'var(--black)'} />
-					<span>New Project</span>
-				</div>
+				<PlusSpecial fill={'var(--black)'} />
+				<span>New Project</span>
 			</button>
 			{projects.map((project, index) => (
-				<Link href={'/'} key={index} className={styles.project}>
+				<Link
+					href={`/projects/${project.id}`}
+					key={index}
+					className={styles.project}
+				>
 					<div className={styles.topPart}>
 						<div className={styles.projectInfo}>
 							<h2>{project.title}</h2>

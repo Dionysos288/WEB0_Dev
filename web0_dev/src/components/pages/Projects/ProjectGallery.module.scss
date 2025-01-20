@@ -9,11 +9,10 @@
 		border-radius: 16px;
 		border: 1px dashed var(--main-25);
 		background: rgba(247, 249, 251, 0.45);
-		.flex {
-			display: flex;
-			gap: 6px;
-			align-items: center;
-		}
+		box-shadow: var(--boxShadow-xs);
+		gap: 6px;
+		min-height: 172px;
+
 		span {
 			font-size: calc(14 / 16 * 1rem);
 			font-weight: 600;
@@ -24,6 +23,8 @@
 		padding: 24px;
 		background-color: var(--lightBlue);
 		border-radius: 16px;
+		border: 1px solid var(--main-5);
+		box-shadow: var(--boxShadow-sm);
 		.topPart {
 			display: flex;
 			justify-content: space-between;

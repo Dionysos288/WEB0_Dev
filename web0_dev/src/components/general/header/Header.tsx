@@ -2,14 +2,16 @@ import SVG from '../SVG';
 import BreadCrumbs from './BreadCrumbs';
 import styles from './Header.module.scss';
 import { History, Notification, Search, Side, Star, Sun } from '@/svgs';
-const Header = () => {
+const Header = ({ setIsOpenLeftBar, setIsOpenRightBar }) => {
 	return (
 		<>
 			<header className={styles.header}>
 				<div className={styles.leftSide}>
-					<SVG>
-						<Side style={{ fill: '#484643' }} />
-					</SVG>
+					<div style={{ display: 'contents' }} onClick={setIsOpenLeftBar}>
+						<SVG>
+							<Side style={{ fill: '#484643' }} />
+						</SVG>
+					</div>
 
 					<SVG>
 						<Star />
@@ -30,9 +32,11 @@ const Header = () => {
 						<SVG>
 							<Notification style={{ fill: '#484643' }} />
 						</SVG>
-						<SVG>
-							<Side style={{ fill: '#484643' }} />
-						</SVG>
+						<div style={{ display: 'contents' }} onClick={setIsOpenRightBar}>
+							<SVG>
+								<Side style={{ fill: '#484643' }} />
+							</SVG>
+						</div>
 					</div>
 				</div>
 			</header>

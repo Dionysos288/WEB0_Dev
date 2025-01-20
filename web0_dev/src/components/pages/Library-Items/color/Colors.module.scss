@@ -11,7 +11,8 @@
 		column-gap: 28px;
 		.color {
 			border-radius: 8px;
-			border: 1px solid rgba(72, 70, 67, 0.05);
+			border: 1px solid var(--main-5);
+			box-shadow: var(--boxShadow-xs);
 			overflow: hidden;
 			.background {
 				width: 100%;

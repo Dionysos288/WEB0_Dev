@@ -60,6 +60,20 @@ interface ClientColumnType {
 	title: ClientStatus;
 	tasks: clientType[];
 }
+
+interface NoteType {
+	id: number;
+	title: string;
+	content: string;
+	folderId?: number;
+	emoji?: string;
+}
+
+interface FolderType {
+	id: number;
+	name: string;
+	emoji?: string;
+}
 export type {
 	projectType,
 	phaseType,
@@ -73,4 +87,6 @@ export type {
 	TaskColumnType,
 	ClientColumnType,
 	TaskStatus,
+	NoteType,
+	FolderType,
 };

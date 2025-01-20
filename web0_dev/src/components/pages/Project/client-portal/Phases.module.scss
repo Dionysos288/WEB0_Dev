@@ -4,40 +4,19 @@
 	line-height: calc(20 / 16 * 1rem);
 }
 .phases {
-	display: flex;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 	gap: 16px;
-	overflow-x: auto;
-	scrollbar-width: none;
-	padding-bottom: 10px;
 
-	&:hover {
-		scrollbar-width: auto;
-	}
-	&::-webkit-scrollbar {
-		height: 8px;
-	}
-	&::-webkit-scrollbar-button {
-		display: none;
-	}
-	&::-webkit-scrollbar-track {
-		background: var(--main-5);
-		border-radius: 360px;
-	}
-	&::-webkit-scrollbar-thumb {
-		background: var(--main-10);
-		border-radius: 360px;
-	}
-	&::-webkit-scrollbar-thumb:hover {
-		background: var(--main-20);
-	}
 	.phase {
-		min-width: 240px;
 		padding: 14px;
 		border-radius: 16px;
 		background-color: var(--lightBlue);
 		display: flex;
 		flex-direction: column;
 		gap: 14px;
+		border: 1px solid var(--main-5);
+		box-shadow: var(--boxShadow-xs);
 		.topSide {
 			display: flex;
 			gap: 4px;

@@ -19,7 +19,7 @@ export async function generateMetadata({
 		description: `View ${params} on Web0`,
 	};
 }
-const page = ({ params }: { params: { project: string; phase: string } }) => {
+const page = async ({ params }: { params: { project: string; phase: string } }) => {
 	const phase = phases.find((phase) => phase.id === Number(params.phase));
 	if (phase) {
 		return (

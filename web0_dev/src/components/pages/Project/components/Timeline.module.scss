@@ -3,6 +3,8 @@
 	border-radius: 16px;
 	background-color: var(--lightBlue);
 	overflow: hidden;
+	border: 1px solid var(--main-5);
+	box-shadow: var(--boxShadow-sm);
 	.title {
 		font-size: calc(14 / 16 * 1rem);
 		font-weight: 600;

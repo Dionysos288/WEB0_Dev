@@ -10,7 +10,13 @@
 			font-weight: 400;
 			line-height: calc(20 / 16 * 1rem);
 			color: var(--main-60);
-			padding: 4px;
+			padding: 2px;
+			margin: 2px;
+		}
+		.active {
+			color: var(--orange);
+			font-weight: 600;
+			border-bottom: 2px solid var(--orange-90);
 		}
 	}
 	.rightSide {

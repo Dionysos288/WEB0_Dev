@@ -3,23 +3,41 @@ import SVG from './SVG';
 import styles from './TopMenu.module.scss';
 import { Plus, Dots } from '@/svgs';
 interface TopMenuProps {
+	mainLink: string;
 	menuItems: string[];
 	AddItem: string;
 	ExtraItems?: string[];
+	foundLink: string;
 }
 
 const TopMenu: React.FC<TopMenuProps> = ({
+	mainLink,
 	menuItems,
 	AddItem,
 	ExtraItems,
+	foundLink,
 }) => {
 	return (
 		<div className={styles.container}>
 			<div className={styles.menu}>
 				{menuItems.map((item, index) => (
 					<Link
-						href={index === 0 ? '/library' : `/library/${item.toLowerCase()}`}
+						href={
+							index === 0
+								? `/${mainLink}`
+								: `/${mainLink}/${item.toLowerCase().replace(/\s+/g, '-')}`
+						}
 						key={index}
+						className={` ${
+							foundLink === item.toLowerCase().replace(/\s+/g, '-')
+								? styles.active
+								: ''
+						}`}
+						aria-current={
+							foundLink === item.toLowerCase().replace(/\s+/g, '-')
+								? 'page'
+								: undefined
+						}
 					>
 						{item}
 					</Link>

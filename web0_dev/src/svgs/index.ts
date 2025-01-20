@@ -47,3 +47,4 @@ export { default as Document } from './Document.svg';
 export { default as DatePicker } from './DatePicker.svg';
 export { default as Jpg } from './files/Jpg.svg';
 export { default as Edit } from './Edit.svg';
+export { default as File } from './File.svg';

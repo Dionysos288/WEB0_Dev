@@ -46,13 +46,13 @@ const DoughnutChart = ({
 				outerRadius={width / 2.5}
 				paddingAngle={1}
 				fill="none"
-				isAnimationActive={false}
+				isAnimationActive={true}
 				onMouseEnter={onPieEnter}
 				cornerRadius={4}
 			>
 				{data.map((entry) => (
 					<Cell
-						key={`slice-${entry.name}`} // Ensure unique and stable keys
+						key={`slice-${entry.name}`}
 						fill={entry.color}
 						onMouseDown={onMouseDown}
 					/>

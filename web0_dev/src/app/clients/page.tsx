@@ -6,6 +6,7 @@ import { Clients } from '@/Data/Clients';
 import ContactStatus from '@/components/pages/clients/overview/ContactStatus';
 import styles from './page.module.scss';
 import ContactSource from '@/components/pages/clients/overview/ContactSource';
+import TopMenu from '@/components/General/TopMenu';
 
 export default function LibraryPage() {
 	const tableHeaders: TableHeader[] = [
@@ -16,6 +17,12 @@ export default function LibraryPage() {
 	];
 	return (
 		<>
+			<TopMenu
+				mainLink="clients"
+				menuItems={['Overview', 'Leads']}
+				AddItem="Add User"
+				foundLink="overview"
+			/>
 			<div className={styles.TopSide}>
 				<ContactSource />
 				<ContactStatus />

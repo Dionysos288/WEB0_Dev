@@ -1,7 +1,7 @@
 .dragging {
 	height: 92px;
 	opacity: 0.5;
-	border: 1px solid var(--orange-90);
+	border: 2px solid var(--orange-90) !important;
 }
 .task {
 	padding: 16px 18px;
@@ -12,6 +12,8 @@
 	border-radius: 16px;
 	background-color: var(--lightBlue);
 	touch-action: none;
+	border: 1px solid var(--main-5);
+	box-shadow: var(--boxShadow-xs);
 
 	.tooltip {
 		padding: 1px 4px;

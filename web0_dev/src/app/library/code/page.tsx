@@ -3,12 +3,14 @@ import FilterBar from '@/components/General/FilterBar';
 import Spacing from '@/components/General/Spacing';
 import TopMenu from '@/components/General/TopMenu';
 
-export default function CodePage() {
+export default function Page() {
 	return (
 		<>
 			<TopMenu
+				mainLink="library"
 				menuItems={['Overview', 'Code', 'Design', 'Favorites']}
 				AddItem={'Add Asset'}
+				foundLink="code"
 			/>
 			<FilterBar
 				ExtraFilters={['Technology', 'Components', 'Animations', 'Sections']}

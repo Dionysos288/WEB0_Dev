@@ -2,6 +2,7 @@ import Spacing from '@/components/General/Spacing';
 import { PhaseStatus, phaseType } from '../../../types/types';
 import styles from './Phases.module.scss';
 import { Paint, Calender } from '@/svgs';
+import Link from 'next/link';
 const Phases = ({ phases }: { phases: phaseType[] }) => {
 	const getPhaseStyles = (status: PhaseStatus): React.CSSProperties => {
 		return {
@@ -31,7 +32,11 @@ const Phases = ({ phases }: { phases: phaseType[] }) => {
 			<Spacing space={12} />
 			<div className={styles.phases}>
 				{phases.map((phase) => (
-					<div key={phase.id} className={styles.phase}>
+					<Link
+						href={`client-portal/${phase.id}`}
+						key={phase.id}
+						className={styles.phase}
+					>
 						<div className={styles.topSide}>
 							<div className={styles.svg}>
 								<Paint fill={'var(--main)'} />
@@ -51,7 +56,7 @@ const Phases = ({ phases }: { phases: phaseType[] }) => {
 								<p>{phase.startDate}</p>
 							</div>
 						</div>
-					</div>
+					</Link>
 				))}
 			</div>
 		</>

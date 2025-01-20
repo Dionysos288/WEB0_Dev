@@ -32,6 +32,8 @@
 		align-items: center;
 		border: 1px dashed var(--main-25);
 		border-radius: 16px;
+		box-shadow: var(--boxShadow-xs);
+
 		span {
 			font-size: calc(14 / 16 * 1rem);
 			font-weight: 600;

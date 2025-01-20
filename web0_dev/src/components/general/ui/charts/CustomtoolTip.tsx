@@ -1,19 +1,34 @@
 import { TooltipProps } from 'recharts';
 import styles from './CustomToolTip.module.scss';
 
-const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
+interface CustomTooltipProps extends TooltipProps<number, string> {
+	money?: boolean;
+}
+
+const CustomTooltip: React.FC<CustomTooltipProps> = ({
+	active,
+	payload,
+
+	money = false,
+}) => {
 	if (active && payload && payload.length) {
 		return (
 			<div className={styles.tooltip}>
 				<div className={styles.leftSide}>
 					<div
 						className={styles.block}
-						style={{ backgroundColor: payload[0].payload.color }}
+						style={{
+							backgroundColor: payload[0].payload.color
+								? payload[0].payload.color
+								: 'var(--orange)',
+						}}
 					/>
 
 					<p className={styles.label}>{payload[0].payload.name}</p>
 				</div>
-				<p className={styles.amount}>{payload[0].payload.value}</p>
+				<p className={styles.amount}>
+					{money ? `$${payload[0].value}` : payload[0].value}
+				</p>
 			</div>
 		);
 	}

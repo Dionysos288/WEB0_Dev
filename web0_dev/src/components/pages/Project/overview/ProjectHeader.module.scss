@@ -3,6 +3,8 @@
 	background-color: var(--lightBlue);
 	border-radius: 16px;
 	position: relative;
+	border: 1px solid var(--main-5);
+	box-shadow: var(--boxShadow-sm);
 	.imgWrapper {
 		position: absolute;
 		top: 24px;

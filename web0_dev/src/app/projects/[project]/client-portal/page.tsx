@@ -8,6 +8,7 @@ import Phases from '@/components/pages/Project/client-portal/Phases';
 import { phases } from '@/Data/phases';
 import Files from '@/components/pages/Project/client-portal/Files';
 import { projectFiles } from '@/Data/ProjectFiles';
+import TopMenu from '@/components/General/TopMenu';
 export async function generateMetadata({
 	params,
 }: {
@@ -18,11 +19,24 @@ export async function generateMetadata({
 		description: `View ${params} on Web0`,
 	};
 }
-const page = ({ params }: { params: { project: string } }) => {
+const page = async ({ params }: { params: { project: string } }) => {
 	const project = projects.find((project) => project.id === params.project);
 	if (project) {
 		return (
 			<>
+				<TopMenu
+					mainLink={`projects/${project.id}`}
+					menuItems={[
+						'Overview',
+						'Tasks',
+						'Client Portal',
+						'Files',
+						'Library',
+						'Settings',
+					]}
+					AddItem="Add Task"
+					foundLink="client-portal"
+				/>
 				<ClientProjectHeader project={project} />
 				<Spacing space={28} />
 				<Phases phases={phases} />

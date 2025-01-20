@@ -87,10 +87,36 @@
 			align-items: center;
 			gap: 4px;
 			padding: 4px 8px;
+			.svg {
+				transition: transform 0.2s var(--ease-out-quad);
+			}
+
+			.svg.rotate {
+				transform: rotate(90deg);
+			}
 			p {
 				font-size: calc(14 / 16 * 1rem);
 				font-weight: 400;
 				line-height: calc(20 / 16 * 1rem);
+			}
+		}
+		.items {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+			li {
+				display: contents;
+				a {
+					width: 100%;
+					font-size: calc(14 / 16 * 1rem);
+					font-weight: 400;
+					line-height: calc(20 / 16 * 1rem);
+					padding: 3px 8px 2px 52px;
+
+					&:last-of-type {
+						padding-bottom: 3px;
+					}
+				}
 			}
 		}
 	}

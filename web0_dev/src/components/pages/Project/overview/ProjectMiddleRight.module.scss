@@ -4,6 +4,8 @@
 	border-radius: 16px;
 	padding: 24px;
 	background-color: var(--lightBlue);
+	border: 1px solid var(--main-5);
+	box-shadow: var(--boxShadow-sm);
 	h2 {
 		font-size: calc(14 / 16 * 1rem);
 		font-weight: 600;

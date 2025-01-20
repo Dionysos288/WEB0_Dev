@@ -10,6 +10,8 @@
 	padding: 8px;
 	display: flex;
 	justify-content: space-between;
+	border: 1px solid var(--main-5);
+	box-shadow: var(--boxShadow-sm);
 	.leftSide {
 		display: flex;
 		gap: 8px;

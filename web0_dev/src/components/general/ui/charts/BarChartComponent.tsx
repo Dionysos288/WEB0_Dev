@@ -37,7 +37,7 @@ const BarChartComponent = ({
 					stroke="transparant"
 				/>
 				<Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
-				<Bar dataKey="value" isAnimationActive={false} radius={[12, 12, 0, 0]}>
+				<Bar dataKey="value" isAnimationActive={true} radius={[12, 12, 0, 0]}>
 					{data.map((entry, index) => (
 						<Cell key={`cell-${index}`} fill={entry.color} />
 					))}
