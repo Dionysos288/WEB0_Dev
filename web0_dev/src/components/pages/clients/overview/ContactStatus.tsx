@@ -1,13 +1,37 @@
 import Spacing from '../../../General/Spacing';
 import styles from './ContactStatus.module.scss';
 import DoughnutChart from '../../../General/ui/charts/DoughnutChart';
-const data = [
-	{ name: 'Leads', value: 50, color: 'var(--leads-90)' },
-	{ name: 'Contacted', value: 60, color: 'var(--contacted-90)' },
-	{ name: 'oppurtunity', value: 25, color: 'var(--oppurtunity-90)' },
-	{ name: 'Client', value: 18, color: 'var(--client-90)' },
-];
-const ContactStatus = () => {
+import { ClientStatus } from '@prisma/client';
+import prisma from '@/lib/db';
+
+const ContactStatus = async () => {
+	const colors = [
+		'var(--leads-90)',
+		'var(--contacted-90)',
+		'var(--oppurtunity-90)',
+		'var(--client-90)',
+	];
+	const sources = [
+		ClientStatus.Leads,
+		ClientStatus.Contacted,
+		ClientStatus.Opportunity,
+		ClientStatus.Client,
+	];
+	const data = await prisma.client.groupBy({
+		by: ['status'],
+		_count: {
+			status: true,
+		},
+	});
+	const sourceCountMap = new Map(
+		data.map((item) => [item.status, item._count.status])
+	);
+
+	const dataGraph = sources.map((item, index) => ({
+		name: item,
+		value: sourceCountMap.get(item) || 0,
+		color: colors[index],
+	}));
 	return (
 		<div className={styles.wrapper}>
 			<div className={styles.topSide}>
@@ -15,9 +39,9 @@ const ContactStatus = () => {
 			</div>
 			<Spacing space={16} />
 			<div className={styles.underSide}>
-				<DoughnutChart data={data} height={300} width={300} />
+				<DoughnutChart data={dataGraph} height={300} width={300} />
 				<div className={styles.legend}>
-					{data.map((item, index) => (
+					{dataGraph.map((item, index) => (
 						<div key={index} className={styles.legendItem}>
 							<div className={styles.leftSide}>
 								<div

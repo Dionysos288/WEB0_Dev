@@ -1,13 +1,12 @@
-import projects from '@/Data/Projects';
 import type { Metadata } from 'next';
 
 import FilterBar from '@/components/General/FilterBar';
 import Spacing from '@/components/General/Spacing';
 import TableData from '@/components/General/ui/TableData';
-import { projectFiles } from '@/Data/ProjectFiles';
 import { DatePicker } from '@/svgs';
 import { TableHeader } from '@/components/types/types';
 import TopMenu from '@/components/General/TopMenu';
+import prisma from '@/lib/db';
 export async function generateMetadata({
 	params,
 }: {
@@ -24,14 +23,28 @@ const tableHeaders: TableHeader[] = [
 	['size', 'File Size'],
 	['uploader', 'Uploader'],
 	[
-		'date',
+		'updatedAt',
 		'Upload Date',
 		<DatePicker key={Math.random().toString(36).substr(2, 9)} />,
 	],
 ];
 const page = async ({ params }: { params: { project: string } }) => {
-	const project = projects.find((project) => project.id === params.project);
+	const project = await prisma.project.findUnique({
+		where: {
+			id: params.project,
+		},
+		include: {
+			Files: true,
+		},
+	});
 	if (project) {
+		const plainProjectData = {
+			...project,
+			Files: project.Files.map((file) => ({
+				...file,
+				size: file.size.toNumber(),
+			})),
+		};
 		return (
 			<>
 				<TopMenu
@@ -52,7 +65,7 @@ const page = async ({ params }: { params: { project: string } }) => {
 				<TableData
 					type="files"
 					tableHeaders={tableHeaders}
-					tableData={projectFiles}
+					tableData={plainProjectData.Files}
 				/>
 			</>
 		);

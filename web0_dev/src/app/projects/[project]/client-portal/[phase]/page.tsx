@@ -2,13 +2,12 @@ import type { Metadata } from 'next';
 
 import Spacing from '@/components/General/Spacing';
 import ClientProjectHeader from '@/components/pages/Project/client-portal/ClientProjectHeader';
-import { phases } from '@/Data/phases';
 import Files from '@/components/pages/Project/client-portal/Files';
-import { projectFiles } from '@/Data/ProjectFiles';
 import FilterBar from '@/components/General/FilterBar';
 import TaskGallery from '@/components/pages/Project/tasks/TaskGallery';
-import { columnsData, TasksData } from '@/Data/Tasks';
+
 import EditHeader from '@/components/General/EditHeader';
+import prisma from '@/lib/db';
 export async function generateMetadata({
 	params,
 }: {
@@ -19,23 +18,44 @@ export async function generateMetadata({
 		description: `View ${params} on Web0`,
 	};
 }
-const page = async ({ params }: { params: { project: string; phase: string } }) => {
-	const phase = phases.find((phase) => phase.id === Number(params.phase));
-	if (phase) {
+const page = async ({ params }: { params: { phase: string } }) => {
+	const { phase } = await params;
+	console.log(phase);
+	const phaseData = await prisma.phase.findUnique({
+		where: {
+			id: phase,
+		},
+		include: {
+			files: true,
+			tasks: true,
+		},
+	});
+	console.log(phaseData);
+	if (phaseData) {
+		const plainPhases = {
+			...phaseData,
+			files: phaseData.files.map((file) => ({
+				...file,
+				size: file.size.toNumber(),
+			})),
+		};
 		return (
 			<>
 				<EditHeader image={false} admin={true} />
 				<Spacing space={28} />
 
-				<ClientProjectHeader phase={phase} revisions={3} />
+				<ClientProjectHeader
+					phase={plainPhases}
+					revisions={plainPhases.revisions}
+				/>
 				<Spacing space={28} />
 
-				<Files files={projectFiles} />
+				<Files files={plainPhases.files} />
 				<Spacing space={28} />
 				<FilterBar title="Tasks" search={false} views={true} />
 				<Spacing space={28} />
 
-				<TaskGallery TasksData={TasksData} columnsData={columnsData} />
+				{/* <TaskGallery TasksData={TasksData} columnsData={columnsData} /> */}
 			</>
 		);
 	}

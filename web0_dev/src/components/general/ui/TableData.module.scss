@@ -110,11 +110,7 @@
 			&:nth-of-type(2) {
 				padding: 8px 16px 8px 4px;
 			}
-			.ball {
-				width: 6px;
-				height: 6px;
-				border-radius: 360px;
-			}
+
 			.svg {
 				margin: auto 0;
 				min-width: max-content;
@@ -128,16 +124,6 @@
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-			}
-			.block {
-				border-radius: 8px;
-				position: relative;
-				padding: 4px;
-
-				display: flex;
-				min-width: max-content;
-				justify-content: center;
-				align-items: center;
 			}
 		}
 	}

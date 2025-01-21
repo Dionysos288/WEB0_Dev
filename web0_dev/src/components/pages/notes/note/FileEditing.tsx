@@ -1,8 +1,8 @@
-import { NoteType } from '@/components/types/types';
 import styles from './FileEditing.module.scss';
 import { File, Figma } from '@/svgs';
 import Spacing from '@/components/General/Spacing';
-const FileEditing = ({ note }: { note: NoteType }) => {
+import { Note } from '@prisma/client';
+const FileEditing = ({ note }: { note: Note }) => {
 	return (
 		<>
 			<div className={styles.wrapper}>

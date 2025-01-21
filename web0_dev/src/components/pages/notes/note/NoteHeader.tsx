@@ -9,7 +9,7 @@ const NoteHeader = ({
 	return (
 		<div className={styles.wrapper}>
 			<h2>{title}</h2>
-			<p>{description}</p>
+			{description && <p>{description}</p>}
 		</div>
 	);
 };

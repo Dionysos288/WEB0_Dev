@@ -43,7 +43,7 @@
 			position: relative;
 			display: grid;
 			grid-template-columns: repeat(var(--amount), 26px);
-			grid-template-rows: repeat(var(--tasks), auto);
+			grid-template-rows: repeat(var(--phases), auto);
 			text-align: center;
 			.month {
 				grid-row: 1;

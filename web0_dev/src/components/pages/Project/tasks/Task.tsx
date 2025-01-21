@@ -4,7 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Image from 'next/image';
 import { Clock, Message } from '@/svgs';
-import { TaskType } from '@/components/types/types';
+import { Task as TaskType } from '@prisma/client';
 const Task = ({ task }: { task: TaskType }) => {
 	const {
 		attributes,

@@ -1,9 +1,7 @@
 import Image from 'next/image';
 import styles from './Team.module.scss';
-interface TeamProps {
-	team: string[];
-}
-const Team = ({ team }: TeamProps) => {
+
+const Team = ({ team }: { team: string[] }) => {
 	return (
 		<div className={styles.TeamWrapper}>
 			{team.map((member, index) => {

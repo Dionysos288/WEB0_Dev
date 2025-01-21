@@ -1,5 +1,6 @@
 .FilesWrapper {
 	display: grid;
+	grid-column: 1fr auto;
 	gap: 16px;
 	border-radius: 16px;
 	padding: 24px;
@@ -85,6 +86,8 @@
 		justify-content: center;
 		background: rgba(229, 236, 246, 0.5);
 		border-radius: 8px;
+		align-self: flex-end;
+		height: fit-content;
 		div {
 			display: flex;
 			gap: 16px;

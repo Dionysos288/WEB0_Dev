@@ -4,18 +4,20 @@ import {
 	useSortable,
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import Task from './Task';
+import TaskComponent from './Task';
 import React, { useMemo } from 'react';
 import Spacing from '@/components/General/Spacing';
 import { PlusSpecial } from '@/svgs';
-import { TaskColumnType } from '@/components/types/types';
+import { Task, TaskColumn } from '@prisma/client';
 
-const Column = ({ column }: { column: TaskColumnType }) => {
-	const { title, tasks } = column;
-	const allTasks = tasks.length;
+const Column = ({ column }: { column: TaskColumn & { Tasks?: Task[] } }) => {
+	const { title, Tasks } = column;
+
+	const allTasks = Tasks?.length;
 	const tasksId = useMemo(() => {
-		return tasks.map((task) => task.id);
-	}, [tasks]);
+		if (!Tasks) return [];
+		return Tasks.map((task) => task.id);
+	}, [Tasks]);
 
 	const { attributes, listeners, setNodeRef } = useSortable({
 		id: column.id,
@@ -36,7 +38,7 @@ const Column = ({ column }: { column: TaskColumnType }) => {
 					style={{ backgroundColor: 'var(--rejected)' }}
 				/>
 			)}
-			{title === 'In Progress' && (
+			{title === 'In_Progress' && (
 				<div
 					className={styles.line}
 					style={{ backgroundColor: 'var(--progress)' }}
@@ -50,11 +52,19 @@ const Column = ({ column }: { column: TaskColumnType }) => {
 			)}
 			<Spacing space={16} />
 			<div className={styles.column}>
-				<SortableContext items={tasksId} strategy={verticalListSortingStrategy}>
-					{tasks.map((task) => (
-						<Task key={task.id} task={task} />
-					))}
-				</SortableContext>
+				{!Tasks ? (
+					<></>
+				) : (
+					<SortableContext
+						items={tasksId}
+						strategy={verticalListSortingStrategy}
+					>
+						{Tasks.map((task) => (
+							<TaskComponent key={task.id} task={task} />
+						))}
+					</SortableContext>
+				)}
+
 				<button className={styles.addTask}>
 					<PlusSpecial fill={'var(--main)'} opacity={'0.8'} />
 					<span>Add Task</span>

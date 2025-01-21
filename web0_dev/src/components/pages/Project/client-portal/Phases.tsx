@@ -1,9 +1,9 @@
 import Spacing from '@/components/General/Spacing';
-import { PhaseStatus, phaseType } from '../../../types/types';
 import styles from './Phases.module.scss';
 import { Paint, Calender } from '@/svgs';
 import Link from 'next/link';
-const Phases = ({ phases }: { phases: phaseType[] }) => {
+import { Phase, PhaseStatus } from '@prisma/client';
+const Phases = ({ phases }: { phases: Phase[] }) => {
 	const getPhaseStyles = (status: PhaseStatus): React.CSSProperties => {
 		return {
 			'--colorBG':
@@ -26,38 +26,55 @@ const Phases = ({ phases }: { phases: phaseType[] }) => {
 					: 'var(--notStarted-text)',
 		} as React.CSSProperties;
 	};
+
 	return (
 		<>
 			<h2 className={styles.title}>Phases</h2>
 			<Spacing space={12} />
 			<div className={styles.phases}>
-				{phases.map((phase) => (
-					<Link
-						href={`client-portal/${phase.id}`}
-						key={phase.id}
-						className={styles.phase}
-					>
-						<div className={styles.topSide}>
-							<div className={styles.svg}>
-								<Paint fill={'var(--main)'} />
+				{phases.map((phase) => {
+					const startDate = new Date(phase.startDate).toLocaleDateString(
+						'en-US',
+						{
+							month: 'numeric',
+							day: 'numeric',
+							year: 'numeric',
+						}
+					);
+					return (
+						<Link
+							href={`client-portal/${phase.id}`}
+							key={phase.id}
+							className={styles.phase}
+						>
+							<div className={styles.topSide}>
+								<div className={styles.svg}>
+									<Paint fill={'var(--main)'} />
+								</div>
+								<h3>{phase.title}</h3>
 							</div>
-							<h3>{phase.name}</h3>
-						</div>
-						<div className={styles.underSide}>
-							<div
-								className={styles.status}
-								style={getPhaseStyles(phase.status)}
-							>
-								<div />
-								<p>{phase.status}</p>
+							<div className={styles.underSide}>
+								<div
+									className={styles.status}
+									style={getPhaseStyles(phase.status)}
+								>
+									<div />
+									<p>
+										{phase.status === 'Not_Started'
+											? 'Not Started'
+											: phase.status === 'Active'
+											? phase.status
+											: phase.status}
+									</p>
+								</div>
+								<div className={styles.date}>
+									<Calender fill={'var(--main)'} />
+									<p>{startDate}</p>
+								</div>
 							</div>
-							<div className={styles.date}>
-								<Calender fill={'var(--main)'} />
-								<p>{phase.startDate}</p>
-							</div>
-						</div>
-					</Link>
-				))}
+						</Link>
+					);
+				})}
 			</div>
 		</>
 	);

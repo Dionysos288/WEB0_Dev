@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Spacing from '@/components/General/Spacing';
-import { notes } from '@/Data/Notes';
 import EditHeader from '@/components/General/EditHeader';
 import NoteHeader from '@/components/pages/notes/note/NoteHeader';
 import FileEditing from '@/components/pages/notes/note/FileEditing';
+import prisma from '@/lib/db';
 
 export async function generateMetadata({
 	params,
@@ -16,19 +16,23 @@ export async function generateMetadata({
 	};
 }
 const page = async ({ params }: { params: { note: string } }) => {
-	const notesData = notes.filter((note) => note.id === parseInt(params.note));
+	const notesData = await prisma.note.findUnique({
+		where: {
+			id: params.note,
+		},
+	});
 	if (notesData) {
 		return (
 			<>
 				<EditHeader admin={true} image={false} />
 				<Spacing space={28} />
 				<NoteHeader
-					title={notesData[0].title}
-					description={notesData[0].content}
+					title={notesData.title}
+					description={notesData.description || undefined}
 				/>
 				<Spacing space={28} />
 
-				<FileEditing note={notesData[0]} />
+				<FileEditing note={notesData} />
 			</>
 		);
 	}

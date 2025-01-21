@@ -1,0 +1,15 @@
+.block {
+	border-radius: 8px;
+	position: relative;
+	padding: 4px;
+
+	display: flex;
+	min-width: max-content;
+	justify-content: center;
+	align-items: center;
+}
+.ball {
+	width: 6px;
+	height: 6px;
+	border-radius: 360px;
+}

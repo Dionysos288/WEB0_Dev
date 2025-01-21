@@ -1,12 +1,12 @@
 import ProjectHeader from '@/components/pages/Project/overview/ProjectHeader';
 import ProjectMiddleLeft from '@/components/pages/Project/overview/ProjectMiddleLeft';
-import projects from '@/Data/Projects';
 import type { Metadata } from 'next';
 import styles from './page.module.scss';
 import Spacing from '@/components/General/Spacing';
 import ProjectMiddleRight from '@/components/pages/Project/overview/ProjectMiddleRight';
 import Timeline from '@/components/pages/Project/components/Timeline';
 import TopMenu from '@/components/General/TopMenu';
+import prisma from '@/lib/db';
 export async function generateMetadata({
 	params,
 }: {
@@ -18,12 +18,29 @@ export async function generateMetadata({
 	};
 }
 const page = async ({ params }: { params: { project: string } }) => {
-	const project = projects.find((project) => project.id === params.project);
-	if (project) {
+	const projectData = await prisma.project.findUnique({
+		where: {
+			id: params.project,
+		},
+		include: {
+			tasks: true,
+			phases: true,
+			Files: true,
+		},
+	});
+	if (projectData) {
+		const plainProjectData = {
+			...projectData,
+			budget: projectData.budget.toNumber(),
+			Files: projectData.Files.map((file) => ({
+				...file,
+				size: file.size.toNumber(),
+			})),
+		};
 		return (
 			<>
 				<TopMenu
-					mainLink={`projects/${project.id}`}
+					mainLink={`projects/${plainProjectData.id}`}
 					menuItems={[
 						'Overview',
 						'Tasks',
@@ -35,14 +52,14 @@ const page = async ({ params }: { params: { project: string } }) => {
 					AddItem="Add Task"
 					foundLink="overview"
 				/>
-				<ProjectHeader project={project} />
+				<ProjectHeader project={plainProjectData} />
 				<Spacing space={28} />
 				<div className={styles.middlePart}>
 					<ProjectMiddleLeft />
-					<ProjectMiddleRight />
+					<ProjectMiddleRight project={plainProjectData} />
 				</div>
 				<Spacing space={28} />
-				<Timeline />
+				<Timeline project={plainProjectData} />
 			</>
 		);
 	}

@@ -1,20 +1,29 @@
-import { FolderType, NoteType } from '@/components/types/types';
 import styles from './NoteGallery.module.scss';
 import React from 'react';
 import { Folder, PlusSpecial } from '@/svgs';
 import Link from 'next/link';
+import prisma from '@/lib/db';
+import { Folder as folderType, Note as noteType } from '@prisma/client';
 
-const NoteGallery = ({
-	notes,
-	folders,
+const NoteGallery = async ({
+	notesData,
+	foldersData,
 	inFolder = false,
 }: {
-	notes: NoteType[];
-	folders: FolderType[];
+	notesData?: noteType[];
+	foldersData?: folderType & { notes: noteType[] };
 	inFolder?: boolean;
 }) => {
-	function groupFoldersAndNotes(folders: FolderType[], notes: NoteType[]) {
-		// 1) Group notes by folderId
+	let folders;
+	let notes;
+	if (foldersData === undefined || notesData === undefined) {
+		folders = await prisma.folder.findMany();
+		notes = await prisma.note.findMany();
+	} else {
+		folders = foldersData;
+		notes = notesData;
+	}
+	function groupFoldersAndNotes(folders: folderType[], notes: noteType[]) {
 		const grouped = notes.reduce((acc, note) => {
 			const folderId = note.folderId ? note.folderId.toString() : 'no-folder';
 			if (!acc[folderId]) {
@@ -22,28 +31,23 @@ const NoteGallery = ({
 			}
 			acc[folderId].push(note);
 			return acc;
-		}, {} as { [key: string]: NoteType[] });
+		}, {} as { [key: string]: noteType[] });
 
-		// 2) Create the final array: folders first, then no-folder notes
 		const result: Array<
-			{ folder: FolderType; notes: NoteType[] } | { note: NoteType }
+			{ folder: folderType; notes: noteType[] } | { note: noteType }
 		> = [];
 
-		// For each folder in use (meaning it appears in grouped)
 		folders.forEach((folder) => {
 			const folderId = folder.id.toString();
 			if (grouped[folderId]) {
-				// Push a single object with the folder and the notes
 				result.push({
 					folder,
 					notes: grouped[folderId],
 				});
-				// Remove from the grouped object so we don't repeat it later
 				delete grouped[folderId];
 			}
 		});
 
-		// Finally, add each note without a folder as a separate item
 		if (grouped['no-folder']) {
 			grouped['no-folder'].forEach((note) => {
 				result.push({ note });
@@ -53,6 +57,7 @@ const NoteGallery = ({
 	}
 	let groupedNotes;
 	if (!inFolder) {
+		// @ts-expect-error maybe fix this later
 		groupedNotes = groupFoldersAndNotes(folders, notes);
 	}
 	const renderEmoji = (emoji: string) => {
@@ -72,7 +77,7 @@ const NoteGallery = ({
 				<span>Add Item</span>
 			</button>
 			{inFolder
-				? notes.map((item, index) => {
+				? notes?.map((item, index) => {
 						return (
 							<Link
 								href={`/notes/${item.id}`}
@@ -88,9 +93,7 @@ const NoteGallery = ({
 							>
 								<h3>{item.title}</h3>
 								<p className={styles.content}>{item.content}</p>
-								{item.emoji && (
-									<div className={styles.emoji}>{renderEmoji(item.emoji)}</div>
-								)}
+								<div className={styles.emoji}>{renderEmoji(item.emoji)}</div>
 							</Link>
 						);
 				  })
@@ -119,22 +122,18 @@ const NoteGallery = ({
 										<p className={styles.length}>
 											{item.notes.length} Item{item.notes.length > 1 ? 's' : ''}
 										</p>
-										{item.folder.emoji && (
-											<div className={styles.emoji}>
-												{renderEmoji(item.folder.emoji)}
-											</div>
-										)}{' '}
+										<div className={styles.emoji}>
+											{renderEmoji(item.folder.emoji)}
+										</div>
 									</>
 								)}
 								{'note' in item && (
 									<>
 										<h3>{item.note.title}</h3>
 										<p className={styles.content}>{item.note.content}</p>
-										{item.note.emoji && (
-											<div className={styles.emoji}>
-												{renderEmoji(item.note.emoji)}
-											</div>
-										)}
+										<div className={styles.emoji}>
+											{renderEmoji(item.note.emoji)}
+										</div>
 									</>
 								)}
 							</Link>

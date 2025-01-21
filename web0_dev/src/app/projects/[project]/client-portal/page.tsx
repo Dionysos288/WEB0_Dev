@@ -1,14 +1,12 @@
-import projects from '@/Data/Projects';
 import type { Metadata } from 'next';
 
 import Spacing from '@/components/General/Spacing';
 import Timeline from '@/components/pages/Project/components/Timeline';
 import ClientProjectHeader from '@/components/pages/Project/client-portal/ClientProjectHeader';
 import Phases from '@/components/pages/Project/client-portal/Phases';
-import { phases } from '@/Data/phases';
 import Files from '@/components/pages/Project/client-portal/Files';
-import { projectFiles } from '@/Data/ProjectFiles';
 import TopMenu from '@/components/General/TopMenu';
+import prisma from '@/lib/db';
 export async function generateMetadata({
 	params,
 }: {
@@ -20,8 +18,25 @@ export async function generateMetadata({
 	};
 }
 const page = async ({ params }: { params: { project: string } }) => {
-	const project = projects.find((project) => project.id === params.project);
+	const project = await prisma.project.findUnique({
+		where: {
+			id: params.project,
+		},
+		include: {
+			tasks: true,
+			Files: true,
+			phases: true,
+		},
+	});
 	if (project) {
+		const plainProjectData = {
+			...project,
+			budget: project.budget.toNumber(),
+			Files: project.Files.map((file) => ({
+				...file,
+				size: file.size.toNumber(),
+			})),
+		};
 		return (
 			<>
 				<TopMenu
@@ -37,14 +52,14 @@ const page = async ({ params }: { params: { project: string } }) => {
 					AddItem="Add Task"
 					foundLink="client-portal"
 				/>
-				<ClientProjectHeader project={project} />
+				<ClientProjectHeader project={plainProjectData} />
 				<Spacing space={28} />
-				<Phases phases={phases} />
+				<Phases phases={plainProjectData.phases} />
 				<Spacing space={28} />
-				<Files files={projectFiles} />
+				<Files files={plainProjectData.Files} />
 				<Spacing space={28} />
 
-				<Timeline />
+				<Timeline project={plainProjectData} />
 			</>
 		);
 	}

@@ -2,16 +2,49 @@ import styles from './ClientProjectHeader.module.scss';
 import Spacing from '@/components/General/Spacing';
 import Team from '@/components/General/ui/Team';
 import Image from 'next/image';
-import { PhaseStatus, phaseType, projectType } from '../../../types/types';
+import { Phase, PhaseStatus, Project, Task } from '@prisma/client';
+
+type ProjectAndTasks = Omit<Project, 'budget'> & {
+	budget: number;
+	tasks: Task[];
+};
 const ClientProjectHeader = ({
 	project,
 	phase,
 	revisions,
 }: {
-	project?: projectType;
-	phase?: phaseType;
-	revisions?: number;
+	project?: ProjectAndTasks;
+	phase?: Phase;
+	revisions?: number | null;
 }) => {
+	let startDate;
+	let endDate;
+	let allTasks = 0;
+	if (project) {
+		startDate = new Date(project.start).toLocaleDateString('en-US', {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+		});
+		endDate = new Date(project.due).toLocaleDateString('en-US', {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+		});
+		allTasks = project.tasks.length || 0;
+	} else if (phase) {
+		startDate = new Date(phase.startDate).toLocaleDateString('en-US', {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+		});
+		endDate = new Date(phase.endDate).toLocaleDateString('en-US', {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+		});
+	}
+
 	const getPhaseStyles = (status: PhaseStatus): React.CSSProperties => {
 		return {
 			'--background':
@@ -51,31 +84,15 @@ const ClientProjectHeader = ({
 					<h2>WEB0 | {project.title}</h2>
 					<Spacing space={8} />
 
-					<p className={styles.subheader}>
-						Project Phoenix aims to revolutionize the way we interact with
-						technology by creating an intuitive platform that seamlessly
-						integrates artificial intelligence into everyday tasks. Our goal is
-						to enhance productivity and creativity, making advanced tools
-						accessible to everyone, from students to professionals. Join us on
-						this journey to empower users and transform their digital
-						experiences.
-					</p>
+					<p className={styles.subheader}>{/* {project.description} */}</p>
 				</>
 			)}
 			{phase && (
 				<>
-					<h2>Phase: {phase.name}</h2>
+					<h2>Phase: {phase.title}</h2>
 					<Spacing space={8} />
 
-					<p className={styles.subheader}>
-						Project Phoenix aims to revolutionize the way we interact with
-						technology by creating an intuitive platform that seamlessly
-						integrates artificial intelligence into everyday tasks. Our goal is
-						to enhance productivity and creativity, making advanced tools
-						accessible to everyone, from students to professionals. Join us on
-						this journey to empower users and transform their digital
-						experiences.
-					</p>
+					<p className={styles.subheader}>{phase.description}</p>
 				</>
 			)}
 			<Spacing space={22} />
@@ -86,14 +103,11 @@ const ClientProjectHeader = ({
 						<Spacing space={4} />
 						{project && (
 							<div className={styles.progress}>
-								{project.phase === 'completed' && (
+								{project.status === 'completed' && (
 									<>
 										<div
 											style={{
-												width: `${(
-													(project.completed / project.Alltasks) *
-													100
-												).toFixed(2)}%`,
+												width: `100%`,
 											}}
 											className={styles.completed}
 										/>
@@ -101,12 +115,12 @@ const ClientProjectHeader = ({
 									</>
 								)}
 
-								{project.phase === 'progress' && (
+								{project.status === 'progress' && (
 									<>
 										<div
 											style={{
 												width: `${(
-													(project.completed / project.Alltasks) *
+													(project.completed / allTasks) *
 													100
 												).toFixed(2)}%`,
 											}}
@@ -115,19 +129,19 @@ const ClientProjectHeader = ({
 										<p>
 											In Progress <span>/</span>{' '}
 											{(
-												(Number(project.completed) / Number(project.Alltasks)) *
+												(Number(project.completed) / Number(allTasks)) *
 												100
 											).toFixed(0)}
 											%
 										</p>
 									</>
 								)}
-								{project.phase === 'rejected' && (
+								{project.status === 'rejected' && (
 									<>
 										<div
 											style={{
 												width: `${(
-													(project.completed / project.Alltasks) *
+													(project.completed / allTasks) *
 													100
 												).toFixed(2)}%`,
 											}}
@@ -136,19 +150,19 @@ const ClientProjectHeader = ({
 										<p>
 											Rejected <span>/</span>{' '}
 											{(
-												(Number(project.completed) / Number(project.Alltasks)) *
+												(Number(project.completed) / Number(allTasks)) *
 												100
 											).toFixed(0)}
 											%
 										</p>
 									</>
 								)}
-								{project.phase === 'pending' && (
+								{project.status === 'pending' && (
 									<>
 										<div
 											style={{
 												width: `${(
-													(project.completed / project.Alltasks) *
+													(project.completed / allTasks) *
 													100
 												).toFixed(2)}%`,
 											}}
@@ -157,7 +171,7 @@ const ClientProjectHeader = ({
 										<p>
 											Pending <span>/</span>{' '}
 											{(
-												(Number(project.completed) / Number(project.Alltasks)) *
+												(Number(project.completed) / Number(allTasks)) *
 												100
 											).toFixed(0)}
 											%
@@ -171,19 +185,25 @@ const ClientProjectHeader = ({
 								className={styles.progressSpecial}
 								style={getPhaseStyles(phase.status)}
 							>
-								<p>{phase.status}</p>
+								<p>
+									{phase.status === 'Not_Started'
+										? 'Not Started'
+										: phase.status === 'Active'
+										? phase.status
+										: phase.status}
+								</p>
 							</div>
 						)}
 					</div>
 					<div className={styles.column}>
 						<h3>Start Date</h3>
 						<Spacing space={4} />
-						<p>{project?.start || phase?.startDate}</p>
+						<p>{startDate}</p>
 					</div>
 					<div className={styles.column}>
 						<h3>Due Date</h3>
 						<Spacing space={4} />
-						<p>{project?.due || phase?.endDate}</p>
+						<p>{endDate}</p>
 					</div>
 					{(revisions && phase) || project ? (
 						<div className={styles.column}>
@@ -191,12 +211,14 @@ const ClientProjectHeader = ({
 								<>
 									<h3>Budget</h3>
 									<Spacing space={4} />
-									<p>$ {project.budget}</p>
+									<p>${project.budget.toFixed(2)}</p>
 								</>
 							) : (
-								<button className={styles.revision}>
-									<span>Ask Revision 0/{revisions}</span>
-								</button>
+								revisions && (
+									<button className={styles.revision}>
+										<span>Ask Revision 0/{revisions}</span>
+									</button>
+								)
 							)}
 						</div>
 					) : null}

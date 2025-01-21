@@ -29,6 +29,8 @@
 		gap: 8px;
 		border: 1px solid var(--main-5);
 		box-shadow: var(--boxShadow-xs);
+		min-height: 112px;
+
 		.folderTop {
 			position: absolute;
 			top: -18px;

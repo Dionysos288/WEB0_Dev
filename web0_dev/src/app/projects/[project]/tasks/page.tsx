@@ -1,11 +1,10 @@
-import projects from '@/Data/Projects';
 import type { Metadata } from 'next';
 
 import TaskGallery from '@/components/pages/Project/tasks/TaskGallery';
 import FilterBar from '@/components/General/FilterBar';
 import Spacing from '@/components/General/Spacing';
-import { columnsData, TasksData } from '@/Data/Tasks';
 import TopMenu from '@/components/General/TopMenu';
+import prisma from '@/lib/db';
 export async function generateMetadata({
 	params,
 }: {
@@ -17,8 +16,24 @@ export async function generateMetadata({
 	};
 }
 const page = async ({ params }: { params: { project: string } }) => {
-	const project = projects.find((project) => project.id === params.project);
+	const project = await prisma.project.findUnique({
+		where: {
+			id: params.project,
+		},
+		include: {
+			tasks: true,
+		},
+	});
 	if (project) {
+		const columnsData = await prisma.taskColumn.findMany({
+			include: {
+				Tasks: {
+					where: {
+						projectId: project.id,
+					},
+				},
+			},
+		});
 		return (
 			<>
 				<TopMenu
@@ -36,7 +51,7 @@ const page = async ({ params }: { params: { project: string } }) => {
 				/>
 				<FilterBar views={true} search={false} />
 				<Spacing space={28} />
-				<TaskGallery TasksData={TasksData} columnsData={columnsData} />
+				<TaskGallery TasksData={project.tasks} columnsData={columnsData} />
 			</>
 		);
 	}

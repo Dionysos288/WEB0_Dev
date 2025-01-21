@@ -2,8 +2,19 @@ import Spacing from '@/components/General/Spacing';
 import styles from './ProjectHeader.module.scss';
 import Team from '@/components/General/ui/Team';
 import Image from 'next/image';
-import { projectType } from '../../../types/types';
-const ProjectHeader = ({ project }: { project: projectType }) => {
+import { Project, Task } from '@prisma/client';
+type projectAndTasks = Omit<Project, 'budget'> & {
+	budget: number;
+	tasks: Task[];
+};
+const ProjectHeader = ({ project }: { project: projectAndTasks }) => {
+	const endDate = new Date(project.due).toLocaleDateString('en-US', {
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
+	});
+	const allTasks = project.tasks.length || 0;
+	console.log(project);
 	return (
 		<div className={styles.headerWrapper}>
 			<div className={styles.imgWrapper}>
@@ -23,14 +34,13 @@ const ProjectHeader = ({ project }: { project: projectType }) => {
 						<Spacing space={4} />
 
 						<div className={styles.progress}>
-							{project.phase === 'completed' && (
+							{project.status === 'completed' && (
 								<>
 									<div
 										style={{
-											width: `${(
-												(project.completed / project.Alltasks) *
-												100
-											).toFixed(2)}%`,
+											width: `${((project.completed / allTasks) * 100).toFixed(
+												2
+											)}%`,
 										}}
 										className={styles.completed}
 									/>
@@ -38,63 +48,60 @@ const ProjectHeader = ({ project }: { project: projectType }) => {
 								</>
 							)}
 
-							{project.phase === 'progress' && (
+							{project.status === 'progress' && (
 								<>
 									<div
 										style={{
-											width: `${(
-												(project.completed / project.Alltasks) *
-												100
-											).toFixed(2)}%`,
+											width: `${((project.completed / allTasks) * 100).toFixed(
+												2
+											)}%`,
 										}}
 										className={styles.progress}
 									/>
 									<p>
 										In Progress <span>/</span>{' '}
 										{(
-											(Number(project.completed) / Number(project.Alltasks)) *
+											(Number(project.completed) / Number(allTasks)) *
 											100
 										).toFixed(0)}
 										%
 									</p>
 								</>
 							)}
-							{project.phase === 'rejected' && (
+							{project.status === 'rejected' && (
 								<>
 									<div
 										style={{
-											width: `${(
-												(project.completed / project.Alltasks) *
-												100
-											).toFixed(2)}%`,
+											width: `${((project.completed / allTasks) * 100).toFixed(
+												2
+											)}%`,
 										}}
 										className={styles.rejected}
 									/>
 									<p>
 										Rejected <span>/</span>{' '}
 										{(
-											(Number(project.completed) / Number(project.Alltasks)) *
+											(Number(project.completed) / Number(allTasks)) *
 											100
 										).toFixed(0)}
 										%
 									</p>
 								</>
 							)}
-							{project.phase === 'pending' && (
+							{project.status === 'pending' && (
 								<>
 									<div
 										style={{
-											width: `${(
-												(project.completed / project.Alltasks) *
-												100
-											).toFixed(2)}%`,
+											width: `${((project.completed / allTasks) * 100).toFixed(
+												2
+											)}%`,
 										}}
 										className={styles.pending}
 									/>
 									<p>
 										Pending <span>/</span>{' '}
 										{(
-											(Number(project.completed) / Number(project.Alltasks)) *
+											(Number(project.completed) / Number(allTasks)) *
 											100
 										).toFixed(0)}
 										%
@@ -107,18 +114,18 @@ const ProjectHeader = ({ project }: { project: projectType }) => {
 						<h3>Total Tasks</h3>
 						<Spacing space={4} />
 						<p>
-							{project.completed} <span>/</span> {project.Alltasks}
+							{project.completed} <span>/</span> {allTasks}
 						</p>
 					</div>
 					<div className={styles.column}>
 						<h3>Due Date</h3>
 						<Spacing space={4} />
-						<p>{project.due}</p>
+						<p>{endDate}</p>
 					</div>
 					<div className={styles.column}>
 						<h3>Budget</h3>
 						<Spacing space={4} />
-						<p>$ {project.budget}</p>
+						<p>${project.budget.toFixed(2)}</p>
 					</div>
 				</div>
 				<div className={styles.rightSide}>

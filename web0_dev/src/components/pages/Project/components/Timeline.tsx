@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import styles from './Timeline.module.scss';
 import Spacing from '@/components/General/Spacing';
 import React, { CSSProperties } from 'react';
+import { Phase, Project } from '@prisma/client';
 
 interface Day {
 	id: number;
@@ -10,51 +11,35 @@ interface Day {
 	month: number;
 	year: number;
 }
-const Timeline = () => {
-	const tasks = [
-		{
-			id: 1,
-			name: 'Designing',
-			startDay: new Date(2025, 0, 2),
-			duration: 10,
-			color: '#E8B594',
-		},
-		{
-			id: 2,
-			name: 'Reviewing',
-			startDay: new Date(2025, 0, 11),
-			duration: 15,
-			color: '#EDE9DD',
-		},
-		{
-			id: 3,
-			name: 'Testing',
-			startDay: new Date(2025, 0, 18),
-			duration: 20,
-			color: '#E0E7FF',
-		},
-		{
-			id: 4,
-			name: 'Testing',
-			startDay: new Date(2025, 0, 22),
-			duration: 20,
-			color: '#E8B594',
-		},
-	];
+type projectAndPhases = Omit<Project, 'budget'> & {
+	budget: number;
+	phases: Phase[];
+};
+const Timeline = ({ project }: { project: projectAndPhases }) => {
+	const { phases } = project;
 
-	const start = new Date(tasks[0].startDay);
+	const earliestData = phases.reduce((prev, current) =>
+		prev.startDate < current.startDate ? prev : current
+	);
+	const latestData = phases.reduce((prev, current) =>
+		prev.endDate > current.endDate ? prev : current
+	);
+
+	const start = new Date(earliestData.startDate);
 	start.setDate(start.getDate() - 4);
 
-	const end = new Date(tasks[tasks.length - 1].startDay);
-	end.setDate(end.getDate() + tasks[tasks.length - 1].duration);
+	const end = new Date(latestData.endDate);
+	end.setDate(end.getDate() + 4);
+
 	const calculateDaysDifference = (start: Date, end: Date): number => {
 		const msPerDay = 1000 * 60 * 60 * 24;
 		const diffInMs = end.getTime() - start.getTime();
 		return Math.ceil(diffInMs / msPerDay);
 	};
+
 	const totalDuration = calculateDaysDifference(start, end);
 
-	if (totalDuration < 60) {
+	if (totalDuration < 50) {
 		end.setDate(end.getDate() + 24);
 	}
 
@@ -68,35 +53,36 @@ const Timeline = () => {
 		});
 	}
 
-	const taskSpecial = tasks.map((task) => {
+	const taskSpecial = phases.map((phase) => {
 		const matchingDay = days.find(
 			(day) =>
-				day.label === task.startDay.getDate() &&
-				day.month === task.startDay.getMonth() &&
-				day.year === task.startDay.getFullYear()
+				day.label === phase.startDate.getDate() &&
+				day.month === phase.startDate.getMonth() &&
+				day.year === phase.startDate.getFullYear()
 		);
 		const today = new Date();
-		const startDate = task.startDay;
-		const endDate = new Date(task.startDay);
-		endDate.setDate(endDate.getDate() + task.duration);
+		const startDate = phase.startDate;
+		const endDate = phase.endDate;
 
 		let state: [string, string];
 
-		if (today.getTime() < startDate.getTime()) {
+		if (phase.status === 'Completed') {
+			state = ['Completed', 'Completed'];
+		} else if (today.getTime() < startDate.getTime()) {
 			const daysBefore = calculateDaysDifference(today, startDate);
 			state = [
-				'before',
+				'Not_Started',
 				`Starts in ${daysBefore} day${daysBefore > 1 ? 's' : ''}`,
 			];
 		} else if (today.getTime() <= endDate.getTime()) {
 			const daysLeft = calculateDaysDifference(today, endDate);
-			state = ['during', `${daysLeft} day${daysLeft > 1 ? 's' : ''} left`];
+			state = ['Active', `${daysLeft} day${daysLeft > 1 ? 's' : ''} left`];
 		} else {
-			state = ['complete', 'Completed'];
+			state = ['Completed', 'Completed'];
 		}
 
 		return {
-			...task,
+			...phase,
 			startIndex: matchingDay ? matchingDay.id : 1,
 			state,
 		};
@@ -134,7 +120,6 @@ const Timeline = () => {
 	const getPosTodaynow = getPosToday();
 	const getMonthName = (month: number): string => {
 		const isIncluded = filteredMonths.find((m) => Number(m) === month);
-		console.log('Is Month Included:', isIncluded);
 
 		const monthNames = [
 			'January',
@@ -153,14 +138,16 @@ const Timeline = () => {
 
 		return isIncluded !== undefined ? monthNames[month] : '';
 	};
+	const colors = ['#E8B594', '#EDE9DD', '#E0E7FF'];
+
 	interface CustomCSSProperties extends CSSProperties {
 		'--amount'?: number;
-		'--tasks'?: number;
+		'--phases'?: number;
 	}
 
 	const customStyle: CustomCSSProperties = {
 		'--amount': days.length,
-		'--tasks': tasks.length + 2,
+		'--phases': phases.length + 2,
 	};
 
 	return (
@@ -169,7 +156,7 @@ const Timeline = () => {
 			<Spacing space={10} />
 			<motion.div className={styles.timelineWrapper}>
 				<div className={styles.days} style={customStyle}>
-					{Array.from({ length: tasks.length + 2 }).map((_, i) => (
+					{Array.from({ length: phases.length + 2 }).map((_, i) => (
 						<React.Fragment key={i}>
 							{i === 0 &&
 								days.map((day, index) =>
@@ -208,7 +195,9 @@ const Timeline = () => {
 						<div
 							key={task.id}
 							style={{
-								gridColumn: `${task.startIndex} / span ${task.duration}`,
+								gridColumn: `${task.startIndex} / span ${
+									calculateDaysDifference(task.startDate, task.endDate) + 1
+								}`,
 								gridRow: index + 3,
 								zIndex: 1,
 							}}
@@ -216,14 +205,14 @@ const Timeline = () => {
 							<div
 								className={styles.task}
 								style={{
-									backgroundColor: task.color,
+									backgroundColor: colors[index % colors.length],
 								}}
 							>
-								<p className={styles.leftSide}>{task.name}</p>
+								<p className={styles.leftSide}>{task.title}</p>
 								<p className={styles.rightSide}>
-									{task.state[0] === 'before' ? (
+									{task.state[0] === 'Not_Started' ? (
 										<>{task.state[1]}</>
-									) : task.state[0] === 'during' ? (
+									) : task.state[0] === 'Active' ? (
 										<>{task.state[1]}</>
 									) : (
 										<>{task.state[1]}</>
@@ -236,7 +225,10 @@ const Timeline = () => {
 									height: '8px',
 								}}
 							>
-								{Array.from({ length: task.duration }).map((_, i) => (
+								{Array.from({
+									length:
+										calculateDaysDifference(task.startDate, task.endDate) + 1,
+								}).map((_, i) => (
 									<div key={i} className={styles.borderSpec} />
 								))}
 							</div>
