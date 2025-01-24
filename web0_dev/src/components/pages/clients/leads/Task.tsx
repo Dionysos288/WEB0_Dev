@@ -2,8 +2,8 @@ import styles from './Task.module.scss';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Image from 'next/image';
-import { clientType } from '@/components/types/types';
-const Task = ({ task }: { task: clientType }) => {
+import { Client } from '@prisma/client';
+const Task = ({ task }: { task: Client }) => {
 	const {
 		attributes,
 		listeners,

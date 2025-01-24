@@ -1,7 +1,6 @@
-import { Clients, columnsData } from '@/Data/Clients';
 import TopMenu from '@/components/General/TopMenu';
 
-import ClientGallery from '@/components/pages/clients/leads/ClientGallery';
+import ServerClientGallery from '@/components/Server/ServerClientGallery';
 
 export default function LibraryPage() {
 	return (
@@ -12,7 +11,7 @@ export default function LibraryPage() {
 				AddItem="Add User"
 				foundLink="leads"
 			/>
-			<ClientGallery TasksData={Clients} columnsData={columnsData} />
+			<ServerClientGallery />
 		</>
 	);
 }

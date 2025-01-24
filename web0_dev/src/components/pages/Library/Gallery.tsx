@@ -1,18 +1,26 @@
+import { Library } from '@prisma/client';
 import styles from './Gallery.module.scss';
 import { PlusRound, Bookmark } from '@/svgs';
-const Gallery = () => {
-	const items = Array.from({ length: 8 });
-
+import Link from 'next/link';
+const Gallery = ({ data }: { data: Library[] | Library }) => {
+	const items = Array.isArray(data) ? data : [data];
 	return (
 		<div className={styles.GalleryContainer}>
-			{items.map((_, index) => (
-				<div className={styles.item} key={index}>
+			{items.map((item) => (
+				<Link
+					href={`/library/${item.id}`}
+					className={styles.item}
+					key={item.id}
+				>
 					<div className={styles.GalleryItem}></div>
-					<div className={styles.banner}>
-						<p>Websites</p>
+					<div className={styles.bannerLeft}>
+						<p>{item.component}</p>
+					</div>
+					<div className={styles.bannerRight}>
+						<p>{item.component}</p>
 					</div>
 					<div className={styles.under}>
-						<h3>Cool Button Hover</h3>
+						<h3>{item.title}</h3>
 						<div className={styles.svgs}>
 							<button>
 								<PlusRound />
@@ -22,7 +30,7 @@ const Gallery = () => {
 							</button>
 						</div>
 					</div>
-				</div>
+				</Link>
 			))}
 		</div>
 	);

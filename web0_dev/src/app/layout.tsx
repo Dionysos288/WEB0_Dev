@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.scss';
 import ConsoleLogger from '@/components/General/Consolelogger';
-import Layout from '@/components/General/Layout';
 import LenisWrapper from '@/components/General/LenisWrapper';
+import LayoutClient from '@/components/General/LayoutClient';
 
 const inter = Inter({
 	weight: ['400', '500', '600', '800'],
@@ -27,7 +27,7 @@ export default function RootLayout({
 			<body className={`${inter.variable}`}>
 				<ConsoleLogger />
 				<LenisWrapper>
-					<Layout>{children}</Layout>
+					<LayoutClient>{children}</LayoutClient>
 				</LenisWrapper>
 			</body>
 		</html>

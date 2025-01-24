@@ -4,10 +4,10 @@ import Spacing from '@/components/General/Spacing';
 import ClientProjectHeader from '@/components/pages/Project/client-portal/ClientProjectHeader';
 import Files from '@/components/pages/Project/client-portal/Files';
 import FilterBar from '@/components/General/FilterBar';
-import TaskGallery from '@/components/pages/Project/tasks/TaskGallery';
 
 import EditHeader from '@/components/General/EditHeader';
 import prisma from '@/lib/db';
+import ServerTasksGallery from '@/components/Server/ServerTasksGallery';
 export async function generateMetadata({
 	params,
 }: {
@@ -20,7 +20,6 @@ export async function generateMetadata({
 }
 const page = async ({ params }: { params: { phase: string } }) => {
 	const { phase } = await params;
-	console.log(phase);
 	const phaseData = await prisma.phase.findUnique({
 		where: {
 			id: phase,
@@ -30,7 +29,6 @@ const page = async ({ params }: { params: { phase: string } }) => {
 			tasks: true,
 		},
 	});
-	console.log(phaseData);
 	if (phaseData) {
 		const plainPhases = {
 			...phaseData,
@@ -54,8 +52,7 @@ const page = async ({ params }: { params: { phase: string } }) => {
 				<Spacing space={28} />
 				<FilterBar title="Tasks" search={false} views={true} />
 				<Spacing space={28} />
-
-				{/* <TaskGallery TasksData={TasksData} columnsData={columnsData} /> */}
+				<ServerTasksGallery phase={phase} />
 			</>
 		);
 	}

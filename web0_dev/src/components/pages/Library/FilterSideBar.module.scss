@@ -1,0 +1,66 @@
+.filterSideBar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	padding: 20px 24px;
+	border-right: 1px solid rgba(72, 70, 67, 0.1);
+	min-height: 100vh;
+	min-height: 100svh;
+	width: 212px;
+	background-color: #fff;
+	z-index: 10000000000000000000000000000000000000000000000000000000000000000000000000;
+
+	h2 {
+	}
+	.filterBar {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+
+		.topCategoryItem {
+			span {
+				font-size: calc(15 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(20 / 16 * 1rem);
+				color: var(--main);
+			}
+		}
+		.subCategoryItem {
+			.hor {
+				padding-left: 12px;
+				span {
+					font-size: calc(14 / 16 * 1rem);
+					font-weight: 400;
+					line-height: calc(20 / 16 * 1rem);
+					color: var(--main);
+				}
+			}
+		}
+		.hor {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			padding: 4px 0px;
+			.svg {
+				transition: transform 0.2s var(--ease-out-quad);
+			}
+
+			.svg.rotate {
+				transform: rotate(90deg);
+			}
+		}
+		.items {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+			.subCategory button {
+				&:last-of-type {
+					padding-bottom: 4px;
+				}
+			}
+		}
+	}
+}

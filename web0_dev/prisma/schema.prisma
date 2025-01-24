@@ -44,24 +44,67 @@ enum TaskStatus {
   Completed
 }
 
-model TaskColumn {
-  id    String     @id @default(cuid())
-  title TaskStatus @unique
-  Tasks Task[]
+enum libraryComponent {
+  imageV1
+  imageV2
+  color
+  codefull
+  codeSplit
+}
+
+model LibraryType {
+  id         String     @id @default(cuid())
+  name       String     @unique
+  slug       String     @unique
+  libraries  Library[]
+  categories Category[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Library {
+  id            String           @id @default(cuid())
+  title         String
+  description   String?
+  url           String?
+  libraryTypeId String
+  component     libraryComponent
+  type          LibraryType      @relation(fields: [libraryTypeId], references: [id])
+  favorite      Boolean          @default(false)
+  tags          String[]
+  projectId     String?
+  Project       Project?         @relation(fields: [projectId], references: [id])
+  categoryId    String?
+  Category      Category?        @relation(fields: [categoryId], references: [id])
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model Category {
+  id            String       @id @default(cuid())
+  name          String
+  slug          String
+  parentId      String?
+  parent        Category?    @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  subcategories Category[]   @relation("CategoryHierarchy")
+  libraries     Library[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  LibraryType   LibraryType? @relation(fields: [libraryTypeId], references: [id])
+  libraryTypeId String?
 }
 
 model Task {
-  id           String     @id @default(cuid())
-  title        String
-  description  String?
-  projectId    String
-  project      Project    @relation(fields: [projectId], references: [id])
-  columnStatus TaskStatus
-  TaskColumn   TaskColumn @relation(fields: [columnStatus], references: [title])
-  phaseId      String?
-  Phase        Phase?     @relation(fields: [phaseId], references: [id])
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  projectId   String
+  project     Project    @relation(fields: [projectId], references: [id])
+  status      TaskStatus
+  phaseId     String?
+  Phase       Phase?     @relation(fields: [phaseId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Project {
@@ -77,6 +120,7 @@ model Project {
   completed   Int
   phases      Phase[]
   Files       File[]
+  Library     Library[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 }
@@ -122,11 +166,6 @@ model Client {
   source    ClientSource
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
-}
-
-model ClientColumn {
-  id    String       @id @default(cuid())
-  title ClientStatus @unique
 }
 
 model Note {

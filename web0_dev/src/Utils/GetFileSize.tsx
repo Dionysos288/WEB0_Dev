@@ -1,5 +1,4 @@
 const GetFileSize = (size: number) => {
-	console.log(size);
 	let fileSize = size / 1024;
 	let unit = 'KB';
 	if (fileSize > 1024) {

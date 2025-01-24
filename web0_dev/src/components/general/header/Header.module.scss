@@ -1,14 +1,19 @@
 .header {
-	position: sticky !important;
+	position: fixed;
 	z-index: 1000;
 	background-color: var(--white);
 	top: 0;
+	left: 0;
+	width: calc(100% - var(--widthLeftBar) - var(--widthRightBar));
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	padding: 22px 28px;
 	border-bottom: 1px solid rgba(72, 70, 67, 0.1);
 	margin-bottom: 20px;
+	margin-left: var(--widthLeftBar);
+	transition: margin-left 0.4s var(--ease-in-out-cubic),
+		width 0.4s var(--ease-in-out-cubic);
 
 	.emoji {
 		padding: 4px;
@@ -27,4 +32,18 @@
 			gap: 8px;
 		}
 	}
+}
+.bothOpen {
+	margin-left: 0;
+
+	width: calc(100%);
+}
+
+.leftOpen {
+	margin-left: 0;
+	width: calc(100% - var(--widthRightBar));
+}
+
+.rightOpen {
+	width: calc(100% - var(--widthLeftBar));
 }

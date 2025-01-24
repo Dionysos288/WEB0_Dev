@@ -14,7 +14,6 @@ const ProjectHeader = ({ project }: { project: projectAndTasks }) => {
 		year: 'numeric',
 	});
 	const allTasks = project.tasks.length || 0;
-	console.log(project);
 	return (
 		<div className={styles.headerWrapper}>
 			<div className={styles.imgWrapper}>

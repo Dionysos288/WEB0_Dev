@@ -25,15 +25,6 @@ const page = async ({ params }: { params: { project: string } }) => {
 		},
 	});
 	if (project) {
-		const columnsData = await prisma.taskColumn.findMany({
-			include: {
-				Tasks: {
-					where: {
-						projectId: project.id,
-					},
-				},
-			},
-		});
 		return (
 			<>
 				<TopMenu
@@ -51,7 +42,7 @@ const page = async ({ params }: { params: { project: string } }) => {
 				/>
 				<FilterBar views={true} search={false} />
 				<Spacing space={28} />
-				<TaskGallery TasksData={project.tasks} columnsData={columnsData} />
+				<TaskGallery TasksData={project.tasks} />
 			</>
 		);
 	}

@@ -16,24 +16,41 @@ import Column from './Column';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
 import Task from './Task';
-import { ClientColumnType, clientType } from '@/components/types/types';
+import { Client } from '@prisma/client';
+import { ClientColumnType } from '@/components/types/types';
 
-const ClientGallery = ({
-	TasksData,
-	columnsData,
-}: {
-	TasksData: clientType[];
-	columnsData: ClientColumnType[];
-}) => {
-	const [tasks, setTasks] = useState<clientType[]>(TasksData);
+const ClientGallery = ({ TasksData }: { TasksData: Client[] }) => {
+	const columnsData: ClientColumnType[] = [
+		{
+			id: 1,
+			title: 'Leads',
+			tasks: TasksData.filter((task) => task.status === 'Leads'),
+		},
+		{
+			id: 2,
+			title: 'Contacted',
+			tasks: TasksData.filter((task) => task.status === 'Contacted'),
+		},
+		{
+			id: 3,
+			title: 'Opportunity',
+			tasks: TasksData.filter((task) => task.status === 'Opportunity'),
+		},
+		{
+			id: 4,
+			title: 'Client',
+			tasks: TasksData.filter((task) => task.status === 'Client'),
+		},
+	];
+	const [tasks, setTasks] = useState<Client[]>(TasksData);
 	const [colums, setColumns] = useState<ClientColumnType[]>(columnsData);
-	const [activeTask, setActiveTask] = useState<clientType | null>(null);
+	const [activeTask, setActiveTask] = useState<Client | null>(null);
 	useEffect(() => {
 		setColumns((columns) => {
 			return columns.map((column) => {
 				return {
 					...column,
-					tasks: tasks.filter((task) => task.columnId === column.id),
+					tasks: tasks.filter((task) => task.status === column.title),
 				};
 			});
 		});
@@ -69,21 +86,21 @@ const ClientGallery = ({
 			setTasks((task) => {
 				const activeIndex = task.findIndex((t) => t.id === activeId);
 				const overIndex = task.findIndex((t) => t.id === overId);
-				tasks[activeIndex].columnId = tasks[overIndex].columnId;
+				tasks[activeIndex].status = tasks[overIndex].status;
 				return arrayMove(tasks, activeIndex, overIndex);
 			});
 		}
 		const isOverColumn = over.data.current?.type === 'column';
+		const overColumnTitle = over?.data.current?.title;
 		if (isActiveTask && isOverColumn) {
 			setTasks((task) => {
 				const activeIndex = task.findIndex((t) => t.id === activeId);
-				tasks[activeIndex].columnId = Number(overId);
+				tasks[activeIndex].status = overColumnTitle;
 				return arrayMove(tasks, activeIndex, Number(overId));
 			});
 		}
 	}
 
-	console.log(activeTask);
 	return (
 		<div className={styles.wrapper}>
 			<DndContext

@@ -19,7 +19,7 @@ const Column = ({ column }: { column: ClientColumnType }) => {
 
 	const { attributes, listeners, setNodeRef } = useSortable({
 		id: column.id,
-		data: { type: 'column', column },
+		data: { type: 'column', title: title },
 		disabled: true,
 	});
 

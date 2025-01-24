@@ -10,10 +10,10 @@
 			background-color: #f7f9fb;
 			border-radius: 8px;
 		}
-		.banner {
+		.bannerLeft,
+		.bannerRight {
 			position: absolute;
 			top: 16px;
-			left: 18px;
 			padding: 1px 4px;
 			border-radius: 4px;
 			background-color: #e5ecf6;
@@ -24,6 +24,13 @@
 				color: var(--main-60);
 			}
 		}
+		.bannerLeft {
+			left: 18px;
+		}
+		.bannerRight {
+			right: 18px;
+		}
+
 		.under {
 			display: flex;
 			justify-content: space-between;

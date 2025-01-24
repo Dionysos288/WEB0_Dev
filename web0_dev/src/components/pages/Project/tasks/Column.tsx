@@ -8,20 +8,18 @@ import TaskComponent from './Task';
 import React, { useMemo } from 'react';
 import Spacing from '@/components/General/Spacing';
 import { PlusSpecial } from '@/svgs';
-import { Task, TaskColumn } from '@prisma/client';
+import { TaskColumnType } from '@/components/types/types';
 
-const Column = ({ column }: { column: TaskColumn & { Tasks?: Task[] } }) => {
-	const { title, Tasks } = column;
-
-	const allTasks = Tasks?.length;
+const Column = ({ column }: { column: TaskColumnType }) => {
+	const { title, tasks } = column;
+	const allTasks = tasks.length;
 	const tasksId = useMemo(() => {
-		if (!Tasks) return [];
-		return Tasks.map((task) => task.id);
-	}, [Tasks]);
+		return tasks.map((task) => task.id);
+	}, [tasks]);
 
 	const { attributes, listeners, setNodeRef } = useSortable({
 		id: column.id,
-		data: { type: 'column', column },
+		data: { type: 'column', title: title },
 		disabled: true,
 	});
 
@@ -52,22 +50,14 @@ const Column = ({ column }: { column: TaskColumn & { Tasks?: Task[] } }) => {
 			)}
 			<Spacing space={16} />
 			<div className={styles.column}>
-				{!Tasks ? (
-					<></>
-				) : (
-					<SortableContext
-						items={tasksId}
-						strategy={verticalListSortingStrategy}
-					>
-						{Tasks.map((task) => (
-							<TaskComponent key={task.id} task={task} />
-						))}
-					</SortableContext>
-				)}
-
+				<SortableContext items={tasksId} strategy={verticalListSortingStrategy}>
+					{tasks.map((task) => (
+						<TaskComponent key={task.id} task={task} />
+					))}
+				</SortableContext>
 				<button className={styles.addTask}>
 					<PlusSpecial fill={'var(--main)'} opacity={'0.8'} />
-					<span>Add Task</span>
+					<span>Add User</span>
 				</button>
 			</div>
 		</div>

@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma, Category } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const tasks = [
@@ -13,170 +13,7 @@ const tasks = [
 const completedCount = tasks.filter(
 	(t) => t.columnStatus === 'Completed'
 ).length;
-const Taskdata: Prisma.TaskColumnCreateInput[] = [
-	{
-		title: 'Backlog',
-		Tasks: {
-			create: [
-				{
-					title: 'Task #1 (Allsdftasks P1)',
-					description: 'ik ben description',
-					projectId: '1ABC',
-					phaseId: 'A123',
-				},
-				{
-					title: 'Task #5 (Alltsdfasks P1)',
-					description: 'ik ben description',
-					projectId: '2ABC',
-				},
-				{
-					title: 'Task #6 (Alltsfasks P1)',
-					description: 'ik ben description',
-					projectId: '3ABC',
-				},
-				{
-					title: 'Task #1 (Alltafsks P1)',
-					description: 'ik ben description',
-					projectId: '1ABC',
-					phaseId: 'A123',
-				},
-				{
-					title: 'Task #5 (Alltasdfsks P1)',
-					description: 'ik ben description',
-					projectId: '2ABC',
-				},
-				{
-					title: 'Task #6 (Alltsdfasks P1)',
-					description: 'ik ben description',
-					projectId: '3ABC',
-				},
-				{
-					title: 'Task #1 (Alsfdltasks P1)',
-					description: 'ik ben description',
-					projectId: '1ABC',
-					phaseId: 'A123',
-				},
-				{
-					title: 'Task #5 (Alltassdfks P1)',
-					description: 'ik ben description',
-					projectId: '2ABC',
-				},
-				{
-					title: 'Task #6 (Alltassdfks P1)',
-					projectId: '3ABC',
-				},
-			],
-		},
-	},
-	{
-		title: 'In_Progress',
-		Tasks: {
-			create: [
-				{
-					title: 'Task #1 (Allsdftasks P1)',
-					description: 'ik ben description',
-					projectId: '1ABC',
-					phaseId: 'A123',
-				},
-				{
-					title: 'Task #5 (Alltsdfasks P1)',
-					description: 'ik ben description',
-					projectId: '2ABC',
-				},
-				{
-					title: 'Task #6 (Alltsdfasks P1)',
-					description: 'ik ben description',
-					projectId: '3ABC',
-				},
-				{
-					title: 'Task #1 (Alltsdfasks P1)',
-					description: 'ik ben description',
-					projectId: '1ABC',
-					phaseId: 'A123',
-				},
-				{
-					title: 'Task #5 (Alltsfasks P1)',
-					description: 'ik ben description',
-					projectId: '2ABC',
-				},
-				{
-					title: 'Task #6 (Alltasdfsks P1)',
-					description: 'ik ben description',
-					projectId: '3ABC',
-				},
-				{
-					title: 'Task #1 (Alltassdfks P1)',
-					description: 'ik ben description',
-					projectId: '1ABC',
-					phaseId: 'A123',
-				},
-				{
-					title: 'Task #5 (Alltassdfks P1)',
-					description: 'ik ben description',
-					projectId: '2ABC',
-				},
-				{
-					title: 'Task #6 (Alltassdfks P1)',
-					projectId: '3ABC',
-				},
-			],
-		},
-	},
-	{
-		title: 'Completed',
-		Tasks: {
-			create: [
-				{
-					title: 'Task #1 (Alltassdfks P1)',
-					description: 'ik ben description',
-					projectId: '1ABC',
-					phaseId: 'A123',
-				},
-				{
-					title: 'Task #5 (Alltsdfasks P1)',
-					description: 'ik ben description',
-					projectId: '2ABC',
-				},
-				{
-					title: 'Task #6 (Alltassdfks P1)',
-					description: 'ik ben description',
-					projectId: '3ABC',
-				},
-				{
-					title: 'Task #1 (Alltasdfsks P1)',
-					description: 'ik ben description',
-					projectId: '1ABC',
-					phaseId: 'A123',
-				},
-				{
-					title: 'Task #5 (Alltasdfsks P1)',
-					description: 'ik ben description',
-					projectId: '2ABC',
-				},
-				{
-					title: 'Task #6 (Alltassdfks P1)',
-					description: 'ik ben description',
-					projectId: '3ABC',
-				},
-				{
-					title: 'Task #1 (Allsdftasks P1)',
-					description: 'ik ben description',
-					projectId: '1ABC',
-					phaseId: 'A123',
-				},
-				{
-					title: 'Task #5 (Alsdfltasks P1)',
-					description: 'ik ben description',
-					projectId: '2ABC',
-				},
-				{
-					title: 'Task #6 (Alltasksdfs P1)',
-					projectId: '3ABC',
-				},
-			],
-		},
-	},
-];
+
 const projectData: Prisma.ProjectCreateInput[] = [
 	{
 		id: '1ABC',
@@ -220,6 +57,43 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				},
 			],
 		},
+		tasks: {
+			create: [
+				{
+					title: 'Task #1 (Alltasks P1)',
+					description: 'Task #1 description',
+					status: 'Backlog',
+					phaseId: 'A123',
+				},
+				{
+					title: 'Task #2 (Alltasks P1)',
+					description: 'Task #2 description',
+					status: 'In_Progress',
+					phaseId: 'A123',
+				},
+				{
+					title: 'Task #3 (Alltasks P1)',
+					description: 'Task #3 description',
+					status: 'Completed',
+					phaseId: 'A123',
+				},
+				{
+					title: 'Task #4 (Alltasks P1)',
+					description: 'Task #4 description',
+					status: 'In_Progress',
+				},
+				{
+					title: 'Task #5 (Alltasks P1)',
+					description: 'Task #5 description',
+					status: 'Backlog',
+				},
+				{
+					title: 'Task #6 (Alltasks P1)',
+					description: 'Task #6 description',
+					status: 'Backlog',
+				},
+			],
+		},
 		Files: {
 			create: [
 				{
@@ -249,7 +123,40 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		team: ['John', 'Doe'],
 		status: 'rejected',
 		completed: completedCount,
-
+		tasks: {
+			create: [
+				{
+					title: 'Task #1 (Alltasks P1)',
+					description: 'Task #1 description',
+					status: 'Backlog',
+				},
+				{
+					title: 'Task #2 (Alltasks P1)',
+					description: 'Task #2 description',
+					status: 'In_Progress',
+				},
+				{
+					title: 'Task #3 (Alltasks P1)',
+					description: 'Task #3 description',
+					status: 'Completed',
+				},
+				{
+					title: 'Task #4 (Alltasks P1)',
+					description: 'Task #4 description',
+					status: 'In_Progress',
+				},
+				{
+					title: 'Task #5 (Alltasks P1)',
+					description: 'Task #5 description',
+					status: 'Backlog',
+				},
+				{
+					title: 'Task #6 (Alltasks P1)',
+					description: 'Task #6 description',
+					status: 'Backlog',
+				},
+			],
+		},
 		phases: {
 			create: [
 				{
@@ -311,7 +218,40 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		team: ['John', 'Doe'],
 		status: 'progress',
 		completed: completedCount,
-
+		tasks: {
+			create: [
+				{
+					title: 'Task #1 (Alltasks P1)',
+					description: 'Task #1 description',
+					status: 'Backlog',
+				},
+				{
+					title: 'Task #2 (Alltasks P1)',
+					description: 'Task #2 description',
+					status: 'In_Progress',
+				},
+				{
+					title: 'Task #3 (Alltasks P1)',
+					description: 'Task #3 description',
+					status: 'Completed',
+				},
+				{
+					title: 'Task #4 (Alltasks P1)',
+					description: 'Task #4 description',
+					status: 'In_Progress',
+				},
+				{
+					title: 'Task #5 (Alltasks P1)',
+					description: 'Task #5 description',
+					status: 'Backlog',
+				},
+				{
+					title: 'Task #6 (Alltasks P1)',
+					description: 'Task #6 description',
+					status: 'Backlog',
+				},
+			],
+		},
 		phases: {
 			create: [
 				{
@@ -530,9 +470,7 @@ export async function main() {
 	for (const u of projectData) {
 		await prisma.project.create({ data: u });
 	}
-	for (const u of Taskdata) {
-		await prisma.taskColumn.create({ data: u });
-	}
+
 	for (const u of clientData) {
 		await prisma.client.create({ data: u });
 	}
@@ -542,6 +480,198 @@ export async function main() {
 	for (const u of noteData) {
 		await prisma.note.create({ data: u });
 	}
+
+	const frontendType = await prisma.libraryType.create({
+		data: {
+			name: 'Frontend',
+			slug: 'frontend',
+		},
+	});
+
+	const backendType = await prisma.libraryType.create({
+		data: {
+			name: 'Backend',
+			slug: 'backend',
+		},
+	});
+
+	async function createCategories(libraryTypeId: string, baseName: string) {
+		const category1 = await prisma.category.create({
+			data: {
+				name: `${baseName} Components`,
+				slug: `${baseName.toLowerCase()}-components`,
+				libraryTypeId,
+			},
+		});
+
+		const category2 = await prisma.category.create({
+			data: {
+				name: `${baseName} Utilities`,
+				slug: `${baseName.toLowerCase()}-utilities`,
+				libraryTypeId,
+			},
+		});
+
+		const subcategory1 = await prisma.category.create({
+			data: {
+				name: 'Buttons',
+				slug: 'buttons',
+				parentId: category1.id,
+				libraryTypeId,
+			},
+		});
+
+		const subcategory2 = await prisma.category.create({
+			data: {
+				name: 'Forms',
+				slug: 'forms',
+				parentId: category1.id,
+				libraryTypeId,
+			},
+		});
+
+		const subSubcategory1 = await prisma.category.create({
+			data: {
+				name: 'Black Buttons',
+				slug: 'black-buttons',
+				parentId: subcategory1.id,
+				libraryTypeId,
+			},
+		});
+
+		const subSubcategory2 = await prisma.category.create({
+			data: {
+				name: 'Orange Buttons',
+				slug: 'orange-buttons',
+				parentId: subcategory1.id,
+				libraryTypeId,
+			},
+		});
+
+		const subSubcategory3 = await prisma.category.create({
+			data: {
+				name: 'Black Forms',
+				slug: 'black-forms',
+				parentId: subcategory2.id,
+				libraryTypeId,
+			},
+		});
+
+		const subSubcategory4 = await prisma.category.create({
+			data: {
+				name: 'Orange Forms',
+				slug: 'orange-forms',
+				parentId: subcategory2.id,
+				libraryTypeId,
+			},
+		});
+
+		const subcategory3 = await prisma.category.create({
+			data: {
+				name: 'Helpers',
+				slug: 'helpers',
+				parentId: category2.id,
+				libraryTypeId,
+			},
+		});
+
+		const subcategory4 = await prisma.category.create({
+			data: {
+				name: 'Middlewares',
+				slug: 'middlewares',
+				parentId: category2.id,
+				libraryTypeId,
+			},
+		});
+
+		const subSubcategory5 = await prisma.category.create({
+			data: {
+				name: 'Black Helpers',
+				slug: 'black-helpers',
+				parentId: subcategory3.id,
+				libraryTypeId,
+			},
+		});
+
+		const subSubcategory6 = await prisma.category.create({
+			data: {
+				name: 'Orange Helpers',
+				slug: 'orange-helpers',
+				parentId: subcategory3.id,
+				libraryTypeId,
+			},
+		});
+
+		const subSubcategory7 = await prisma.category.create({
+			data: {
+				name: 'Black Middlewares',
+				slug: 'black-middlewares',
+				parentId: subcategory4.id,
+				libraryTypeId,
+			},
+		});
+
+		const subSubcategory8 = await prisma.category.create({
+			data: {
+				name: 'Orange Middlewares',
+				slug: 'orange-middlewares',
+				parentId: subcategory4.id,
+				libraryTypeId,
+			},
+		});
+
+		return [
+			category1,
+			category2,
+			subcategory1,
+			subcategory2,
+			subcategory3,
+			subcategory4,
+			subSubcategory1,
+			subSubcategory2,
+			subSubcategory3,
+			subSubcategory4,
+			subSubcategory5,
+			subSubcategory6,
+			subSubcategory7,
+			subSubcategory8,
+		];
+	}
+
+	const frontendCategories = await createCategories(
+		frontendType.id,
+		'Frontend'
+	);
+
+	const backendCategories = await createCategories(backendType.id, 'Backend');
+
+	async function createLibraries(
+		libraryTypeId: string,
+		baseName: string,
+		categories: Category[]
+	) {
+		for (let i = 1; i <= 10; i++) {
+			const randomCategory =
+				categories[Math.floor(Math.random() * categories.length)];
+
+			await prisma.library.create({
+				data: {
+					title: `${baseName} Library ${i}`,
+					description: `Description for ${baseName} Library ${i}`,
+					url: `https://example.com/${baseName.toLowerCase()}-library-${i}`,
+					libraryTypeId,
+					component: 'codeSplit',
+					favorite: i % 2 === 0,
+					tags: [`${baseName.toLowerCase()}`, `tag${i}`],
+					categoryId: randomCategory.id,
+				},
+			});
+		}
+	}
+
+	await createLibraries(frontendType.id, 'Frontend', frontendCategories);
+
+	await createLibraries(backendType.id, 'Backend', backendCategories);
 }
 
 main();
