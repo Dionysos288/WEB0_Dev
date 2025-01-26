@@ -16,9 +16,11 @@ export async function generateMetadata({
 	};
 }
 const page = async ({ params }: { params: { note: string } }) => {
+	const { note } = await params;
+
 	const notesData = await prisma.note.findUnique({
 		where: {
-			id: params.note,
+			id: note,
 		},
 	});
 	if (notesData) {

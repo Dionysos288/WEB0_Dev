@@ -18,9 +18,6 @@
 	--table-bottom: 1px solid var(--main-10);
 	overflow-x: auto;
 
-	--HoverIn: all 0.15s ease;
-	--HoverOut: all 0.2s ease;
-
 	.space {
 		display: flex;
 		align-items: center;
@@ -35,7 +32,7 @@
 		height: 100%;
 		border-bottom: var(--table-bottom);
 		cursor: pointer;
-		transition: var(--HoverOut);
+		transition: all var(--hover-out);
 	}
 	.border,
 	.borderS {
@@ -55,7 +52,7 @@
 	.borderS {
 		border-bottom: var(--table-bottom);
 		cursor: pointer;
-		transition: var(--HoverOut);
+		transition: all var(--hover-out);
 	}
 
 	.tableHeader {
@@ -82,17 +79,17 @@
 		overflow: hidden;
 		&:hover {
 			.borderS {
-				transition: var(--HoverIn);
+				transition: all var(--hover-in);
 				// border-top-left-radius: 8px;
 				// border-bottom-left-radius: 8px;
 				background-color: var(--lightBlue);
 			}
 			.tableCell {
-				transition: var(--HoverIn);
+				transition: all var(--hover-in);
 				background-color: var(--lightBlue);
 			}
 			.dots {
-				transition: var(--HoverIn);
+				transition: all var(--hover-in);
 				background-color: var(--lightBlue);
 				// border-top-right-radius: 8px;
 				// border-bottom-right-radius: 8px;
@@ -105,7 +102,7 @@
 			align-items: center;
 			gap: 4px;
 			height: 100%;
-			transition: var(--HoverOut);
+			transition: all var(--hover-out);
 
 			&:nth-of-type(2) {
 				padding: 8px 16px 8px 4px;
@@ -129,16 +126,16 @@
 	}
 	.active {
 		.borderS {
-			transition: var(--HoverIn);
+			transition: all var(--hover-in);
 
 			background-color: var(--lightBlue);
 		}
 		.tableCell {
-			transition: var(--HoverIn);
+			transition: all var(--hover-in);
 			background-color: var(--lightBlue);
 		}
 		.dots {
-			transition: var(--HoverIn);
+			transition: all var(--hover-in);
 			background-color: var(--lightBlue);
 		}
 		&:hover {

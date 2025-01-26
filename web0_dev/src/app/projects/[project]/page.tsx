@@ -18,9 +18,11 @@ export async function generateMetadata({
 	};
 }
 const page = async ({ params }: { params: { project: string } }) => {
+	const { project } = await params;
+
 	const projectData = await prisma.project.findUnique({
 		where: {
-			id: params.project,
+			id: project,
 		},
 		include: {
 			tasks: true,

@@ -17,9 +17,10 @@ export async function generateMetadata({
 	};
 }
 const page = async ({ params }: { params: { item: string } }) => {
+	const { item } = await params;
 	const libraryItem = await prisma.library.findUnique({
 		where: {
-			id: params.item,
+			id: item,
 		},
 	});
 	if (libraryItem) {
@@ -35,6 +36,7 @@ const page = async ({ params }: { params: { item: string } }) => {
 			return <CodeSplitPage />;
 		}
 	}
+	return null;
 };
 
 export default page;

@@ -5,6 +5,7 @@ import { CSS } from '@dnd-kit/utilities';
 import Image from 'next/image';
 import { Clock, Message } from '@/svgs';
 import { Task as TaskType } from '@prisma/client';
+import getTaskPriority from '@/Utils/GetTaskPriority';
 const Task = ({ task }: { task: TaskType }) => {
 	const {
 		attributes,
@@ -38,16 +39,18 @@ const Task = ({ task }: { task: TaskType }) => {
 			style={style}
 			className={styles.task}
 		>
-			<div className={styles.tooltip}>
-				<p>Ui Design</p>
+			<div className={styles.row}>
+				<div className={styles.tooltip}>
+					<p>Ui Design</p>
+				</div>
+				<div className={styles.tooltip}>
+					<p>{getTaskPriority(task.priority)}</p>
+				</div>
 			</div>
 			<div className={styles.middle}>
 				<h3>{task.title}</h3>
 				<Spacing space={4} />
-				<p>
-					First, a disclaimer – the entire process writing a blog post often
-					takes a couple of hours if you can type
-				</p>
+				<p>{task.description}</p>
 			</div>
 			<div className={styles.bottom}>
 				<div className={styles.imgWrapper}>

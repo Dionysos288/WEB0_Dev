@@ -6,9 +6,15 @@
 	.item {
 		position: relative;
 		.GalleryItem {
+			position: relative;
 			aspect-ratio: 16/9;
-			background-color: #f7f9fb;
 			border-radius: 8px;
+			overflow: hidden;
+			width: 100%;
+
+			img {
+				object-fit: cover;
+			}
 		}
 		.bannerLeft,
 		.bannerRight {

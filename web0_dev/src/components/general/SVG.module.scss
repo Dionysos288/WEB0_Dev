@@ -1,0 +1,11 @@
+.button {
+	padding: 4px;
+	border-radius: 8px;
+	position: relative;
+	transition: all var(--hover-out);
+
+	&:hover {
+		transition: all var(--hover-in);
+		background-color: var(--main-10);
+	}
+}

@@ -1,10 +1,9 @@
-import projects from '@/Data/Projects';
 import type { Metadata } from 'next';
 
-import FilterBar from '@/components/General/FilterBar';
 import Spacing from '@/components/General/Spacing';
-import Gallery from '@/components/pages/Library/Gallery';
 import TopMenu from '@/components/General/TopMenu';
+import prisma from '@/lib/db';
+import LibraryPage from '@/components/pages/Library/LibraryPage';
 export async function generateMetadata({
 	params,
 }: {
@@ -16,8 +15,44 @@ export async function generateMetadata({
 	};
 }
 const page = async ({ params }: { params: { project: string } }) => {
-	const project = projects.find((project) => project.id === params.project);
+	const WaitedProp = await params;
+	console.log(WaitedProp);
+	const project = await prisma.project.findFirst({
+		where: {
+			id: WaitedProp.project,
+		},
+	});
+
+	const libraryData = await prisma.libraryType.findMany({
+		orderBy: {
+			createdAt: 'desc',
+		},
+		include: {
+			categories: {
+				include: {
+					subcategories: {
+						include: {
+							subcategories: true,
+						},
+					},
+				},
+			},
+			libraries: {
+				include: {
+					Category: true,
+				},
+				where: {
+					projectId: WaitedProp.project,
+				},
+
+				orderBy: {
+					createdAt: 'desc',
+				},
+			},
+		},
+	});
 	if (project) {
+		console.log(libraryData);
 		return (
 			<>
 				<TopMenu
@@ -33,10 +68,9 @@ const page = async ({ params }: { params: { project: string } }) => {
 					AddItem="Add Task"
 					foundLink="library"
 				/>
-				<FilterBar views={true} />
 				<Spacing space={28} />
 
-				<Gallery />
+				<LibraryPage projectPage={true} libraryData={libraryData} />
 			</>
 		);
 	}

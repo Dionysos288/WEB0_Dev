@@ -1,9 +1,15 @@
+import React from 'react';
+import styles from './SVG.module.scss';
+
 const SVG = ({
 	children,
-}: Readonly<{
-	children: React.ReactNode;
-}>) => {
-	return <button style={{ padding: '4px' }}>{children}</button>;
+	...props
+}: React.PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>) => {
+	return (
+		<button className={styles.button} {...props}>
+			{children}
+		</button>
+	);
 };
 
 export default SVG;

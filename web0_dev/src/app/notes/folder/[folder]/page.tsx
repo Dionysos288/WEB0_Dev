@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Spacing from '@/components/General/Spacing';
-import FilterBar from '@/components/General/FilterBar';
+// import FilterBar from '@/components/General/filterBar/FilterBar';
 import NoteGallery from '@/components/pages/notes/NoteGallery';
 import prisma from '@/lib/db';
 
@@ -15,9 +15,11 @@ export async function generateMetadata({
 	};
 }
 const page = async ({ params }: { params: { folder: string } }) => {
+	const { folder } = await params;
+
 	const Folder = await prisma.folder.findUnique({
 		where: {
-			id: params.folder,
+			id: folder,
 		},
 		include: {
 			notes: true,
@@ -26,7 +28,7 @@ const page = async ({ params }: { params: { folder: string } }) => {
 	if (Folder) {
 		return (
 			<>
-				<FilterBar title="My Notes" />
+				{/* <FilterBar title="My Notes" /> */}
 				<Spacing space={28} />
 				<NoteGallery
 					notesData={Folder.notes}

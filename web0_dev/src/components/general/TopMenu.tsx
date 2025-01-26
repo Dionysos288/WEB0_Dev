@@ -22,14 +22,18 @@ const TopMenu: React.FC<TopMenuProps> = ({
 	ExtraItems,
 	foundLink,
 }) => {
+	console.log(ExtraItems);
 	const router = usePathname();
 
 	if (!foundLink) {
 		const urlParts = router.split('/');
 		const mainLinkIndex = urlParts.indexOf(mainLink);
-		if (mainLinkIndex !== -1 && mainLinkIndex < urlParts.length - 1) {
+		if (urlParts.length === 2 && urlParts[1] === mainLink) {
+			foundLink = `/${mainLink}`;
+		} else if (mainLinkIndex !== -1 && mainLinkIndex < urlParts.length - 1) {
 			foundLink = urlParts.slice(mainLinkIndex).join('/');
 		}
+		console.log(foundLink);
 	}
 	return (
 		<div className={styles.container}>

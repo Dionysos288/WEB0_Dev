@@ -1,4 +1,4 @@
-import FilterBar from '@/components/General/FilterBar';
+import FilterBar from '@/components/General/filterBar/FilterBar';
 import Spacing from '@/components/General/Spacing';
 import { TableHeader } from '@/components/types/types';
 import ContactStatus from '@/components/pages/clients/overview/ContactStatus';

@@ -3,6 +3,7 @@ import { File, Figma } from '@/svgs';
 import Spacing from '@/components/General/Spacing';
 import { Note } from '@prisma/client';
 const FileEditing = ({ note }: { note: Note }) => {
+	console.log(note);
 	return (
 		<>
 			<div className={styles.wrapper}>

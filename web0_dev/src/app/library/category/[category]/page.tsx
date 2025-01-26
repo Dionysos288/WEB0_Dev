@@ -13,7 +13,7 @@ export async function generateMetadata({
 	};
 }
 const page = async ({ params }: { params: { category: string } }) => {
-	const { category } = params;
+	const { category } = await params;
 	const libraryData = await prisma.libraryType.findUnique({
 		where: {
 			slug: category,
@@ -28,7 +28,14 @@ const page = async ({ params }: { params: { category: string } }) => {
 					},
 				},
 			},
-			libraries: true,
+			libraries: {
+				include: {
+					Category: true,
+				},
+				orderBy: {
+					createdAt: 'desc',
+				},
+			},
 		},
 	});
 	if (libraryData) {

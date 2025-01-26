@@ -2,24 +2,42 @@
 import { useState } from 'react';
 import { Arrow } from '@/svgs';
 import { motion } from 'motion/react';
-import { Category, Library, LibraryType } from '@prisma/client';
+import { Category } from '@prisma/client';
 import styles from './FilterSideBar.module.scss';
-import { updateDataFiltered } from '@/actions/GetLibraryItems';
+import { updateFilterLibrary } from '@/actions/CRUDLibrary';
+import {
+	ExtendedLibrary,
+	LibraryData,
+	SortOptions,
+} from '@/components/types/types';
 
 type ExtendedCategory = Category & { subcategories: ExtendedCategory[] };
-
 export default function FilterSideBar({
 	data,
 	setData,
+	setIsFilterOpen,
+	favorite,
+	isFilterOpen,
+	selectedCategories,
+	setSelectedCategories,
+	query,
+	sortType,
 }: {
-	data: LibraryType & { categories: ExtendedCategory[] };
-	setData: React.Dispatch<React.SetStateAction<Library[]>>;
+	data: LibraryData | LibraryData[];
+	favorite: boolean;
+	setData: React.Dispatch<React.SetStateAction<ExtendedLibrary[]>>;
+	setIsFilterOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+	isFilterOpen?: boolean;
+	selectedCategories: string[];
+	setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
+	query: string;
+	sortType: [SortOptions, boolean];
 }) {
+	console.log(setIsFilterOpen);
 	const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
 		{}
 	);
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
+	const id = Array.isArray(data) ? undefined : data.id;
 	function getAllChildNames(category: ExtendedCategory): string[] {
 		if (!category.subcategories?.length) return [];
 		return category.subcategories.reduce<string[]>((acc, subcat) => {
@@ -51,9 +69,13 @@ export default function FilterSideBar({
 		}
 		setSelectedCategories(newSelectedCategories);
 
-		const updatedData = await updateDataFiltered({
+		const updatedData = await updateFilterLibrary({
 			selectedCategories: newSelectedCategories,
-			id: data.id,
+			id: id,
+			type: sortType[0],
+			query,
+			favorite: favorite,
+			isAscending: sortType[1],
 		});
 		setData(updatedData.data);
 	}
@@ -122,13 +144,22 @@ export default function FilterSideBar({
 	}
 
 	return (
-		<div className={styles.filterSideBar}>
+		<div
+			className={styles.filterSideBar}
+			style={isFilterOpen ? { left: '0' } : { left: '-100%' }}
+		>
 			<h2>Filters</h2>
 			<div className={styles.selectedInfo}>
 				Selected: {selectedCategories.join(', ')}
 			</div>
 			<div className={styles.filterBar}>
-				{data?.categories && renderCategories(data.categories)}
+				{Array.isArray(data)
+					? data.map(
+							(libraryType) =>
+								libraryType.categories &&
+								renderCategories(libraryType.categories)
+					  )
+					: data.categories && renderCategories(data.categories)}
 			</div>
 		</div>
 	);

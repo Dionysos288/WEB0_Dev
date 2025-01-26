@@ -1,0 +1,98 @@
+.title {
+	font-size: calc(16 / 16 * 1rem);
+	font-weight: 600;
+	line-height: calc(20 / 16 * 1rem);
+	margin-bottom: 12px;
+}
+.filterContainer {
+	border-radius: 8px;
+	background-color: #f7f9fb;
+	padding: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border: 1px solid var(--main-5);
+	box-shadow: var(--boxShadow-sm);
+	.leftSide {
+		display: flex;
+		gap: 8px;
+		height: min-content;
+		.buttons {
+			display: flex;
+			gap: 4px;
+			align-items: center;
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 400;
+			line-height: calc(20 / 16 * 1rem);
+			color: var(--main);
+		}
+	}
+	.inputWrapper {
+		position: relative;
+		width: 160px;
+		.searchInput {
+			width: 100%;
+			padding: 6px 20px 6px 28px;
+			border: 1px solid #ccc;
+			border-radius: 6px;
+			border: 1px solid var(--main-15);
+			background: rgba(255, 255, 255, 0.8);
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 400;
+			line-height: calc(20 / 16 * 1rem);
+			color: var(--main);
+			&::placeholder {
+				color: var(--main-40);
+			}
+			&:focus {
+				outline: none;
+				border-color: var(--main-30);
+			}
+
+			&:focus ~ .searchIcon svg {
+				opacity: 0.8;
+			}
+		}
+		.searchIcon {
+			position: absolute;
+			left: 6px;
+			top: 50%;
+			transform: translateY(-50%);
+			transition: all 0.15s ease;
+
+			> svg {
+				transition: all 0.1s ease;
+
+				opacity: 0.4;
+			}
+		}
+		.closeIcon {
+			position: absolute;
+			right: 0px;
+			top: 50%;
+			transform: translateY(-50%);
+			padding: 4px;
+			cursor: pointer;
+			transition: all var(--hover-out);
+
+			> svg {
+				transition: all var(--hover-in);
+			}
+		}
+		.closeSVG {
+			> svg {
+				opacity: 0;
+			}
+		}
+		.full {
+			> svg {
+				opacity: 0.25;
+			}
+			&:hover {
+				> svg {
+					opacity: 0.55;
+				}
+			}
+		}
+	}
+}

@@ -14,20 +14,25 @@
 	touch-action: none;
 	border: 1px solid var(--main-5);
 	box-shadow: var(--boxShadow-xs);
+	.row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		.tooltip {
+			padding: 1px 4px;
+			border-radius: 4px;
+			background-color: var(--purple);
+			width: fit-content;
 
-	.tooltip {
-		padding: 1px 4px;
-		border-radius: 4px;
-		background-color: var(--purple);
-		width: fit-content;
-
-		p {
-			font-size: calc(12 / 16 * 1rem);
-			font-weight: 400;
-			line-height: calc(18 / 16 * 1rem);
-			color: var(--main-60);
+			p {
+				font-size: calc(12 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(18 / 16 * 1rem);
+				color: var(--main-60);
+			}
 		}
 	}
+
 	.middle {
 		h3 {
 			font-size: calc(14 / 16 * 1rem);

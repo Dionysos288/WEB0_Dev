@@ -1,0 +1,39 @@
+.sortOptions {
+	position: absolute;
+	padding: 8px;
+	background-color: var(--white);
+	border-radius: 8px;
+	min-width: 240px;
+	width: max-content;
+	z-index: 2;
+	top: calc(100% + 2px);
+	left: -4px;
+	border: 1px solid var(--main-5);
+	box-shadow: var(--boxShadow-xs);
+	.button {
+		padding: 8px;
+		border-radius: 4px;
+		width: 100%;
+		display: flex;
+		gap: 60px;
+		justify-content: space-between;
+		align-items: center;
+		transition: all var(--hover-out);
+
+		&:hover {
+			transition: all var(--hover-in);
+			background-color: var(--main-5);
+		}
+		.leftSide {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+			span {
+				width: 100%;
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(20 / 16 * 1rem);
+			}
+		}
+	}
+}

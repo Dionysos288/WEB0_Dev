@@ -2,19 +2,18 @@
 import React, { useState } from 'react';
 import styles from './TableData.module.scss';
 import { Dots } from '@/svgs';
-import { TableHeader } from '@/components/types/types';
-import { Client, File } from '@prisma/client';
+import { DataType, fileType, TableHeader } from '@/components/types/types';
 import getTimeAgo from '@/Utils/GetTimeAgo';
 import {
 	getFileType,
 	getImagePerson,
 	getTypePerson,
 } from '@/Utils/GetAddOnsTable';
+import { Client } from '@prisma/client';
+import GetFileSize from '@/Utils/GetFileSize';
 type CSSPropertiesWithVars = React.CSSProperties & {
 	'--amount'?: string | number;
 };
-type fileType = Omit<File, 'size'>;
-type DataType = fileType | Client;
 
 const TableData = ({
 	type,
@@ -22,9 +21,10 @@ const TableData = ({
 	tableHeaders,
 }: {
 	type: string;
-	tableData: DataType[];
+	tableData: fileType[] | Client[];
 	tableHeaders: TableHeader[];
 }) => {
+	console.log('tableData', tableData);
 	const [onHover, setOnHover] = useState<string | null>(null);
 	const [active, setActive] = useState<string[]>([]);
 
@@ -80,7 +80,11 @@ const TableData = ({
 					{tableHeaders.map((header, index) => {
 						const value = data[header[0] as keyof DataType];
 						const displayValue =
-							value instanceof Date ? getTimeAgo(String(value)) : value;
+							value instanceof Date
+								? getTimeAgo(String(value))
+								: header[2] && header[2] === 'size'
+								? GetFileSize(Number(data[header[0] as keyof DataType]))
+								: value;
 
 						return (
 							<React.Fragment key={`${data.id}-${header[0]}`}>
@@ -110,6 +114,7 @@ const TableData = ({
 											{getFileType(String(data[header[0] as keyof DataType]))}
 										</>
 									)}
+
 									{header[2] && header[2] === 'user' && (
 										<>
 											{getImagePerson(

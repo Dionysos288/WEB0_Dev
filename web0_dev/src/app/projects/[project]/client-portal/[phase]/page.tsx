@@ -3,11 +3,12 @@ import type { Metadata } from 'next';
 import Spacing from '@/components/General/Spacing';
 import ClientProjectHeader from '@/components/pages/Project/client-portal/ClientProjectHeader';
 import Files from '@/components/pages/Project/client-portal/Files';
-import FilterBar from '@/components/General/FilterBar';
+// import FilterBar from '@/components/General/filterBar/FilterBar';
 
 import EditHeader from '@/components/General/EditHeader';
 import prisma from '@/lib/db';
 import ServerTasksGallery from '@/components/Server/ServerTasksGallery';
+import ClientTasksPage from '@/components/pages/Project/tasks/ClientTasksPage';
 export async function generateMetadata({
 	params,
 }: {
@@ -50,9 +51,7 @@ const page = async ({ params }: { params: { phase: string } }) => {
 
 				<Files files={plainPhases.files} />
 				<Spacing space={28} />
-				<FilterBar title="Tasks" search={false} views={true} />
-				<Spacing space={28} />
-				<ServerTasksGallery phase={phase} />
+				<ClientTasksPage tasksData={plainPhases.tasks} phase={true} />
 			</>
 		);
 	}

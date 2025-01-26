@@ -1,7 +1,12 @@
-import prisma from '@/lib/db';
 import LibraryPage from '@/components/pages/Library/LibraryPage';
+import prisma from '@/lib/db';
+import type { Metadata } from 'next';
 
-export default async function Page() {
+export const metadata: Metadata = {
+	title: 'Library',
+	description: '',
+};
+const page = async () => {
 	const libraryData = await prisma.libraryType.findMany({
 		orderBy: {
 			createdAt: 'desc',
@@ -20,7 +25,9 @@ export default async function Page() {
 				include: {
 					Category: true,
 				},
-
+				where: {
+					favorite: true,
+				},
 				orderBy: {
 					createdAt: 'desc',
 				},
@@ -37,7 +44,7 @@ export default async function Page() {
 			'Favorites',
 		];
 		const menuLinks = [
-			'/library',
+			'library/',
 			...libraryTypes.map((item) => `library/category/${item.slug}`),
 			'library/favorites',
 		];
@@ -45,7 +52,7 @@ export default async function Page() {
 		return (
 			<>
 				<LibraryPage
-					homePage={true}
+					favorite={true}
 					menuItems={menuItems}
 					menuLinks={menuLinks}
 					libraryData={libraryData}
@@ -53,4 +60,6 @@ export default async function Page() {
 			</>
 		);
 	}
-}
+};
+
+export default page;

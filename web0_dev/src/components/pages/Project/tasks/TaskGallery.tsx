@@ -19,25 +19,30 @@ import TaskComponent from './Task';
 import { Task } from '@prisma/client';
 import { TaskColumnType } from '@/components/types/types';
 
-const TaskGallery = ({ TasksData }: { TasksData: Task[] }) => {
+const TaskGallery = ({
+	tasks,
+	setTasks,
+}: {
+	tasks: Task[];
+	setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+}) => {
 	const columnsData: TaskColumnType[] = [
 		{
 			id: 1,
 			title: 'Backlog',
-			tasks: TasksData.filter((task) => task.status === 'Backlog'),
+			tasks: tasks.filter((task) => task.status === 'Backlog'),
 		},
 		{
 			id: 2,
 			title: 'In_Progress',
-			tasks: TasksData.filter((task) => task.status === 'In_Progress'),
+			tasks: tasks.filter((task) => task.status === 'In_Progress'),
 		},
 		{
 			id: 3,
 			title: 'Completed',
-			tasks: TasksData.filter((task) => task.status === 'Completed'),
+			tasks: tasks.filter((task) => task.status === 'Completed'),
 		},
 	];
-	const [tasks, setTasks] = useState<Task[]>(TasksData);
 	const [colums, setColumns] = useState<TaskColumnType[]>(columnsData);
 	const [activeTask, setActiveTask] = useState<Task | null>(null);
 	useEffect(() => {

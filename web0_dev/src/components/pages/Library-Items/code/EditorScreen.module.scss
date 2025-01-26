@@ -19,10 +19,10 @@
 
 				border-top-left-radius: 8px;
 				border-top-right-radius: 8px;
-				transition: all 0.2s ease-in;
+				transition: all var(--hover-out);
 
 				&:hover {
-					transition: all 0.15s ease-in;
+					transition: all var(--hover-in);
 					background-color: rgba(30, 30, 30, 1);
 				}
 				h6 {
@@ -88,10 +88,10 @@
 
 				border-top-left-radius: 8px;
 				border-top-right-radius: 8px;
-				transition: all 0.2s ease-in;
+				transition: all var(--hover-out);
 
 				&:hover {
-					transition: all 0.15s ease-in;
+					transition: all var(--hover-in);
 					background-color: rgba(30, 30, 30, 1);
 				}
 				h6 {

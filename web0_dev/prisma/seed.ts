@@ -62,33 +62,39 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				{
 					title: 'Task #1 (Alltasks P1)',
 					description: 'Task #1 description',
+					priority: 3,
 					status: 'Backlog',
 					phaseId: 'A123',
 				},
 				{
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
+					priority: 1,
 					status: 'In_Progress',
 					phaseId: 'A123',
 				},
 				{
 					title: 'Task #3 (Alltasks P1)',
+					priority: 4,
 					description: 'Task #3 description',
 					status: 'Completed',
 					phaseId: 'A123',
 				},
 				{
 					title: 'Task #4 (Alltasks P1)',
+					priority: 2,
 					description: 'Task #4 description',
 					status: 'In_Progress',
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
+					priority: 3,
 					description: 'Task #5 description',
 					status: 'Backlog',
 				},
 				{
 					title: 'Task #6 (Alltasks P1)',
+					priority: 2,
 					description: 'Task #6 description',
 					status: 'Backlog',
 				},
@@ -128,30 +134,37 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				{
 					title: 'Task #1 (Alltasks P1)',
 					description: 'Task #1 description',
+					priority: 3,
 					status: 'Backlog',
 				},
 				{
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
+					priority: 1,
 					status: 'In_Progress',
 				},
 				{
 					title: 'Task #3 (Alltasks P1)',
+					priority: 2,
 					description: 'Task #3 description',
 					status: 'Completed',
+					phaseId: 'A123',
 				},
 				{
 					title: 'Task #4 (Alltasks P1)',
+					priority: 2,
 					description: 'Task #4 description',
 					status: 'In_Progress',
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
+					priority: 3,
 					description: 'Task #5 description',
 					status: 'Backlog',
 				},
 				{
 					title: 'Task #6 (Alltasks P1)',
+					priority: 2,
 					description: 'Task #6 description',
 					status: 'Backlog',
 				},
@@ -223,30 +236,37 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				{
 					title: 'Task #1 (Alltasks P1)',
 					description: 'Task #1 description',
+					priority: 3,
 					status: 'Backlog',
 				},
 				{
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
+					priority: 1,
 					status: 'In_Progress',
 				},
 				{
 					title: 'Task #3 (Alltasks P1)',
+					priority: 2,
 					description: 'Task #3 description',
 					status: 'Completed',
+					phaseId: 'A123',
 				},
 				{
 					title: 'Task #4 (Alltasks P1)',
+					priority: 2,
 					description: 'Task #4 description',
 					status: 'In_Progress',
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
+					priority: 3,
 					description: 'Task #5 description',
 					status: 'Backlog',
 				},
 				{
 					title: 'Task #6 (Alltasks P1)',
+					priority: 2,
 					description: 'Task #6 description',
 					status: 'Backlog',
 				},
@@ -514,8 +534,8 @@ export async function main() {
 
 		const subcategory1 = await prisma.category.create({
 			data: {
-				name: 'Buttons',
-				slug: 'buttons',
+				name: `${baseName} Buttons`,
+				slug: `${baseName.toLowerCase()}-buttons`,
 				parentId: category1.id,
 				libraryTypeId,
 			},
@@ -523,8 +543,8 @@ export async function main() {
 
 		const subcategory2 = await prisma.category.create({
 			data: {
-				name: 'Forms',
-				slug: 'forms',
+				name: `${baseName} Forms`,
+				slug: `${baseName.toLowerCase()}-forms`,
 				parentId: category1.id,
 				libraryTypeId,
 			},
@@ -532,8 +552,8 @@ export async function main() {
 
 		const subSubcategory1 = await prisma.category.create({
 			data: {
-				name: 'Black Buttons',
-				slug: 'black-buttons',
+				name: `${baseName} Black Buttons`,
+				slug: `${baseName.toLowerCase()}-black-buttons`,
 				parentId: subcategory1.id,
 				libraryTypeId,
 			},
@@ -541,8 +561,8 @@ export async function main() {
 
 		const subSubcategory2 = await prisma.category.create({
 			data: {
-				name: 'Orange Buttons',
-				slug: 'orange-buttons',
+				name: `${baseName} Orange Buttons`,
+				slug: `${baseName.toLowerCase()}-orange-buttons`,
 				parentId: subcategory1.id,
 				libraryTypeId,
 			},
@@ -550,8 +570,8 @@ export async function main() {
 
 		const subSubcategory3 = await prisma.category.create({
 			data: {
-				name: 'Black Forms',
-				slug: 'black-forms',
+				name: `${baseName} Black Forms`,
+				slug: `${baseName.toLowerCase()}-black-forms`,
 				parentId: subcategory2.id,
 				libraryTypeId,
 			},
@@ -559,8 +579,8 @@ export async function main() {
 
 		const subSubcategory4 = await prisma.category.create({
 			data: {
-				name: 'Orange Forms',
-				slug: 'orange-forms',
+				name: `${baseName} Orange Forms`,
+				slug: `${baseName.toLowerCase()}-orange-forms`,
 				parentId: subcategory2.id,
 				libraryTypeId,
 			},
@@ -568,8 +588,8 @@ export async function main() {
 
 		const subcategory3 = await prisma.category.create({
 			data: {
-				name: 'Helpers',
-				slug: 'helpers',
+				name: `${baseName} Helpers`,
+				slug: `${baseName.toLowerCase()}-helpers`,
 				parentId: category2.id,
 				libraryTypeId,
 			},
@@ -577,8 +597,8 @@ export async function main() {
 
 		const subcategory4 = await prisma.category.create({
 			data: {
-				name: 'Middlewares',
-				slug: 'middlewares',
+				name: `${baseName} Middlewares`,
+				slug: `${baseName.toLowerCase()}-middlewares`,
 				parentId: category2.id,
 				libraryTypeId,
 			},
@@ -586,8 +606,8 @@ export async function main() {
 
 		const subSubcategory5 = await prisma.category.create({
 			data: {
-				name: 'Black Helpers',
-				slug: 'black-helpers',
+				name: `${baseName} Black Helpers`,
+				slug: `${baseName.toLowerCase()}-black-helpers`,
 				parentId: subcategory3.id,
 				libraryTypeId,
 			},
@@ -595,8 +615,8 @@ export async function main() {
 
 		const subSubcategory6 = await prisma.category.create({
 			data: {
-				name: 'Orange Helpers',
-				slug: 'orange-helpers',
+				name: `${baseName} Orange Helpers`,
+				slug: `${baseName.toLowerCase()}-orange-helpers`,
 				parentId: subcategory3.id,
 				libraryTypeId,
 			},
@@ -604,8 +624,8 @@ export async function main() {
 
 		const subSubcategory7 = await prisma.category.create({
 			data: {
-				name: 'Black Middlewares',
-				slug: 'black-middlewares',
+				name: `${baseName} Black Middlewares`,
+				slug: `${baseName.toLowerCase()}-black-middlewares`,
 				parentId: subcategory4.id,
 				libraryTypeId,
 			},
@@ -613,8 +633,8 @@ export async function main() {
 
 		const subSubcategory8 = await prisma.category.create({
 			data: {
-				name: 'Orange Middlewares',
-				slug: 'orange-middlewares',
+				name: `${baseName} Orange Middlewares`,
+				slug: `${baseName.toLowerCase()}-orange-middlewares`,
 				parentId: subcategory4.id,
 				libraryTypeId,
 			},
@@ -663,6 +683,7 @@ export async function main() {
 					component: 'codeSplit',
 					favorite: i % 2 === 0,
 					tags: [`${baseName.toLowerCase()}`, `tag${i}`],
+					projectId: '1ABC',
 					categoryId: randomCategory.id,
 				},
 			});

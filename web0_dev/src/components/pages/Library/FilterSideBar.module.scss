@@ -1,7 +1,6 @@
 .filterSideBar {
 	position: fixed;
 	top: 0;
-	left: 0;
 	display: flex;
 	flex-direction: column;
 	gap: 28px;
@@ -11,7 +10,7 @@
 	min-height: 100svh;
 	width: 212px;
 	background-color: #fff;
-	z-index: 10000000000000000000000000000000000000000000000000000000000000000000000000;
+	z-index: 1000000000000;
 
 	h2 {
 	}
