@@ -2,23 +2,7 @@
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 	gap: 28px;
-	.addProject {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: 16px;
-		border: 1px dashed var(--main-25);
-		background: rgba(247, 249, 251, 0.45);
-		box-shadow: var(--boxShadow-xs);
-		gap: 6px;
-		min-height: 172px;
 
-		span {
-			font-size: calc(14 / 16 * 1rem);
-			font-weight: 600;
-			line-height: calc(20 / 16 * 1rem);
-		}
-	}
 	.project {
 		padding: 24px;
 		background-color: var(--lightBlue);

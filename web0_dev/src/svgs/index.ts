@@ -55,3 +55,6 @@ export { default as Text } from './Text.svg';
 export { default as Close } from './Close.svg';
 export { default as BookmarkFilled } from './BookmarkFilled.svg';
 export { default as Number } from './Number.svg';
+export { default as Back } from './Back.svg';
+export { default as DateLeft } from './DateLeft.svg';
+export { default as DateRight } from './DateRight.svg';

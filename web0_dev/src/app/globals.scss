@@ -4,12 +4,19 @@
 	--white: rgba(255, 255, 255, 1);
 	--black: rgba(0, 0, 0, 1);
 	--main: rgba(72, 70, 67, 1);
+	--main-95: rgba(72, 70, 67, 0.95);
 	--main-90: rgba(72, 70, 67, 0.9);
+	--main-85: rgba(72, 70, 67, 0.85);
 	--main-80: rgba(72, 70, 67, 0.8);
+	--main-75: rgba(72, 70, 67, 0.75);
 	--main-70: rgba(72, 70, 67, 0.7);
+	--main-65: rgba(72, 70, 67, 0.65);
 	--main-60: rgba(72, 70, 67, 0.6);
+	--main-55: rgba(72, 70, 67, 0.55);
 	--main-50: rgba(72, 70, 67, 0.5);
+	--main-45: rgba(72, 70, 67, 0.45);
 	--main-40: rgba(72, 70, 67, 0.4);
+	--main-35: rgba(72, 70, 67, 0.35);
 	--main-30: rgba(72, 70, 67, 0.3);
 	--main-25: rgba(72, 70, 67, 0.25);
 	--main-20: rgba(72, 70, 67, 0.2);
@@ -201,10 +208,15 @@ body {
 img,
 picture,
 video,
+canvas {
+	max-width: 100%;
+}
+img,
+picture,
+video,
 canvas,
 svg {
 	display: block;
-	max-width: 100%;
 }
 input,
 button,

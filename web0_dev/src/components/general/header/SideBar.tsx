@@ -133,7 +133,12 @@ const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 							<p>{item.slug}</p>
 						</Link>
 					))}
+					<Link href={'/library/favorite'} className={styles.hor}>
+						<Arrow style={{ fill: '#484643', opacity: 0 }} />
+						<Library style={{ fill: '#484643' }} />
 
+						<p>Favorite</p>
+					</Link>
 					<Link href={'/notes'} className={styles.hor}>
 						<Arrow style={{ fill: '#484643', opacity: 0 }} />
 						<Notes style={{ fill: '#484643' }} />

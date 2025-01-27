@@ -1,7 +1,7 @@
 import { Topfile } from '@/svgs';
 import styles from './ProjectMiddleRight.module.scss';
 import { File, Project } from '@prisma/client';
-import getTimeAgo from '@/Utils/GetTimeAgo';
+import getTimeAgo from '@/Utils/DateHooks';
 import GetFileSize from '@/Utils/GetFileSize';
 import Spacing from '@/components/General/Spacing';
 type projectWithFile = Omit<Project, 'budget'> & {

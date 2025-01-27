@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Team from '../../General/ui/Team';
 import { PlusSpecial } from '@/svgs';
 import prisma from '@/lib/db';
+import AddProject from './AddProject';
 
 const ProjectGallery = async () => {
 	const projects = await prisma.project.findMany({
@@ -14,10 +15,7 @@ const ProjectGallery = async () => {
 	});
 	return (
 		<div className={styles.projectWrapper}>
-			<button className={styles.addProject}>
-				<PlusSpecial fill={'var(--black)'} />
-				<span>New Project</span>
-			</button>
+			<AddProject />
 			{projects.map((project, index) => {
 				const endDate = new Date(project.due).toLocaleDateString('en-US', {
 					month: 'short',

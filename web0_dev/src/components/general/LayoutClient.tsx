@@ -9,7 +9,7 @@ export default function LayoutClient({
 }) {
 	// const [isOpenLeftBar, setIsOpenLeftBar] = useState(true);
 	// const [isOpenRightBar, setIsOpenRightBar] = useState(true);
-	const isOpenRightBar = true;
+	const isOpenRightBar = false;
 	const isOpenLeftBar = true;
 	const widthLeftbar = '212px';
 	const widthRightbar = '280px';

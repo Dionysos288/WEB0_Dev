@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styles from './TableData.module.scss';
 import { Dots } from '@/svgs';
 import { DataType, fileType, TableHeader } from '@/components/types/types';
-import getTimeAgo from '@/Utils/GetTimeAgo';
+import getTimeAgo from '@/Utils/DateHooks';
 import {
 	getFileType,
 	getImagePerson,

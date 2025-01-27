@@ -21,5 +21,20 @@ const getTimeAgo = (date: string) => {
 		return `Just Now`;
 	}
 };
+const getDateFormat = (date: string) => {
+	const fileDate = new Date(date);
+	if (fileDate.getFullYear() === new Date().getFullYear()) {
+		return fileDate.toLocaleDateString('en-US', {
+			month: 'short',
+			day: 'numeric',
+		});
+	} else {
+		return fileDate.toLocaleDateString('en-US', {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+		});
+	}
+};
 
-export default getTimeAgo;
+export { getTimeAgo, getDateFormat };
