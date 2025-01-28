@@ -1,4 +1,4 @@
-import LibraryPage from '@/components/pages/Library/LibraryPage';
+import LibraryPage from '@/components/pages/library/LibraryPage';
 import prisma from '@/lib/db';
 import type { Metadata } from 'next';
 

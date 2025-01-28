@@ -1,11 +1,13 @@
 'use client';
 import styles from './Gallery.module.scss';
-import { PlusRound, Bookmark, BookmarkFilled } from '@/svgs';
 import Link from 'next/link';
 import { ExtendedLibrary } from '@/components/types/types';
 import Image from 'next/image';
 import { makeFavorite } from '@/actions/CRUDLibrary';
 import { useState } from 'react';
+import BookmarkFilled from '@/svgs/Bookmark-Filled';
+import BookmarkOutline from '@/svgs/Bookmark-Outline';
+import PlusRoundStroke from '@/svgs/Plus-Round-Stroke';
 
 const Gallery = ({ data }: { data: ExtendedLibrary | ExtendedLibrary[] }) => {
 	const items = Array.isArray(data) ? data : [data];
@@ -56,17 +58,23 @@ const Gallery = ({ data }: { data: ExtendedLibrary | ExtendedLibrary[] }) => {
 						<h3>{item.title}</h3>
 						<div className={styles.svgs}>
 							<button>
-								<PlusRound />
+								<PlusRoundStroke width="18" height="18" fill="var(--main-90)" />
 							</button>
 							<button
 								onClick={() => handleFavorite(item.id, favoriteStatus[item.id])}
 							>
 								{favoriteStatus[item.id] ? (
 									<BookmarkFilled
-										style={{ fill: 'var(--main)', opacity: '0.9' }}
+										width="20"
+										height="20"
+										fill="var(--main-90)"
 									/>
 								) : (
-									<Bookmark style={{ fill: 'var(--main)', opacity: '0.9' }} />
+									<BookmarkOutline
+										width="20"
+										height="20"
+										fill="var(--main-90)"
+									/>
 								)}
 							</button>
 						</div>

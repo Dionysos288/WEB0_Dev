@@ -6,7 +6,7 @@
 }
 .filterContainer {
 	border-radius: 8px;
-	background-color: #f7f9fb;
+	background-color: var(--lightBlue);
 	padding: 8px;
 	display: flex;
 	align-items: center;
@@ -36,7 +36,7 @@
 			border: 1px solid #ccc;
 			border-radius: 6px;
 			border: 1px solid var(--main-15);
-			background: rgba(255, 255, 255, 0.8);
+			background: var(--white-80);
 			font-size: calc(14 / 16 * 1rem);
 			font-weight: 400;
 			line-height: calc(20 / 16 * 1rem);

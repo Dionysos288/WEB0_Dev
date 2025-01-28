@@ -1,8 +1,8 @@
-import MonthlyRevenue from '@/components/pages/Home/MonthlyRevenue';
+import MonthlyRevenue from '@/components/pages/home/MonthlyRevenue';
 import styles from './page.module.scss';
-import QuadrantRevenue from '@/components/pages/Home/QuadrantRevenue';
+import QuadrantRevenue from '@/components/pages/home/QuadrantRevenue';
 import Spacing from '@/components/General/Spacing';
-import Calender from '@/components/pages/Home/Calender';
+import Calender from '@/components/pages/home/Calender';
 
 export default function Home() {
 	return (

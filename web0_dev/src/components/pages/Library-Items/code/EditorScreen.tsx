@@ -1,10 +1,11 @@
 'use client';
 import styles from './EditorScreen.module.scss';
-import { Palette, Clipboard } from '@/svgs';
 import React, { useState, useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 // import { transform } from '@babel/standalone';
-import files from '@/Data/Files';
+import files from '@/data/Files';
+import ClipboardText from '@/svgs/ClipboardText';
+import Color from '@/svgs/Color';
 interface EditorScreenProps {
 	fullscreen?: boolean;
 }
@@ -91,7 +92,7 @@ const EditorScreen: React.FC<EditorScreenProps> = ({ fullscreen }) => {
 				<div className={styles.editorfull}>
 					<div className={styles.backGround}>
 						<button className={styles.abs}>
-							<Clipboard />
+							<ClipboardText width="20" height="20" fill="var(--white)" />
 						</button>
 						<div className={styles.topSide}>
 							<button
@@ -153,13 +154,13 @@ const EditorScreen: React.FC<EditorScreenProps> = ({ fullscreen }) => {
 						<div className={styles.colorPicker}>
 							<p>#F79F9B</p>
 							<button>
-								<Palette fill={'var(--orange-90)'} opacity={'0.9'} />
+								<Color width="20" height="20" fill="var(--orange-90)" />
 							</button>
 						</div>
 					</div>
 					<div className={styles.rightSide}>
 						<button className={styles.abs}>
-							<Clipboard />
+							<ClipboardText width="20" height="20" fill="var(--white)" />
 						</button>
 						<div className={styles.topSide}>
 							<button

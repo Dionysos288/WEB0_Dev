@@ -1,6 +1,7 @@
 import styles from './FileEditing.module.scss';
-import { File, Figma } from '@/svgs';
 import Spacing from '@/components/General/Spacing';
+import Document from '@/svgs/Document';
+import Figma from '@/svgs/Figma';
 import { Note } from '@prisma/client';
 const FileEditing = ({ note }: { note: Note }) => {
 	console.log(note);
@@ -37,12 +38,12 @@ const FileEditing = ({ note }: { note: Note }) => {
 					<div className={styles.line} />
 
 					<button className={styles.groupSvg}>
-						<Figma />
+						<Figma fill="var(--main)" width="25" height="25" />
 						<span>Figma</span>
 					</button>
 
 					<button className={styles.groupSvg}>
-						<File fill={'var(--main)'} />
+						<Document fill="var(--main)" width="25" height="25" />
 						<span>File</span>
 					</button>
 				</div>

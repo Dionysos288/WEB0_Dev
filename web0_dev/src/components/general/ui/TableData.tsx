@@ -1,16 +1,16 @@
 'use client';
 import React, { useState } from 'react';
 import styles from './TableData.module.scss';
-import { Dots } from '@/svgs';
 import { DataType, fileType, TableHeader } from '@/components/types/types';
-import getTimeAgo from '@/Utils/DateHooks';
 import {
 	getFileType,
 	getImagePerson,
 	getTypePerson,
-} from '@/Utils/GetAddOnsTable';
+} from '@/utils/GetAddOnsTable';
 import { Client } from '@prisma/client';
-import GetFileSize from '@/Utils/GetFileSize';
+import GetFileSize from '@/utils/GetFileSize';
+import Dots from '@/svgs/Dots';
+import { getTimeAgo } from '@/utils/DateHooks';
 type CSSPropertiesWithVars = React.CSSProperties & {
 	'--amount'?: string | number;
 };
@@ -134,6 +134,8 @@ const TableData = ({
 									<div className={styles.dots}>
 										<Dots
 											fill={'var(--main)'}
+											width="20"
+											height="20"
 											style={
 												onHover === data.id
 													? { opacity: '1' }

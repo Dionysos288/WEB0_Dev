@@ -1,5 +1,5 @@
 import prisma from '@/lib/db';
-import TaskGallery from '../pages/Project/tasks/TaskGallery';
+import TaskGallery from '../pages/project/tasks/TaskGallery';
 
 const ServerTasksGallery = async ({ phase }: { phase: string }) => {
 	const tasks = await prisma.task.findMany({

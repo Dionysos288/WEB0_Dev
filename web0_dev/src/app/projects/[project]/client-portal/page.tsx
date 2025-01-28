@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 
 import Spacing from '@/components/General/Spacing';
-import Timeline from '@/components/pages/Project/components/Timeline';
-import ClientProjectHeader from '@/components/pages/Project/client-portal/ClientProjectHeader';
-import Phases from '@/components/pages/Project/client-portal/Phases';
-import Files from '@/components/pages/Project/client-portal/Files';
+import Timeline from '@/components/pages/project/components/Timeline';
+import ClientProjectHeader from '@/components/pages/project/client-portal/ClientProjectHeader';
+import Phases from '@/components/pages/project/client-portal/Phases';
+import Files from '@/components/pages/project/client-portal/Files';
 import TopMenu from '@/components/General/TopMenu';
 import prisma from '@/lib/db';
 export async function generateMetadata({

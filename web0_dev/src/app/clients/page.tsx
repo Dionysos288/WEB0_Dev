@@ -5,7 +5,7 @@ import ContactStatus from '@/components/pages/clients/overview/ContactStatus';
 import styles from './page.module.scss';
 import ContactSource from '@/components/pages/clients/overview/ContactSource';
 import TopMenu from '@/components/General/TopMenu';
-import ServerTableData from '@/components/Server/ServerTableData';
+import ServerTableData from '@/components/server/ServerTableData';
 
 export default function LibraryPage() {
 	const tableHeaders: TableHeader[] = [

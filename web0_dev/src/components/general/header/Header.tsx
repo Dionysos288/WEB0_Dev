@@ -1,9 +1,14 @@
 'use client';
-import SVG from '../SVG';
+import SVG from '@components/general/SVG';
 import { CSSProperties, useState } from 'react';
-import BreadCrumbs from './BreadCrumbs';
+import BreadCrumbs from '@components/general/header/BreadCrumbs';
 import styles from './Header.module.scss';
-import { History, Notification, Search, Side, Star, Sun } from '@/svgs';
+import Sidebar from '@/svgs/Sidebar';
+import Star from '@/svgs/Star';
+import Search from '@/svgs/Search';
+import ClockCounterClockwise from '@/svgs/ClockCounterClockwise';
+import Bell from '@/svgs/Bell';
+import ThemeToggle from '@/components/general/header/ThemeToggle';
 
 const Header = ({
 	isOpenLeftBar,
@@ -39,35 +44,37 @@ const Header = ({
 						onClick={() => setIsOpenLeftBar(!isOpenLeftBarNew)}
 					>
 						<SVG>
-							<Side style={{ fill: '#484643' }} />
+							<Sidebar fill="var(--main)" width="20" height="20" />
 						</SVG>
 					</div>
 
 					<SVG>
-						<Star />
+						<Star fill="var(--main)" width="20" height="20" />
 					</SVG>
 					<BreadCrumbs />
 				</div>
 				<div className={styles.rightSide}>
 					<span>
-						<Search style={{ fill: '#484643' }} />
+						<Search fill="var(--main)" width="20" height="20" />
 					</span>
 					<div className={styles.emojis}>
+						<ThemeToggle />
 						<SVG>
-							<Sun style={{ fill: '#484643' }} />
+							<ClockCounterClockwise
+								fill="var(--main)"
+								width="20"
+								height="20"
+							/>
 						</SVG>
 						<SVG>
-							<History style={{ fill: '#484643' }} />
-						</SVG>
-						<SVG>
-							<Notification style={{ fill: '#484643' }} />
+							<Bell fill="var(--main)" width="20" height="20" />
 						</SVG>
 						<div
 							style={{ display: 'contents' }}
 							onClick={() => setIsOpenRightBar(!isOpenRightBarNew)}
 						>
 							<SVG>
-								<Side style={{ fill: '#484643' }} />
+								<Sidebar fill="var(--main)" width="20" height="20" />
 							</SVG>
 						</div>
 					</div>

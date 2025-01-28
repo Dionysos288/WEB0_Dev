@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import styles from './RightBar.module.scss';
-import { Bug, User, Broadcast } from '@/svgs';
+import Bug from '@/svgs/Bug';
+import Broadcast from '@/svgs/Broadcast';
+import User from '@/svgs/User';
 const RightBar = () => {
 	return (
 		<div className={styles.rightBarWrapper}>
@@ -13,8 +15,10 @@ const RightBar = () => {
 							style={{ backgroundColor: '#e8b594' }}
 						>
 							<Bug
+								fill="var(--main)"
+								width="16"
+								height="16"
 								style={{
-									fill: '#484643',
 									margin: '4px ',
 									position: 'absolute',
 									transform: 'translatex(0.5px) ',
@@ -32,8 +36,10 @@ const RightBar = () => {
 							style={{ backgroundColor: '#EDE9DD' }}
 						>
 							<User
+								fill="var(--main)"
+								width="16"
+								height="16"
 								style={{
-									fill: '#484643',
 									margin: '4px ',
 									position: 'absolute',
 									transform: 'translatex(0.5px) ',
@@ -51,8 +57,10 @@ const RightBar = () => {
 							style={{ backgroundColor: '#e8b594' }}
 						>
 							<Bug
+								fill="var(--main)"
+								width="16"
+								height="16"
 								style={{
-									fill: '#484643',
 									margin: '4px ',
 									position: 'absolute',
 									transform: 'translatex(0.5px) ',
@@ -70,8 +78,10 @@ const RightBar = () => {
 							style={{ backgroundColor: '#EDE9DD' }}
 						>
 							<Broadcast
+								fill="var(--main)"
+								width="16"
+								height="16"
 								style={{
-									fill: '#484643',
 									margin: '4px ',
 									position: 'absolute',
 									transform: 'translatex(0.5px) ',

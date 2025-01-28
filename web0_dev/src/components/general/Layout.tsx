@@ -1,4 +1,4 @@
-import ServerSideBar from '../Server/ServerSideBar';
+import ServerSideBar from '../server/ServerSideBar';
 import Footer from './Footer';
 import Header from './header/Header';
 import RightBar from './header/Rightbar';

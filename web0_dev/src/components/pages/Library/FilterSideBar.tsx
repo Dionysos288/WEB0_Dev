@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { Arrow } from '@/svgs';
 import { motion } from 'motion/react';
 import { Category } from '@prisma/client';
 import styles from './FilterSideBar.module.scss';
@@ -10,6 +9,7 @@ import {
 	LibraryData,
 	SortOptions,
 } from '@/components/types/types';
+import ArrowLineRight from '@/svgs/ArrowLineRight';
 
 type ExtendedCategory = Category & { subcategories: ExtendedCategory[] };
 export default function FilterSideBar({
@@ -114,7 +114,7 @@ export default function FilterSideBar({
 								className={`${styles.svg} ${isOpen ? styles.rotate : ''}`}
 								onClick={() => toggleCategory(category.name)}
 							>
-								<Arrow style={{ fill: '#484643', opacity: 0.3 }} />
+								<ArrowLineRight fill="var(--main-35)" height="16" width="16" />
 							</div>
 						)}
 						<span onClick={() => toggleCategory(category.name)}>

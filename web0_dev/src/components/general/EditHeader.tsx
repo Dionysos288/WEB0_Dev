@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import styles from './EditHeader.module.scss';
-import BackButton from '@/components/General/ui/buttons/BackButton';
 import SVG from './SVG';
-import { Edit } from '@/svgs';
+import BackButton from './ui/buttons/BackButton';
+import Edit from '@/svgs/Edit';
 interface HeaderProps {
 	type?: string;
 	name?: string;
@@ -36,7 +36,7 @@ const EditHeader: React.FC<HeaderProps> = ({
 				)}
 				{admin && (
 					<SVG>
-						<Edit fill={'var(--main)'} opacity={'0.9'} />
+						<Edit fill={'var(--main-90)'} width="20" height="20" />
 					</SVG>
 				)}
 			</div>

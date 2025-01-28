@@ -49,12 +49,14 @@ const DoughnutChart = ({
 				isAnimationActive={true}
 				onMouseEnter={onPieEnter}
 				cornerRadius={4}
+				stroke="none"
 			>
 				{data.map((entry) => (
 					<Cell
 						key={`slice-${entry.name}`}
 						fill={entry.color}
 						onMouseDown={onMouseDown}
+						stroke="none"
 					/>
 				))}
 			</Pie>

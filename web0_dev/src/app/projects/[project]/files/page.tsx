@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 
-import { DatePicker } from '@/svgs';
 import { TableHeader } from '@/components/types/types';
 import TopMenu from '@/components/General/TopMenu';
 import prisma from '@/lib/db';
-import ClientFilesPage from '@/components/pages/Project/files/ClientFilesPage';
+import ClientFilesPage from '@/components/pages/project/files/ClientFilesPage';
+import DatePickerV2 from '@/svgs/DatePickerV2';
 export async function generateMetadata({
 	params,
 }: {
@@ -23,7 +23,12 @@ const tableHeaders: TableHeader[] = [
 	[
 		'updatedAt',
 		'Upload Date',
-		<DatePicker key={Math.random().toString(36).substr(2, 9)} />,
+		<DatePickerV2
+			fill="var(--main)"
+			width="16"
+			height="16"
+			key={Math.random().toString(36).substr(2, 9)}
+		/>,
 	],
 ];
 const page = async ({ params }: { params: { project: string } }) => {

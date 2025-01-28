@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import TopMenu from '@/components/General/TopMenu';
 import prisma from '@/lib/db';
-import ClientTasksPage from '@/components/pages/Project/tasks/ClientTasksPage';
+import ClientTasksPage from '@/components/pages/project/tasks/ClientTasksPage';
 export async function generateMetadata({
 	params,
 }: {

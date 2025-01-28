@@ -4,6 +4,7 @@ import './globals.scss';
 import ConsoleLogger from '@/components/General/Consolelogger';
 import LenisWrapper from '@/components/General/LenisWrapper';
 import LayoutClient from '@/components/General/LayoutClient';
+import { ThemeProvider } from 'next-themes';
 
 const inter = Inter({
 	weight: ['400', '500', '600', '800'],
@@ -23,11 +24,13 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<body className={`${inter.variable}`}>
 				<ConsoleLogger />
 				<LenisWrapper>
-					<LayoutClient>{children}</LayoutClient>
+					<ThemeProvider>
+						<LayoutClient>{children}</LayoutClient>
+					</ThemeProvider>
 				</LenisWrapper>
 			</body>
 		</html>

@@ -1,8 +1,8 @@
 import EditHeader from '@/components/General/EditHeader';
 import Spacing from '@/components/General/Spacing';
-import GalleryV2 from '@/components/pages/Library-Items/gallery/GalleryV2';
-import Toolbar from '@/components/pages/Library-Items/components/ToolBar';
-import Colors from '@/components/pages/Library-Items/color/Colors';
+import GalleryV2 from '@/components/pages/library-items/gallery/GalleryV2';
+import Toolbar from '@/components/pages/library-items/components/ToolBar';
+import Colors from '@/components/pages/library-items/color/Colors';
 
 const ColorPage = () => {
 	const color = [

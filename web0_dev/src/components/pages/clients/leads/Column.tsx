@@ -7,8 +7,8 @@ import {
 import Task from './Task';
 import React, { useMemo } from 'react';
 import Spacing from '@/components/General/Spacing';
-import { PlusSpecial } from '@/svgs';
 import { ClientColumnType } from '@/components/types/types';
+import PlusFilled from '@/svgs/Plus-Filled';
 
 const Column = ({ column }: { column: ClientColumnType }) => {
 	const { title, tasks } = column;
@@ -62,7 +62,7 @@ const Column = ({ column }: { column: ClientColumnType }) => {
 					))}
 				</SortableContext>
 				<button className={styles.addTask}>
-					<PlusSpecial fill={'var(--main)'} opacity={'0.8'} />
+					<PlusFilled fill={'var(--main-80)'} width="16" height="16" />
 					<span>Add User</span>
 				</button>
 			</div>

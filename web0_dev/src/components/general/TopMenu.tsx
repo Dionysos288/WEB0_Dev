@@ -2,8 +2,9 @@
 import Link from 'next/link';
 import SVG from './SVG';
 import styles from './TopMenu.module.scss';
-import { Plus, Dots } from '@/svgs';
 import { usePathname } from 'next/navigation';
+import PlusStroke from '@/svgs/Plus-stroke';
+import Dots from '@/svgs/Dots';
 
 interface TopMenuProps {
 	mainLink: string;
@@ -76,12 +77,17 @@ const TopMenu: React.FC<TopMenuProps> = ({
 			</div>
 			<div className={styles.rightSide}>
 				<button className={styles.addItem}>
-					<Plus fill={'var(--main)'} opacity={'0.6'} />
+					<PlusStroke
+						fill={'var(--main)'}
+						style={{ opacity: '0.6' }}
+						width="16"
+						height="16"
+					/>
 					<span>{AddItem}</span>
 				</button>
 				<div className={styles.extraItems}>
 					<SVG>
-						<Dots fill={'var(--main)'} opacity={'0.6'} />
+						<Dots fill={'var(--main-60)'} width="20" height="20" />
 					</SVG>
 				</div>
 			</div>

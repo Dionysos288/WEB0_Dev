@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Spacing from '@/components/General/Spacing';
 import styles from './ButtonSelector.module.scss';
-import { Text } from '@/svgs';
+import Text from '@/svgs/Text';
 
 const ButtonSelector = ({
 	query,
@@ -88,13 +88,15 @@ const ButtonSelector = ({
 						tabIndex={-1}
 					>
 						<div className={styles.leftSide}>
-							<Text fill={'var(--main)'} />
+							<Text fill={'var(--main)'} width="16" height="16" />
 							<span>{option}</span>
 						</div>
 						<div className={styles.leftSide}>
 							<Text
 								fill={'var(--main)'}
-								opacity={isChosen === option ? '1' : '0'}
+								width="16"
+								height="16"
+								style={{ opacity: isChosen === option ? '1' : '0' }}
 							/>
 						</div>
 					</button>

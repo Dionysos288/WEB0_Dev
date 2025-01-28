@@ -3,9 +3,10 @@ import styles from './Task.module.scss';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Image from 'next/image';
-import { Clock, Message } from '@/svgs';
 import { Task as TaskType } from '@prisma/client';
-import getTaskPriority from '@/Utils/GetTaskPriority';
+import getTaskPriority from '@/utils/GetTaskPriority';
+import Clock from '@/svgs/Clock';
+import ChatText from '@/svgs/ChatText';
 const Task = ({ task }: { task: TaskType }) => {
 	const {
 		attributes,
@@ -63,11 +64,11 @@ const Task = ({ task }: { task: TaskType }) => {
 				</div>
 				<div className={styles.emojiWrapper}>
 					<div>
-						<Clock fill={'var(--main)'} opacity={'0.6'} />
+						<Clock fill={'var(--main-60)'} width="12" height="12" />
 						<p>6h</p>
 					</div>
 					<div>
-						<Message />
+						<ChatText fill={'var(--main-60)'} width="12" height="12" />
 						<p>8</p>
 					</div>
 				</div>

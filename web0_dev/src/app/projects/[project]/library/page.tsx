@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Spacing from '@/components/General/Spacing';
 import TopMenu from '@/components/General/TopMenu';
 import prisma from '@/lib/db';
-import LibraryPage from '@/components/pages/Library/LibraryPage';
+import LibraryPage from '@/components/pages/library/LibraryPage';
 export async function generateMetadata({
 	params,
 }: {

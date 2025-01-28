@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import styles from './GalleryV2.module.scss';
 import { useState } from 'react';
-import { ArrowXL } from '@/svgs';
+import ArrowLineRight from '@/svgs/ArrowLineRight';
 const GalleryV2 = () => {
 	const [image, setImage] = useState(0);
 	const changeImage = (index: number) => {
@@ -21,10 +21,15 @@ const GalleryV2 = () => {
 			<div className={styles.imgWrapper}>
 				<div className={styles.abs}>
 					<button className={styles.click} onClick={() => changePageUp(false)}>
-						<ArrowXL fill={'var(--main)'} style={{ rotate: '180deg' }} />
+						<ArrowLineRight
+							fill={'var(--main-main)'}
+							width="44"
+							height="44"
+							style={{ rotate: '180deg' }}
+						/>
 					</button>
 					<button className={styles.click} onClick={() => changePageUp(true)}>
-						<ArrowXL fill={'var(--main)'} />
+						<ArrowLineRight fill={'var(--main-main)'} width="44" height="44" />
 					</button>
 				</div>
 				<Image

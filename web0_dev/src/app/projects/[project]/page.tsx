@@ -1,10 +1,10 @@
-import ProjectHeader from '@/components/pages/Project/overview/ProjectHeader';
-import ProjectMiddleLeft from '@/components/pages/Project/overview/ProjectMiddleLeft';
+import ProjectHeader from '@/components/pages/project/overview/ProjectHeader';
+import ProjectMiddleLeft from '@/components/pages/project/overview/ProjectMiddleLeft';
 import type { Metadata } from 'next';
 import styles from './page.module.scss';
 import Spacing from '@/components/General/Spacing';
-import ProjectMiddleRight from '@/components/pages/Project/overview/ProjectMiddleRight';
-import Timeline from '@/components/pages/Project/components/Timeline';
+import ProjectMiddleRight from '@/components/pages/project/overview/ProjectMiddleRight';
+import Timeline from '@/components/pages/project/components/Timeline';
 import TopMenu from '@/components/General/TopMenu';
 import prisma from '@/lib/db';
 export async function generateMetadata({

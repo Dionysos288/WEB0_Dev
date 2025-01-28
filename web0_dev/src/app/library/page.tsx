@@ -1,5 +1,5 @@
 import prisma from '@/lib/db';
-import LibraryPage from '@/components/pages/Library/LibraryPage';
+import LibraryPage from '@/components/pages/library/LibraryPage';
 
 export default async function Page() {
 	const libraryData = await prisma.libraryType.findMany({

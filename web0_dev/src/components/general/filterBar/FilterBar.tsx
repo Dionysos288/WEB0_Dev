@@ -1,10 +1,8 @@
 'use client';
 import SVG from '../SVG';
 import styles from './FilterBar.module.scss';
-import { PlusXL, Filter, Sort, ArrowDown, Search, Views, Close } from '@/svgs';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
-import SortPopup from './SortPopup';
 import { Library, Task } from '@prisma/client';
 import {
 	ExtendedLibrary,
@@ -15,6 +13,13 @@ import {
 import { updateFilterLibrary } from '@/actions/CRUDLibrary';
 import { updateFilterFiles } from '@/actions/CRUDFile';
 import { updateFilterTasks } from '@/actions/CRUDTask';
+import ArrowLineRight from '@/svgs/ArrowLineRight';
+import PlusStroke from '@/svgs/Plus-stroke';
+import SortPopup from './SortPopup';
+import FunnelSimple from '@/svgs/FunnelSimple';
+import SortArrowsDownUp from '@/svgs/SortArrowsDownUp';
+import Search from '@/svgs/Search';
+import CloseCircleFilled from '@/svgs/Close-Circle-Filled';
 
 interface FilterBarProps {
 	title?: string;
@@ -127,16 +132,17 @@ const FilterBar: React.FC<FilterBarProps> = ({
 			<div className={styles.filterContainer}>
 				<div className={styles.leftSide}>
 					<SVG>
-						<PlusXL style={{ fill: '#484643' }} />
+						<PlusStroke fill="var(--main)" width="20" height="20" />
 					</SVG>
 					{ExtraFilters &&
 						ExtraFilters.map((filter, index) => (
 							<button key={index} className={styles.buttons}>
 								{filter}
-								<ArrowDown
+								<ArrowLineRight
+									fill={'var(--main-80)'}
+									width="16"
+									height="16"
 									style={{
-										fill: '#484643',
-										opacity: '0.8',
 										transform: 'translateY(1.5px)',
 									}}
 								/>
@@ -144,16 +150,16 @@ const FilterBar: React.FC<FilterBarProps> = ({
 						))}
 					{setIsFilterOpenLibrary ? (
 						<SVG onClick={() => setIsFilterOpenLibrary(!isFilterOpenLibrary)}>
-							<Filter style={{ fill: '#484643' }} />
+							<FunnelSimple fill="var(--main)" width="20" height="20" />
 						</SVG>
 					) : (
 						<SVG onClick={() => setIsFilterOpen(!isFilterOpen)}>
-							<Filter style={{ fill: '#484643' }} />
+							<FunnelSimple fill="var(--main)" width="20" height="20" />
 						</SVG>
 					)}
 
 					<SVG onClick={() => setIsOpenSort(!isOpenSort)}>
-						<Sort style={{ fill: '#484643' }} />
+						<SortArrowsDownUp fill="var(--main)" width="20" height="20" />
 						<AnimatePresence>
 							{isOpenSort && (
 								<SortPopup
@@ -173,12 +179,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
 							)}
 						</AnimatePresence>
 					</SVG>
-
-					{views && (
-						<SVG>
-							<Views style={{ fill: '#484643' }} />
-						</SVG>
-					)}
 				</div>
 				{search && (
 					<div className={styles.inputWrapper}>
@@ -201,7 +201,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 							}`}
 							onClick={() => setQuery('')}
 						>
-							<Close fill={'var(--main)'} />
+							<CloseCircleFilled fill={'var(--main)'} width="16" height="16" />
 						</div>
 					</div>
 				)}

@@ -73,7 +73,7 @@
 				.TodayRed {
 					position: relative;
 					z-index: 1;
-					color: var(--white);
+					color: var(--whiteSpecial);
 				}
 				.TodayRed::before {
 					content: '';
@@ -117,11 +117,14 @@
 				.leftSide {
 					font-size: calc(11 / 16 * 1rem);
 					font-weight: 400;
+					color: var(--main-main);
 					line-height: calc(20 / 16 * 1rem);
 				}
 				.rightSide {
 					font-size: calc(10 / 16 * 1rem);
 					font-weight: 300;
+					color: var(--main-main);
+
 					line-height: calc(20 / 16 * 1rem);
 				}
 			}

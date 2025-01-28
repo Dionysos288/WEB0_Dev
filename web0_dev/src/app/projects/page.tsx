@@ -1,6 +1,6 @@
 import Spacing from '@/components/General/Spacing';
-import BigButtons from '@/components/pages/Projects/BigButtons';
-import ProjectGallery from '@/components/pages/Projects/ProjectGallery';
+import BigButtons from '@/components/pages/projects/BigButtons';
+import ProjectGallery from '@/components/pages/projects/ProjectGallery';
 
 export default function LibraryPage() {
 	return (

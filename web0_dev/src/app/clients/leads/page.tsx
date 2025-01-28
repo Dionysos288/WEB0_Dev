@@ -1,6 +1,6 @@
 import TopMenu from '@/components/General/TopMenu';
 
-import ServerClientGallery from '@/components/Server/ServerClientGallery';
+import ServerClientGallery from '@/components/server/ServerClientGallery';
 
 export default function LibraryPage() {
 	return (

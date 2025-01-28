@@ -1,8 +1,11 @@
 import Spacing from '@/components/General/Spacing';
 import styles from './Phases.module.scss';
-import { Paint, Calender } from '@/svgs';
 import Link from 'next/link';
 import { Phase, PhaseStatus } from '@prisma/client';
+import DesignIdeas from '@/svgs/Design-Ideas';
+import DatePicker from '@/svgs/DatePicker';
+import StartDate from '@/svgs/StartDate';
+import DatePickerV3 from '@/svgs/DatePickerV3';
 const Phases = ({ phases }: { phases: Phase[] }) => {
 	const getPhaseStyles = (status: PhaseStatus): React.CSSProperties => {
 		return {
@@ -49,7 +52,7 @@ const Phases = ({ phases }: { phases: Phase[] }) => {
 						>
 							<div className={styles.topSide}>
 								<div className={styles.svg}>
-									<Paint fill={'var(--main)'} />
+									<DesignIdeas width="20" height="20" fill={'var(--main)'} />
 								</div>
 								<h3>{phase.title}</h3>
 							</div>
@@ -68,7 +71,7 @@ const Phases = ({ phases }: { phases: Phase[] }) => {
 									</p>
 								</div>
 								<div className={styles.date}>
-									<Calender fill={'var(--main)'} />
+									<DatePickerV3 width="18" height="18" fill={'var(--main)'} />
 									<p>{startDate}</p>
 								</div>
 							</div>

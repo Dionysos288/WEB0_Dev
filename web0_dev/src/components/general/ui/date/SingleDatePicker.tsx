@@ -3,8 +3,11 @@ import styles from './SingleDatePicker.module.scss';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import SVG from '@/components/General/SVG';
-import { Back, DateLeft, DateRight } from '@/svgs';
 import { useState } from 'react';
+import ArrowLineRight from '@/svgs/ArrowLineRight';
+import ArrowLineLeftFilled from '@/svgs/ArrowLineLeftFilled';
+import Back from '@/svgs/Back';
+import ArrowLineRightFilled from '@/svgs/ArrowLineRightFilled';
 
 const SingleDatePicker = ({
 	setDate,
@@ -59,13 +62,21 @@ const SingleDatePicker = ({
 				/>
 				<div className={styles.mover}>
 					<SVG onClick={goToToday}>
-						<Back fill={'var(--main-85)'} />
+						<Back fill={'var(--main-85)'} width="16" height="16" />
 					</SVG>
 					<SVG onClick={goToPrevMonth}>
-						<DateLeft fill={'var(--main-85)'} />
+						<ArrowLineLeftFilled
+							fill={'var(--main-85)'}
+							width="16"
+							height="16"
+						/>
 					</SVG>
 					<SVG onClick={goToNextMonth}>
-						<DateRight fill={'var(--main-85)'} />
+						<ArrowLineRightFilled
+							fill={'var(--main-85)'}
+							width="16"
+							height="16"
+						/>
 					</SVG>
 				</div>
 			</div>

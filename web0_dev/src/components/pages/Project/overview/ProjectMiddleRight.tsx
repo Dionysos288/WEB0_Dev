@@ -1,9 +1,9 @@
-import { Topfile } from '@/svgs';
 import styles from './ProjectMiddleRight.module.scss';
 import { File, Project } from '@prisma/client';
-import getTimeAgo from '@/Utils/DateHooks';
-import GetFileSize from '@/Utils/GetFileSize';
+import GetFileSize from '@/utils/GetFileSize';
 import Spacing from '@/components/General/Spacing';
+import { getTimeAgo } from '@/utils/DateHooks';
+import FilePdf from '@/svgs/FilePdf';
 type projectWithFile = Omit<Project, 'budget'> & {
 	budget: number;
 	Files: (Omit<File, 'size'> & { size: number })[];
@@ -22,11 +22,7 @@ const ProjectMiddleRight = ({ project }: { project: projectWithFile }) => {
 									className={styles.block}
 									style={{ backgroundColor: '#e8b594' }}
 								>
-									<Topfile
-										style={{
-											fill: '#484643',
-										}}
-									/>
+									<FilePdf fill="var(--main)" width="16" height="16" />
 								</div>
 								<div className={styles.vert}>
 									<h3>{file.name}</h3>

@@ -2,12 +2,17 @@
 import Image from 'next/image';
 import styles from './AddProjectPopup.module.scss';
 import Spacing from '@/components/General/Spacing';
-import { Text } from '@/svgs';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ButtonSelector from './ButtonSelector';
 import SingleDatePicker from '@/components/general/ui/date/SingleDatePicker';
-import useOutsideClick from '@/Utils/useOutSideClick';
-import { getDateFormat } from '@/Utils/DateHooks';
+import useOutsideClick from '@/utils/useOutSideClick';
+import { getDateFormat } from '@/utils/DateHooks';
+import StartDate from '@/svgs/StartDate';
+import Text from '@/svgs/Text';
+import Team from '@/svgs/Team';
+import DatePickerOver from '@/svgs/DatePickerOver';
+import DatePicker from '@/svgs/DatePicker';
+import Lead from '@/svgs/lead';
 
 const AddProjectPopUp = ({
 	isOpen,
@@ -189,7 +194,7 @@ const AddProjectPopUp = ({
 										onClick={() => setIsStatusOpen(!isStatusOpen)}
 										ref={statusRef}
 									>
-										<Text fill={'var(--main)'} />
+										<Text fill={'var(--main)'} width="16" height="16" />
 										<span>{chosenStatus}</span>
 										{isStatusOpen && (
 											<ButtonSelector
@@ -233,7 +238,12 @@ const AddProjectPopUp = ({
 										onClick={() => setIsLeadOpen(!isLeadOpen)}
 										ref={leadRef}
 									>
-										<Text fill={'var(--main)'} />
+										<Lead
+											fill={'var(--main-90)'}
+											width="15"
+											height="15"
+											style={{ transform: 'translateY(-0.5px)' }}
+										/>
 										<span>
 											{chosenLead === 'Unassigned' ? 'Lead' : chosenLead}
 										</span>
@@ -257,7 +267,7 @@ const AddProjectPopUp = ({
 										onClick={() => setIsMembersOpen(!isMembersOpen)}
 										ref={membersRef}
 									>
-										<Text fill={'var(--main)'} />
+										<Team fill={'var(--main)'} width="16" height="16" />
 										<span>{chosenMembers}</span>
 										{isMembersOpen && (
 											<ButtonSelector
@@ -278,9 +288,18 @@ const AddProjectPopUp = ({
 										className={styles.option}
 										onClick={() => budgetRef.current?.focus()}
 									>
-										<Text fill={'var(--main)'} />
+										{budget === 0 ? (
+											<Text fill={'var(--main-65)'} width="16" height="16" />
+										) : (
+											<Text fill={'var(--main)'} width="16" height="16" />
+										)}
 										<input
-											style={{ width: `calc(10px + ${inputSize}px)` }}
+											style={{
+												...(budget === 0
+													? { color: 'var(--main-65)' }
+													: { color: 'var(--main)' }),
+												width: `calc(10px + ${inputSize}px)`,
+											}}
 											className={styles.budget}
 											type="number"
 											step="0.01"
@@ -295,8 +314,27 @@ const AddProjectPopUp = ({
 										onClick={() => setIsStartDateOpen(!isStartDateOpen)}
 										ref={startDateRef}
 									>
-										<Text fill={'var(--main)'} />
-										<span>
+										{!startDate ? (
+											<StartDate
+												fill={'var(--main-65)'}
+												width="15"
+												height="15"
+											/>
+										) : (
+											<StartDate
+												fill={'var(--main-90)'}
+												width="15"
+												height="15"
+											/>
+										)}
+
+										<span
+											style={
+												startDate
+													? { color: 'var(--main)' }
+													: { color: 'var(--main-65)' }
+											}
+										>
 											{startDate
 												? getDateFormat(String(startDate))
 												: 'Start Date'}
@@ -314,9 +352,40 @@ const AddProjectPopUp = ({
 										onClick={() => setIsEndDateOpen(!isEndDateOpen)}
 										ref={endDateRef}
 									>
-										<Text fill={'var(--main)'} />
-										<span>
-											{endDate ? getDateFormat(String(endDate)) : 'End Date'}
+										{!endDate ? (
+											<DatePicker
+												fill={'var(--main-65)'}
+												width="15"
+												height="15"
+											/>
+										) : endDate < new Date() ? (
+											<DatePickerOver
+												fill={'lch(58 73 29)'}
+												width="15"
+												height="15"
+											/>
+										) : endDate <=
+										  new Date(new Date().setDate(new Date().getDate() + 7)) ? (
+											<DatePicker
+												fill={'var(--orange-90)'}
+												width="15"
+												height="15"
+											/>
+										) : (
+											<DatePicker
+												fill={'var(--main-90)'}
+												width="15"
+												height="15"
+											/>
+										)}
+										<span
+											style={
+												endDate
+													? { color: 'var(--main)' }
+													: { color: 'var(--main-65)' }
+											}
+										>
+											{endDate ? getDateFormat(String(endDate)) : 'Target Date'}
 										</span>
 										{isEndDateOpen && (
 											<SingleDatePicker

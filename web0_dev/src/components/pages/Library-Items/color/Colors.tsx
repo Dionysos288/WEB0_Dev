@@ -1,7 +1,7 @@
 import Spacing from '@/components/General/Spacing';
 import styles from './Colors.module.scss';
-import { Clip } from '@/svgs';
 import SVG from '@/components/General/SVG';
+import ClipboardText from '@/svgs/ClipboardText';
 interface colorsProps {
 	color: string[][];
 }
@@ -23,7 +23,7 @@ const Colors: React.FC<colorsProps> = ({ color }) => {
 								<p>{item[1]}</p>
 							</div>
 							<SVG>
-								<Clip />
+								<ClipboardText width="24" height="24" fill="var(--white)" />
 							</SVG>
 						</div>
 					</div>

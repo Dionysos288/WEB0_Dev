@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import styles from './ProjectMiddleLeft.module.scss';
-import getCurrentWeekDates from '@/Utils/GetCurrentWeekDates';
+import getCurrentWeekDates from '@/utils/GetCurrentWeekDates';
 import { useState } from 'react';
 const ProjectMiddleLeft = () => {
 	const weekDates = getCurrentWeekDates('en-US');

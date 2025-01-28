@@ -1,18 +1,16 @@
 'use client';
 import Image from 'next/image';
 import styles from './SideBar.module.scss';
-import {
-	Arrow,
-	ChartPie,
-	Library,
-	Projects,
-	Leads,
-	Notes,
-	Social,
-} from '@/svgs';
+
 import Link from 'next/link';
 import { useState } from 'react';
 import { motion } from 'motion/react';
+import ArrowLineRight from '@/svgs/ArrowLineRight';
+import ChartPieSlice from '@/svgs/ChartPieSlice';
+import Team from '@/svgs/Team';
+import ShoppingBagOpen from '@/svgs/ShoppingBagOpen';
+import Notebook from '@/svgs/Notebook';
+import FolderV2 from '@/svgs/FolderV2';
 
 const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 	const items = ['Overview', 'Projects'];
@@ -69,15 +67,16 @@ const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 				<div className={styles.dashboards}>
 					<h2>Dashboards</h2>
 					<Link href={'/'} className={styles.hor}>
-						<Arrow style={{ fill: '#484643', opacity: 0 }} />
+						<ArrowLineRight fill="transparant" height="16" width="16" />
 
-						<ChartPie style={{ fill: '#484643' }} />
+						<ChartPieSlice width="20" height="20" fill="var(--main)" />
 						<p>Home</p>
 					</Link>
 
 					<Link href={'/projects'} className={styles.hor}>
-						<Arrow style={{ fill: '#484643', opacity: 0 }} />
-						<Projects style={{ fill: '#484643' }} />
+						<ArrowLineRight fill="transparant" height="16" width="16" />
+
+						<FolderV2 width="20" height="20" fill="var(--main)" />
 
 						<p>Projects</p>
 					</Link>
@@ -86,9 +85,10 @@ const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 						onClick={() => setOpenClient(!openClient)}
 					>
 						<div className={`${styles.svg} ${openClient ? styles.rotate : ''}`}>
-							<Arrow style={{ fill: '#484643', opacity: 0.3 }} />
+							<ArrowLineRight fill="var(--main-35)" height="16" width="16" />
 						</div>
-						<Leads style={{ fill: '#484643' }} />
+
+						<Team fill="var(--main)" width="20" height="20" />
 						<p>Clients</p>
 					</button>
 					<motion.ul
@@ -116,8 +116,9 @@ const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 				<div className={styles.dashboards}>
 					<h2>Library</h2>
 					<Link href={'/library'} className={styles.hor}>
-						<Arrow style={{ fill: '#484643', opacity: 0 }} />
-						<Library style={{ fill: '#484643' }} />
+						<ArrowLineRight fill="transparant" height="16" width="16" />
+
+						<ShoppingBagOpen fill="var(--main)" width="20" height="20" />
 
 						<p>Overview</p>
 					</Link>
@@ -127,29 +128,26 @@ const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 							className={styles.hor}
 							key={index}
 						>
-							<Arrow style={{ fill: '#484643', opacity: 0 }} />
-							<Library style={{ fill: '#484643' }} />
+							<ArrowLineRight fill="transparant" height="16" width="16" />
+
+							<ShoppingBagOpen fill="var(--main)" width="20" height="20" />
 
 							<p>{item.slug}</p>
 						</Link>
 					))}
 					<Link href={'/library/favorite'} className={styles.hor}>
-						<Arrow style={{ fill: '#484643', opacity: 0 }} />
-						<Library style={{ fill: '#484643' }} />
+						<ArrowLineRight fill="transparant" height="16" width="16" />
+
+						<ShoppingBagOpen fill="var(--main)" width="20" height="20" />
 
 						<p>Favorite</p>
 					</Link>
 					<Link href={'/notes'} className={styles.hor}>
-						<Arrow style={{ fill: '#484643', opacity: 0 }} />
-						<Notes style={{ fill: '#484643' }} />
+						<ArrowLineRight fill="transparant" height="16" width="16" />
+
+						<Notebook fill="var(--main)" width="20" height="20" />
 
 						<p>Notes</p>
-					</Link>
-					<Link href={'/social'} className={styles.hor}>
-						<Arrow style={{ fill: '#484643', opacity: 0 }} />
-						<Social style={{ fill: '#484643' }} />
-
-						<p>Social</p>
 					</Link>
 				</div>
 			</div>

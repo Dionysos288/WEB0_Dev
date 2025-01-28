@@ -3,9 +3,10 @@
 	top: 0;
 	display: flex;
 	flex-direction: column;
+	background-color: var(--sidebar);
 	gap: 28px;
 	padding: 20px 16px;
-	border-right: 1px solid rgba(72, 70, 67, 0.1);
+	border-right: 1px solid var(--main-10);
 	width: 212px;
 	min-height: 100vh;
 	min-height: 100svh;

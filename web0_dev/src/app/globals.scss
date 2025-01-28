@@ -1,8 +1,14 @@
 /* Color */
 
 :root {
-	--white: rgba(255, 255, 255, 1);
+	--white: rgba(247, 249, 251, 1);
+
+	--white-80: rgba(247, 249, 251, 0.8);
+	--sidebar: rgba(247, 249, 251, 1);
 	--black: rgba(0, 0, 0, 1);
+	--black-black: rgba(0, 0, 0, 1);
+	--main-main: rgba(72, 70, 67, 1);
+
 	--main: rgba(72, 70, 67, 1);
 	--main-95: rgba(72, 70, 67, 0.95);
 	--main-90: rgba(72, 70, 67, 0.9);
@@ -29,9 +35,10 @@
 	--whiteSpecial: rgba(237, 233, 221, 1);
 	--whiteSpecial-5: rgba(237, 233, 221, 0.05);
 	--whiteSpecial-10: rgba(237, 233, 221, 0.1);
-
-	--lightBlue: rgba(247, 249, 251, 1);
+	--lightBlue: rgba(239, 241, 246, 1);
+	--lightBlue-45: rgba(239, 241, 246, 0.45);
 	--purple: rgba(229, 236, 246, 1);
+	--purple-50: rgba(229, 236, 246, 0.5);
 
 	--completedText: rgba(74, 167, 133, 1);
 	--completed: rgba(161, 227, 203, 1);
@@ -155,6 +162,93 @@
 	--headerHeight: 93px;
 	--headerMobileHeight: 73px;
 	--footerHeight: 96px;
+}
+
+[data-theme='dark'] {
+	--white: rgba(24, 24, 24, 1);
+	--white-80: rgba(24, 24, 24, 0.8);
+	--black: rgba(255, 255, 255, 1);
+	--black-black: rgba(0, 0, 0, 1);
+	--sidebar: rgba(26, 26, 26, 1);
+	--main-main: rgba(72, 70, 67, 1);
+	--main: rgba(237, 233, 221, 1);
+	--main-95: rgba(237, 233, 221, 0.95);
+	--main-90: rgba(237, 233, 221, 0.9);
+	--main-85: rgba(237, 233, 221, 0.85);
+	--main-80: rgba(237, 233, 221, 0.8);
+	--main-75: rgba(237, 233, 221, 0.75);
+	--main-70: rgba(237, 233, 221, 0.7);
+	--main-65: rgba(237, 233, 221, 0.65);
+	--main-60: rgba(237, 233, 221, 0.6);
+	--main-55: rgba(237, 233, 221, 0.55);
+	--main-50: rgba(237, 233, 221, 0.5);
+	--main-45: rgba(237, 233, 221, 0.45);
+	--main-40: rgba(237, 233, 221, 0.4);
+	--main-35: rgba(237, 233, 221, 0.35);
+	--main-30: rgba(237, 233, 221, 0.3);
+	--main-25: rgba(237, 233, 221, 0.25);
+	--main-20: rgba(237, 233, 221, 0.2);
+	--main-15: rgba(237, 233, 221, 0.15);
+	--main-10: rgba(237, 233, 221, 0.1);
+	--main-5: rgba(237, 233, 221, 0.05);
+
+	--orange: rgba(200, 90, 20, 1);
+	--orange-90: rgba(200, 90, 20, 0.9);
+	--whiteSpecial: rgba(237, 233, 221, 1);
+	--whiteSpecial-5: rgba(237, 233, 221, 0.05);
+	--whiteSpecial-10: rgba(237, 233, 221, 0.1);
+
+	--lightBlue: rgba(31, 30, 30, 1);
+	--lightBlue-45: rgba(31, 30, 30, 0.45);
+
+	--purple: rgba(58, 60, 61, 1);
+	--purple-50: rgba(58, 60, 61, 0.5);
+
+	--completedText: rgba(74, 167, 133, 1);
+	--completed: rgba(161, 227, 203, 1);
+
+	--progressText: rgba(138, 140, 217, 1);
+	--progress: rgba(149, 164, 252, 1);
+
+	--rejectedText: rgba(72, 70, 67, 0.6);
+	--rejected: rgba(72, 70, 67, 0.4);
+
+	--pendingText: rgba(89, 168, 212, 1);
+	--pending: rgba(177, 227, 255, 1);
+
+	--notStarted-bg: rgba(89, 168, 212, 0.3);
+	--notStarted-text: rgba(89, 168, 212, 1);
+	--notStarted-ball: rgba(89, 168, 212, 0.8);
+
+	--active-bg: rgba(89, 168, 212, 0.3);
+	--active-text: rgba(89, 168, 212, 1);
+	--active-ball: rgba(89, 168, 212, 0.8);
+
+	--completed-bg: rgba(89, 168, 212, 0.3);
+	--completed-text: rgba(89, 168, 212, 1);
+	--completed-ball: rgba(89, 168, 212, 0.8);
+
+	--leads: rgba(90, 155, 95, 1);
+	--leads-90: rgba(90, 155, 95, 0.9);
+
+	--contacted: rgba(125, 130, 200, 1);
+	--contacted-90: rgba(125, 130, 200, 0.9);
+
+	--oppurtunity: rgba(81, 98, 255, 1);
+	--oppurtunity-90: rgba(81, 98, 255, 0.9);
+
+	--client: rgba(200, 90, 20, 1);
+	--client-90: rgba(200, 90, 20, 0.9);
+
+	--boxShadow-xs: 0px 1px 2px 0px rgba(237, 233, 221, 0.02);
+	--boxShadow-sm: 0px 1px 2px 0px rgba(237, 233, 221, 0.05);
+	--boxShadow-md: 0px 1px 2px 0px rgba(237, 233, 221, 0.05);
+	--boxShadow-lg: 0px 3px 6px -1px rgba(237, 233, 221, 0.08),
+		0px 2px 4px -1px rgba(237, 233, 221, 0.06);
+	--boxShadow-xl: 0px 10px 16px -3px rgba(237, 233, 221, 0.08),
+		0px 3px 6px -2px rgba(237, 233, 221, 0.05);
+	--boxShadow-2xl: 0px 18px 24px -5px rgba(237, 233, 221, 0.1),
+		0px 8px 8px -5px rgba(237, 233, 221, 0.05);
 }
 
 /* Fonts */

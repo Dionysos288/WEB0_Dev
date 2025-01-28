@@ -1,5 +1,7 @@
-import { BookmarkXL, Figma, Dependency } from '@/svgs';
 import styles from './ToolBar.module.scss';
+import BookmarkOutline from '@/svgs/Bookmark-Outline';
+import ClipboardText from '@/svgs/ClipboardText';
+import Figma from '@/svgs/Figma';
 
 interface ToolbarProps {
 	figma: boolean;
@@ -11,7 +13,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ figma, dependency }) => {
 		<div className={styles.toolbarWrapper}>
 			<div className={styles.leftSide}>
 				<button className={styles.groupSvg}>
-					<BookmarkXL fill={'var(--main)'} />
+					<BookmarkOutline width="25" height="25" fill={'var(--main)'} />
 					<span>Save To Favorites</span>
 				</button>
 				{figma || dependency ? (
@@ -19,13 +21,13 @@ const Toolbar: React.FC<ToolbarProps> = ({ figma, dependency }) => {
 						<div className={styles.line} />
 						{figma && (
 							<button className={styles.groupSvg}>
-								<Figma />
+								<Figma width="25" height="25" fill="var(--main)" />
 								<span>Copy To Figma</span>
 							</button>
 						)}
 						{dependency && (
 							<button className={styles.groupSvg}>
-								<Dependency />
+								<ClipboardText width="25" height="25" fill="var(--main)" />
 								<span>Copy Dependencies</span>
 							</button>
 						)}

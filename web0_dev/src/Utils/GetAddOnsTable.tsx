@@ -1,4 +1,4 @@
-import { Jpg } from '@/svgs';
+import FilePdf from '@/svgs/FilePdf';
 import styles from './GetAddOnsTable.module.scss';
 import Image from 'next/image';
 const getFileType = (file: string | number) => {
@@ -16,9 +16,9 @@ const getFileType = (file: string | number) => {
 					className={styles.block}
 					style={{ backgroundColor: '#e8b594', marginRight: '4px' }}
 				>
-					<Jpg
+					<FilePdf
+						fill="var(--main)"
 						style={{
-							fill: '#484643',
 							transform: 'translateX(1px)',
 						}}
 					/>

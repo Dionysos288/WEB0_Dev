@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 import Spacing from '@/components/General/Spacing';
-import ClientProjectHeader from '@/components/pages/Project/client-portal/ClientProjectHeader';
-import Files from '@/components/pages/Project/client-portal/Files';
+import ClientProjectHeader from '@/components/pages/project/client-portal/ClientProjectHeader';
+import Files from '@/components/pages/project/client-portal/Files';
 // import FilterBar from '@/components/General/filterBar/FilterBar';
 
 import EditHeader from '@/components/General/EditHeader';
 import prisma from '@/lib/db';
-import ServerTasksGallery from '@/components/Server/ServerTasksGallery';
-import ClientTasksPage from '@/components/pages/Project/tasks/ClientTasksPage';
+import ServerTasksGallery from '@/components/server/ServerTasksGallery';
+import ClientTasksPage from '@/components/pages/project/tasks/ClientTasksPage';
 export async function generateMetadata({
 	params,
 }: {

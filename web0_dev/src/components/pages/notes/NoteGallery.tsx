@@ -1,9 +1,10 @@
 import styles from './NoteGallery.module.scss';
 import React from 'react';
-import { Folder, PlusSpecial } from '@/svgs';
 import Link from 'next/link';
 import prisma from '@/lib/db';
 import { Folder as folderType, Note as noteType } from '@prisma/client';
+import PlusFilled from '@/svgs/Plus-Filled';
+import Folder from '@/svgs/Folder';
 
 const NoteGallery = async ({
 	notesData,
@@ -63,17 +64,17 @@ const NoteGallery = async ({
 	const renderEmoji = (emoji: string) => {
 		switch (emoji) {
 			case 'Folder':
-				return <Folder fill={'var(--main)'} />;
+				return <Folder fill={'var(--main)'} width="22" height="22" />;
 			case 'Money':
-				return <Folder fill={'var(--main)'} />;
+				return <Folder fill={'var(--main)'} width="22" height="22" />;
 			default:
-				return <Folder fill={'var(--main)'} />;
+				return <Folder fill={'var(--main)'} width="22" height="22" />;
 		}
 	};
 	return (
 		<div className={styles.container}>
 			<button className={styles.addNote}>
-				<PlusSpecial fill={'var(--black)'} />
+				<PlusFilled fill={'var(--main-80)'} width="16" height="16" />
 				<span>Add Item</span>
 			</button>
 			{inFolder
@@ -118,7 +119,7 @@ const NoteGallery = async ({
 								{'folder' in item && (
 									<>
 										<div className={styles.folderTop}></div>
-										<h3>{item.folder.name}</h3>
+										<h3 className={styles.folderTitle}>{item.folder.name}</h3>
 										<p className={styles.length}>
 											{item.notes.length} Item{item.notes.length > 1 ? 's' : ''}
 										</p>

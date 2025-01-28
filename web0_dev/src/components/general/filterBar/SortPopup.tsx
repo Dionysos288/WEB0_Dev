@@ -5,18 +5,15 @@ import {
 	SortOptions,
 } from '@/components/types/types';
 import styles from './SortPopup.module.scss';
-import {
-	ArrowFilter,
-	ArrowFilterDown,
-	DatePickerXL,
-	Number,
-	Text,
-} from '@/svgs';
+
 import { Library, Task } from '@prisma/client';
 import { motion } from 'motion/react';
 import { updateFilterLibrary } from '@/actions/CRUDLibrary';
 import { updateFilterFiles } from '@/actions/CRUDFile';
 import { updateFilterTasks } from '@/actions/CRUDTask';
+import DatePicker from '@/svgs/DatePicker';
+import Number from '@/svgs/Number';
+import Text from '@/svgs/Text';
 
 const SortPopup = ({
 	isOpenSort,
@@ -108,27 +105,23 @@ const SortPopup = ({
 						onClick={() => handleSort('date', true)}
 					>
 						<div className={styles.leftSide}>
-							<DatePickerXL opacity={'0.8'} />
+							<DatePicker fill="var(--main-80)" width="16" height="16" />
 
 							<span>Date ( old - new )</span>
 						</div>
-						<div className={styles.rightSide}>
-							<ArrowFilter fill={'var(--main)'} />
-						</div>
+						<div className={styles.rightSide}></div>
 					</div>
 					<div
 						className={styles.button}
 						onClick={() => handleSort('date', false)}
 					>
 						<div className={styles.leftSide}>
-							<DatePickerXL opacity={'0.8'} />
+							<DatePicker fill="var(--main-80)" width="16" height="16" />
 
 							<span>Date ( new - old )</span>
 						</div>
 
-						<div className={styles.rightSide}>
-							<ArrowFilterDown fill={'var(--main)'} />
-						</div>
+						<div className={styles.rightSide}></div>
 					</div>
 				</>
 			)}
@@ -139,24 +132,20 @@ const SortPopup = ({
 						onClick={() => handleSort('title', true)}
 					>
 						<div className={styles.leftSide}>
-							<Text fill={'var(--main)'} opacity={'1'} />
+							<Text fill={'var(--main)'} width="16" height="16" />
 							<span>Title ( A - Z )</span>
 						</div>
-						<div className={styles.rightSide}>
-							<ArrowFilter fill={'var(--main)'} />
-						</div>
+						<div className={styles.rightSide}></div>
 					</div>
 					<div
 						className={styles.button}
 						onClick={() => handleSort('title', false)}
 					>
 						<div className={styles.leftSide}>
-							<Text fill={'var(--main)'} opacity={'1'} />
+							<Text fill={'var(--main)'} width="16" height="16" />
 							<span>Title ( Z - A )</span>
 						</div>
-						<div className={styles.rightSide}>
-							<ArrowFilterDown fill={'var(--main)'} />
-						</div>
+						<div className={styles.rightSide}></div>
 					</div>
 				</>
 			)}
@@ -167,24 +156,20 @@ const SortPopup = ({
 						onClick={() => handleSort('name', true)}
 					>
 						<div className={styles.leftSide}>
-							<Text fill={'var(--main)'} opacity={'1'} />
+							<Text fill={'var(--main)'} width="16" height="16" />
 							<span>Name ( A - Z )</span>
 						</div>
-						<div className={styles.rightSide}>
-							<ArrowFilter fill={'var(--main)'} />
-						</div>
+						<div className={styles.rightSide}></div>
 					</div>
 					<div
 						className={styles.button}
 						onClick={() => handleSort('name', false)}
 					>
 						<div className={styles.leftSide}>
-							<Text fill={'var(--main)'} opacity={'1'} />
+							<Text fill={'var(--main)'} width="16" height="16" />
 							<span>Name ( Z - A )</span>
 						</div>
-						<div className={styles.rightSide}>
-							<ArrowFilterDown fill={'var(--main)'} />
-						</div>
+						<div className={styles.rightSide}></div>
 					</div>
 				</>
 			)}
@@ -195,24 +180,20 @@ const SortPopup = ({
 						onClick={() => handleSort('size', true)}
 					>
 						<div className={styles.leftSide}>
-							<Number fill={'var(--main)'} opacity={'1'} />
+							<Number fill={'var(--main)'} width="16" height="16" />
 							<span>Size ( small - big )</span>
 						</div>
-						<div className={styles.rightSide}>
-							<ArrowFilter fill={'var(--main)'} />
-						</div>
+						<div className={styles.rightSide}></div>
 					</div>
 					<div
 						className={styles.button}
 						onClick={() => handleSort('size', false)}
 					>
 						<div className={styles.leftSide}>
-							<Number fill={'var(--main)'} opacity={'1'} />
+							<Number fill={'var(--main)'} width="16" height="16" />
 							<span>Size ( big - small )</span>
 						</div>
-						<div className={styles.rightSide}>
-							<ArrowFilterDown fill={'var(--main)'} />
-						</div>
+						<div className={styles.rightSide}></div>
 					</div>
 				</>
 			)}
@@ -223,24 +204,20 @@ const SortPopup = ({
 						onClick={() => handleSort('priority', true)}
 					>
 						<div className={styles.leftSide}>
-							<Text fill={'var(--main)'} opacity={'1'} />
+							<Text fill={'var(--main)'} width="16" height="16" />
 							<span>Priority ( low - urgent )</span>
 						</div>
-						<div className={styles.rightSide}>
-							<ArrowFilter fill={'var(--main)'} />
-						</div>
+						<div className={styles.rightSide}></div>
 					</div>
 					<div
 						className={styles.button}
 						onClick={() => handleSort('priority', false)}
 					>
 						<div className={styles.leftSide}>
-							<Text fill={'var(--main)'} opacity={'1'} />
+							<Text fill={'var(--main)'} width="16" height="16" />
 							<span>Priority ( urgent - low )</span>
 						</div>
-						<div className={styles.rightSide}>
-							<ArrowFilterDown fill={'var(--main)'} />
-						</div>
+						<div className={styles.rightSide}></div>
 					</div>
 				</>
 			)}
