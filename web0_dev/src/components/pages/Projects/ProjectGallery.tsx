@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Team from '../../General/ui/Team';
 import { PlusSpecial } from '@/svgs';
 import prisma from '@/lib/db';
-import AddProject from './AddProject';
+import AddProject from './addProject/AddProject';
 
 const ProjectGallery = async () => {
 	const projects = await prisma.project.findMany({

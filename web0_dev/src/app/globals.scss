@@ -8,7 +8,6 @@
 	--black: rgba(0, 0, 0, 1);
 	--black-black: rgba(0, 0, 0, 1);
 	--main-main: rgba(72, 70, 67, 1);
-
 	--main: rgba(72, 70, 67, 1);
 	--main-95: rgba(72, 70, 67, 0.95);
 	--main-90: rgba(72, 70, 67, 0.9);
@@ -29,6 +28,7 @@
 	--main-15: rgba(72, 70, 67, 0.15);
 	--main-10: rgba(72, 70, 67, 0.1);
 	--main-5: rgba(72, 70, 67, 0.05);
+	--backdrop: rgba(72, 70, 67, 0.07);
 
 	--orange: rgba(200, 90, 20, 1);
 	--orange-90: rgba(200, 90, 20, 0.9);
@@ -87,7 +87,6 @@
 	--gray-800: rgba(56, 63, 69, 1);
 	--gray-900: rgba(36, 41, 46, 1);
 	--gray-1000: rgba(26, 29, 31, 1);
-
 	--error-50: rgba(255, 251, 250, 1);
 	--error-100: rgba(254, 242, 242, 1);
 	--error-200: rgba(253, 233, 233, 1);
@@ -191,54 +190,13 @@
 	--main-15: rgba(237, 233, 221, 0.15);
 	--main-10: rgba(237, 233, 221, 0.1);
 	--main-5: rgba(237, 233, 221, 0.05);
-
-	--orange: rgba(200, 90, 20, 1);
-	--orange-90: rgba(200, 90, 20, 0.9);
-	--whiteSpecial: rgba(237, 233, 221, 1);
-	--whiteSpecial-5: rgba(237, 233, 221, 0.05);
-	--whiteSpecial-10: rgba(237, 233, 221, 0.1);
+	--backdrop: transparent;
 
 	--lightBlue: rgba(31, 30, 30, 1);
 	--lightBlue-45: rgba(31, 30, 30, 0.45);
 
 	--purple: rgba(58, 60, 61, 1);
 	--purple-50: rgba(58, 60, 61, 0.5);
-
-	--completedText: rgba(74, 167, 133, 1);
-	--completed: rgba(161, 227, 203, 1);
-
-	--progressText: rgba(138, 140, 217, 1);
-	--progress: rgba(149, 164, 252, 1);
-
-	--rejectedText: rgba(72, 70, 67, 0.6);
-	--rejected: rgba(72, 70, 67, 0.4);
-
-	--pendingText: rgba(89, 168, 212, 1);
-	--pending: rgba(177, 227, 255, 1);
-
-	--notStarted-bg: rgba(89, 168, 212, 0.3);
-	--notStarted-text: rgba(89, 168, 212, 1);
-	--notStarted-ball: rgba(89, 168, 212, 0.8);
-
-	--active-bg: rgba(89, 168, 212, 0.3);
-	--active-text: rgba(89, 168, 212, 1);
-	--active-ball: rgba(89, 168, 212, 0.8);
-
-	--completed-bg: rgba(89, 168, 212, 0.3);
-	--completed-text: rgba(89, 168, 212, 1);
-	--completed-ball: rgba(89, 168, 212, 0.8);
-
-	--leads: rgba(90, 155, 95, 1);
-	--leads-90: rgba(90, 155, 95, 0.9);
-
-	--contacted: rgba(125, 130, 200, 1);
-	--contacted-90: rgba(125, 130, 200, 0.9);
-
-	--oppurtunity: rgba(81, 98, 255, 1);
-	--oppurtunity-90: rgba(81, 98, 255, 0.9);
-
-	--client: rgba(200, 90, 20, 1);
-	--client-90: rgba(200, 90, 20, 0.9);
 
 	--boxShadow-xs: 0px 1px 2px 0px rgba(237, 233, 221, 0.02);
 	--boxShadow-sm: 0px 1px 2px 0px rgba(237, 233, 221, 0.05);

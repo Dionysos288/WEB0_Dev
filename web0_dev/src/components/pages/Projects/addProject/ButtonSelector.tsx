@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Spacing from '@/components/General/Spacing';
 import styles from './ButtonSelector.module.scss';
 import Text from '@/svgs/Text';
+import Check from '@/svgs/Check';
 
 const ButtonSelector = ({
 	query,
@@ -92,8 +93,8 @@ const ButtonSelector = ({
 							<span>{option}</span>
 						</div>
 						<div className={styles.leftSide}>
-							<Text
-								fill={'var(--main)'}
+							<Check
+								fill={'var(--main-90)'}
 								width="16"
 								height="16"
 								style={{ opacity: isChosen === option ? '1' : '0' }}

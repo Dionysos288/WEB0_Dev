@@ -2,9 +2,8 @@
 import styles from './SingleDatePicker.module.scss';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
-import SVG from '@/components/General/SVG';
+import SVG from '@/components/general/SVG';
 import { useState } from 'react';
-import ArrowLineRight from '@/svgs/ArrowLineRight';
 import ArrowLineLeftFilled from '@/svgs/ArrowLineLeftFilled';
 import Back from '@/svgs/Back';
 import ArrowLineRightFilled from '@/svgs/ArrowLineRightFilled';
@@ -18,7 +17,9 @@ const SingleDatePicker = ({
 	setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
 	date: Date | undefined;
 	limitDate?: Date;
-	setIsDateOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsDateOpen: React.Dispatch<
+		React.SetStateAction<boolean | string | number>
+	>;
 }) => {
 	const today = new Date();
 

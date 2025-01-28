@@ -4,6 +4,7 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
+	background-color: var(--backdrop);
 	backdrop-filter: blur(4px);
 	z-index: 1000;
 	display: flex;
@@ -89,14 +90,18 @@
 				justify-content: center;
 				align-items: center;
 				padding: 4px 8px;
-				gap: 4px;
 				border-radius: 6px;
 				background-color: var(--main-5);
 				span {
+					margin-left: 4px;
 					font-size: calc(12 / 16 * 1rem);
 					font-weight: 400;
 					line-height: calc(18 / 16 * 1rem);
 					width: max-content;
+				}
+				.budgetSpan {
+					margin-left: 0;
+					margin-right: 4px;
 				}
 				.budget {
 					border: 0;

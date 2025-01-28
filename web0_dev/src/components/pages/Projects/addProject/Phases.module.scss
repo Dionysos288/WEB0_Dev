@@ -1,0 +1,123 @@
+.phases {
+	--spacing: 8px;
+	--spacingNeg: -8px;
+
+	border-radius: 8px;
+	display: grid;
+	background-color: var(--lightBlue);
+	padding: var(--spacing);
+	padding: 12px 8px 8px 12px;
+	border: 1px solid var(--main-10);
+	box-shadow: var(--boxShadow-sm);
+	.topPart {
+		position: relative;
+		display: flex;
+		gap: 6px;
+		&:after {
+			position: absolute;
+			bottom: 0;
+			left: var(--spacingNeg);
+			content: '';
+			height: 1px;
+			width: calc(100% + (var(--spacing) * 2));
+			background-color: var(--main-10);
+		}
+		padding-bottom: 10px;
+		h3 {
+			transform: translateY(1px);
+			height: fit-content;
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 500;
+			line-height: calc(20 / 16 * 1rem);
+		}
+		p {
+			padding: 2px 6px;
+			border-radius: 4px;
+			background-color: var(--orange-90);
+			font-size: calc(12 / 16 * 1rem);
+			font-weight: 400;
+			line-height: calc(20 / 16 * 1rem);
+			color: var(--whiteSpecial);
+		}
+	}
+	.phase {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 8px 4px;
+		&:before {
+			position: absolute;
+			bottom: 0;
+			left: var(--spacingNeg);
+			content: '';
+			height: 1px;
+			width: calc(100% + (var(--spacing) * 2));
+			background-color: var(--main-10);
+		}
+		.leftSide {
+			display: flex;
+			gap: 4px;
+			align-items: center;
+			input {
+				border: 0px solid;
+				background-color: transparent;
+
+				&:focus {
+					outline: none;
+				}
+
+				&::placeholder {
+					color: var(--main-40);
+				}
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(20 / 16 * 1rem);
+				color: var(--main-80);
+				&:-webkit-autofill {
+					-webkit-box-shadow: 0 0 0 30px var(--white) inset !important;
+					-webkit-text-fill-color: var(--main-100) !important;
+				}
+			}
+		}
+		.rightSide {
+			svg {
+				svg:hover {
+					fill: 'var(--main-95)';
+				}
+			}
+			display: flex;
+			gap: 2px;
+			align-items: center;
+			p {
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(20 / 16 * 1rem);
+				color: var(--main-70);
+			}
+		}
+	}
+	.underSide {
+		padding-top: 8px;
+
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		button {
+			padding: 4px;
+			border-radius: 4px;
+			display: flex;
+			gap: 3px;
+			align-items: center;
+			&:hover {
+				background-color: var(--main-10);
+			}
+			span {
+				transform: translateY(0.5px);
+				font-size: calc(12 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(18 / 16 * 1rem);
+			}
+		}
+	}
+}

@@ -70,12 +70,12 @@
 			}
 			:global(.rdp-day > button:hover) {
 				background-color: var(--orange-90) !important;
-				color: var(--white) !important;
+				color: var(--whiteSpecial) !important;
 			}
 
 			:global(.rdp-day_selected > button) {
 				background-color: var(--orange-90) !important;
-				color: var(--white) !important;
+				color: var(--whiteSpecial) !important;
 			}
 			:global(.rdp-day:has(.rdp-day_button[aria-label^='Saturday'])) {
 				color: var(--main-55) !important;
