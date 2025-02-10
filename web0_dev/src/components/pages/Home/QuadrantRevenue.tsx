@@ -1,6 +1,6 @@
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import styles from './QuadrantRevenue.module.scss';
-import BarChartComponentVertical from '@/components/General/ui/charts/BarChartComponentVertical';
+import BarChartComponentVertical from '@/components/general/ui/charts/BarChartComponentVertical';
 const data = [
 	{ name: 'Q1', value: 125, color: 'rgba(105, 164, 111,1)' },
 	{ name: 'Q2', value: 100, color: 'rgba(137, 141, 205,1)' },

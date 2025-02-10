@@ -13,7 +13,7 @@ const tasks = [
 const completedCount = tasks.filter(
 	(t) => t.columnStatus === 'Completed'
 ).length;
-
+const organizationId = '3jCJWR1cFNgXYhNyS5kzYmuib01dp4wk';
 const projectData: Prisma.ProjectCreateInput[] = [
 	{
 		id: '1ABC',
@@ -25,6 +25,11 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		team: ['John', 'Doe'],
 		status: 'pending',
 		completed: completedCount,
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 
 		phases: {
 			create: [
@@ -129,6 +134,11 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		team: ['John', 'Doe'],
 		status: 'rejected',
 		completed: completedCount,
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 		tasks: {
 			create: [
 				{
@@ -231,6 +241,11 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		team: ['John', 'Doe'],
 		status: 'progress',
 		completed: completedCount,
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 		tasks: {
 			create: [
 				{
@@ -331,6 +346,11 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		team: ['John', 'Doe'],
 		status: 'completed',
 		completed: 0,
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 ];
 const clientData: Prisma.ClientCreateInput[] = [
@@ -341,6 +361,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Call',
 		status: 'Leads',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		name: 'dion ZEneli',
@@ -349,6 +374,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Mail',
 		status: 'Leads',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		name: 'John',
@@ -357,6 +387,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Referral',
 		status: 'Leads',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		name: 'Client 1',
@@ -365,6 +400,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Events',
 		status: 'Contacted',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		name: 'dion ZEneli',
@@ -373,6 +413,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Other',
 		status: 'Contacted',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		name: 'John',
@@ -381,6 +426,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Events',
 		status: 'Contacted',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		name: 'Client 1',
@@ -389,6 +439,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Call',
 		status: 'Opportunity',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		name: 'dion ZEneli',
@@ -397,6 +452,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Mail',
 		status: 'Opportunity',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		name: 'John',
@@ -405,6 +465,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Website',
 		status: 'Opportunity',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		name: 'Client 1',
@@ -413,6 +478,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Website',
 		status: 'Client',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		name: 'dion ZEneli',
@@ -421,6 +491,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Website',
 		status: 'Client',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		name: 'John',
@@ -429,6 +504,11 @@ const clientData: Prisma.ClientCreateInput[] = [
 		company: 'Company 1',
 		source: 'Website',
 		status: 'Client',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 ];
 
@@ -436,28 +516,64 @@ const folderData: Prisma.FolderCreateInput[] = [
 	{
 		name: 'Design Documents',
 		emoji: 'money',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 		notes: {
 			create: [
-				{ title: 'Wireframe.png', description: '#1' },
-				{ title: 'Mockups.pdf' },
+				{
+					title: 'Wireframe.png',
+					description: '#1',
+					organizationId: organizationId,
+				},
+				{
+					title: 'Mockups.pdf',
+					organizationId: organizationId,
+				},
 			],
 		},
 	},
 	{
 		name: 'Reports',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 		notes: {
 			create: [
-				{ title: 'Q1Report.xlsx', description: '#1' },
-				{ title: 'Q2Report.xlsx' },
+				{
+					title: 'Q1Report.xlsx',
+					description: '#1',
+					organizationId: organizationId,
+				},
+				{
+					title: 'Q2Report.xlsx',
+					organizationId: organizationId,
+				},
 			],
 		},
 	},
 	{
 		name: 'Marketing',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 		notes: {
 			create: [
-				{ title: 'CampaignIdeas.docx', description: '#1' },
-				{ title: 'Budget.xlsx' },
+				{
+					title: 'CampaignIdeas.docx',
+					description: '#1',
+					organizationId: organizationId,
+				},
+				{
+					title: 'Budget.xlsx',
+					organizationId: organizationId,
+				},
 			],
 		},
 	},
@@ -466,39 +582,77 @@ const noteData: Prisma.NoteCreateInput[] = [
 	{
 		title: 'Wireframe.png',
 		description: '#1',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		title: 'Mockups.pdf',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		title: 'Q1Report.xlsx',
 		description: '#1',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		title: 'Q2Report.xlsx',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		title: 'CampaignIdeas.docx',
 		description: '#1',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 	{
 		title: 'Budget.xlsx',
+		Organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
 	},
 ];
 
 export async function main() {
-	for (const u of projectData) {
-		await prisma.project.create({ data: u });
+	for (const project of projectData) {
+		await prisma.project.create({
+			data: project,
+		});
 	}
 
 	for (const u of clientData) {
-		await prisma.client.create({ data: u });
+		await prisma.client.create({
+			data: u,
+		});
 	}
 	for (const u of folderData) {
-		await prisma.folder.create({ data: u });
+		await prisma.folder.create({
+			data: u,
+		});
 	}
 	for (const u of noteData) {
-		await prisma.note.create({ data: u });
+		await prisma.note.create({
+			data: u,
+		});
 	}
 
 	const frontendType = await prisma.libraryType.create({
@@ -521,6 +675,7 @@ export async function main() {
 				name: `${baseName} Components`,
 				slug: `${baseName.toLowerCase()}-components`,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -529,6 +684,7 @@ export async function main() {
 				name: `${baseName} Utilities`,
 				slug: `${baseName.toLowerCase()}-utilities`,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -538,6 +694,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-buttons`,
 				parentId: category1.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -547,6 +704,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-forms`,
 				parentId: category1.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -556,6 +714,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-black-buttons`,
 				parentId: subcategory1.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -565,6 +724,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-orange-buttons`,
 				parentId: subcategory1.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -574,6 +734,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-black-forms`,
 				parentId: subcategory2.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -583,6 +744,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-orange-forms`,
 				parentId: subcategory2.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -592,6 +754,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-helpers`,
 				parentId: category2.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -601,6 +764,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-middlewares`,
 				parentId: category2.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -610,6 +774,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-black-helpers`,
 				parentId: subcategory3.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -619,6 +784,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-orange-helpers`,
 				parentId: subcategory3.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -628,6 +794,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-black-middlewares`,
 				parentId: subcategory4.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -637,6 +804,7 @@ export async function main() {
 				slug: `${baseName.toLowerCase()}-orange-middlewares`,
 				parentId: subcategory4.id,
 				libraryTypeId,
+				organizationId: organizationId,
 			},
 		});
 
@@ -685,6 +853,7 @@ export async function main() {
 					tags: [`${baseName.toLowerCase()}`, `tag${i}`],
 					projectId: '1ABC',
 					categoryId: randomCategory.id,
+					organizationId: organizationId,
 				},
 			});
 		}

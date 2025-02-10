@@ -1,7 +1,7 @@
 'use client';
-import FilterBar from '@/components/General/filterBar/FilterBar';
-import Spacing from '@/components/General/Spacing';
-import TopMenu from '@/components/General/TopMenu';
+import FilterBar from '@/components/general/filterBar/FilterBar';
+import Spacing from '@/components/general/Spacing';
+import TopMenu from '@/components/general/TopMenu';
 import Gallery from './Gallery';
 import FilterSideBar from './FilterSideBar';
 import { useState } from 'react';
@@ -19,13 +19,17 @@ const LibraryPage = ({
 	menuLinks,
 	favorite = false,
 	libraryData,
+	slug,
+	orgId,
 }: {
 	homePage?: boolean;
 	projectPage?: boolean;
 	menuItems?: string[];
 	menuLinks?: string[];
 	favorite?: boolean;
+	slug: string;
 	libraryData: LibraryData | LibraryData[];
+	orgId: string;
 }) => {
 	const [galleryData, setGalleryData] = useState<ExtendedLibrary[]>(
 		Array.isArray(libraryData)
@@ -53,10 +57,10 @@ const LibraryPage = ({
 				setSelectedCategories={setSelectedCategories}
 				query={query}
 				sortType={sortType}
+				organizationId={orgId}
 			/>
 			{!projectPage && menuItems && menuLinks && (
 				<TopMenu
-					mainLink="library"
 					menuItems={menuItems}
 					menuLinks={menuLinks}
 					AddItem={'Add Asset'}
@@ -84,9 +88,10 @@ const LibraryPage = ({
 				filters={selectedCategories}
 				sortType={sortType}
 				setSortType={setSortType}
+				orgId={orgId}
 			/>
 			<Spacing space={28} />
-			<Gallery data={galleryData} />
+			<Gallery data={galleryData} slug={slug} />
 		</>
 	);
 };

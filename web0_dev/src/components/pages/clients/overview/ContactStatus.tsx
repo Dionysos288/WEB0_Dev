@@ -1,10 +1,12 @@
-import Spacing from '../../../General/Spacing';
+import Spacing from '../../../general/Spacing';
 import styles from './ContactStatus.module.scss';
-import DoughnutChart from '../../../General/ui/charts/DoughnutChart';
+import DoughnutChart from '../../../general/ui/charts/DoughnutChart';
 import { ClientStatus } from '@prisma/client';
 import prisma from '@/lib/db';
+import { getUser } from '@/actions/AccountActions';
 
 const ContactStatus = async () => {
+	const { data: session } = await getUser();
 	const colors = [
 		'var(--leads-90)',
 		'var(--contacted-90)',
@@ -21,6 +23,9 @@ const ContactStatus = async () => {
 		by: ['status'],
 		_count: {
 			status: true,
+		},
+		where: {
+			organizationId: session?.session.organizationId,
 		},
 	});
 	const sourceCountMap = new Map(

@@ -1,6 +1,7 @@
 'use server';
 
 import { ExtendedLibrary, SortOptions } from '@/components/types/types';
+import { Session } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
@@ -12,6 +13,7 @@ async function updateFilterLibrary({
 	query,
 	type,
 	favorite,
+	organizationId,
 }: {
 	selectedCategories: string[];
 	id?: string;
@@ -19,6 +21,7 @@ async function updateFilterLibrary({
 	query: string;
 	type: SortOptions;
 	favorite: boolean;
+	organizationId: string;
 }) {
 	try {
 		const orderBy: Prisma.LibraryOrderByWithRelationInput =
@@ -28,19 +31,15 @@ async function updateFilterLibrary({
 				? { title: isAscending ? 'asc' : 'desc' }
 				: { createdAt: 'desc' };
 
-		const where: Prisma.LibraryWhereInput = {};
-		if (id || id !== '') {
-			where.libraryTypeId = id;
-		}
-		if (favorite) {
-			where.favorite = true;
-		}
-		if (selectedCategories?.length) {
-			where.Category = { name: { in: selectedCategories } };
-		}
-		if (query) {
-			where.title = { contains: query, mode: 'insensitive' };
-		}
+		const where: Prisma.LibraryWhereInput = {
+			organizationId,
+			...(id ? { libraryTypeId: id } : {}),
+			...(favorite ? { favorite: true } : {}),
+			...(selectedCategories?.length
+				? { Category: { name: { in: selectedCategories } } }
+				: {}),
+			...(query ? { title: { contains: query, mode: 'insensitive' } } : {}),
+		};
 
 		const data = (await prisma.library.findMany({
 			where,

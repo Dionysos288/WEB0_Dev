@@ -2,15 +2,20 @@ import Image from 'next/image';
 import Spacing from '../../General/Spacing';
 import styles from './ProjectGallery.module.scss';
 import Link from 'next/link';
-import Team from '../../General/ui/Team';
-import { PlusSpecial } from '@/svgs';
+import Team from '../../general/ui/Team';
 import prisma from '@/lib/db';
 import AddProject from './addProject/AddProject';
+import { getUser } from '@/actions/AccountActions';
 
 const ProjectGallery = async () => {
+	const { data: session } = await getUser();
+	const organizationSlug = session?.session.organizationSlug;
 	const projects = await prisma.project.findMany({
 		include: {
 			tasks: true,
+		},
+		where: {
+			organizationId: session?.session.organizationId,
 		},
 	});
 	return (
@@ -25,7 +30,7 @@ const ProjectGallery = async () => {
 				const allTasks = project.tasks.length;
 				return (
 					<Link
-						href={`/projects/${project.id}`}
+						href={`/${organizationSlug}/projects/${project.id}`}
 						key={index}
 						className={styles.project}
 					>

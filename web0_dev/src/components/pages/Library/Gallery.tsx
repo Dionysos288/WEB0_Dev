@@ -9,7 +9,13 @@ import BookmarkFilled from '@/svgs/Bookmark-Filled';
 import BookmarkOutline from '@/svgs/Bookmark-Outline';
 import PlusRoundStroke from '@/svgs/Plus-Round-Stroke';
 
-const Gallery = ({ data }: { data: ExtendedLibrary | ExtendedLibrary[] }) => {
+const Gallery = ({
+	data,
+	slug,
+}: {
+	data: ExtendedLibrary | ExtendedLibrary[];
+	slug: string;
+}) => {
 	const items = Array.isArray(data) ? data : [data];
 	const [favoriteStatus, setFavoriteStatus] = useState(
 		items.reduce((acc, item) => {
@@ -38,7 +44,7 @@ const Gallery = ({ data }: { data: ExtendedLibrary | ExtendedLibrary[] }) => {
 			{items.map((item) => (
 				<div className={styles.item} key={item.id}>
 					<div className={styles.GalleryItem}>
-						<Link href={`/library/${item.id}`}>
+						<Link href={`/${slug}/library/${item.id}`}>
 							<Image
 								src="https://placehold.co/24"
 								alt="UserProfilePic"

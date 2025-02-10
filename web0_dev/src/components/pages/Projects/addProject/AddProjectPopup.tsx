@@ -5,7 +5,6 @@ import Spacing from '@/components/General/Spacing';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ButtonSelector from './ButtonSelector';
 import SingleDatePicker from '@/components/general/ui/date/SingleDatePicker';
-import useOutsideClick from '@/utils/useOutSideClick';
 import { getDateFormat } from '@/utils/DateHooks';
 import StartDate from '@/svgs/StartDate';
 import Text from '@/svgs/Text';
@@ -65,6 +64,7 @@ const AddProjectPopUp = ({
 	const [chosenPriority, setChosenPriority] = useState(priorities[0]);
 	const [chosenLead, setChosenLead] = useState('Unassigned');
 	const [chosenMembers, setChosenMembers] = useState('Members');
+	const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -145,6 +145,13 @@ const AddProjectPopUp = ({
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 	};
+
+	const getMembersDisplayText = (selected: string[]) => {
+		if (selected.length === 0) return 'Members';
+		if (selected.length === 1) return '1 Member';
+		return `${selected.length} Members`;
+	};
+
 	return (
 		<>
 			{isOpen && (
@@ -236,17 +243,29 @@ const AddProjectPopUp = ({
 												</ClickOutsideWrapper>
 											)}
 										</div>
+
 										<div
 											className={styles.option}
 											onClick={() => setIsLeadOpen(!isLeadOpen)}
 										>
 											<Lead
-												fill={'var(--main-90)'}
+												fill={
+													chosenLead === 'Unassigned'
+														? 'var(--main-65)'
+														: 'var(--main-90)'
+												}
 												width="15"
 												height="15"
 												style={{ transform: 'translateY(-0.5px)' }}
 											/>
-											<span>
+											<span
+												style={{
+													color:
+														chosenLead === 'Unassigned'
+															? 'var(--main-65)'
+															: 'var(--main)',
+												}}
+											>
 												{chosenLead === 'Unassigned' ? 'Lead' : chosenLead}
 											</span>
 											{isLeadOpen && (
@@ -268,12 +287,30 @@ const AddProjectPopUp = ({
 												</ClickOutsideWrapper>
 											)}
 										</div>
+
 										<div
 											className={styles.option}
 											onClick={() => setIsMembersOpen(!isMembersOpen)}
 										>
-											<Team fill={'var(--main)'} width="16" height="16" />
-											<span>{chosenMembers}</span>
+											<Team
+												fill={
+													selectedMembers.length === 0
+														? 'var(--main-65)'
+														: 'var(--main)'
+												}
+												width="16"
+												height="16"
+											/>
+											<span
+												style={{
+													color:
+														selectedMembers.length === 0
+															? 'var(--main-65)'
+															: 'var(--main)',
+												}}
+											>
+												{getMembersDisplayText(selectedMembers)}
+											</span>
 											{isMembersOpen && (
 												<ClickOutsideWrapper
 													onClose={() => setIsMembersOpen(!isMembersOpen)}
@@ -289,6 +326,9 @@ const AddProjectPopUp = ({
 														setIsChosen={setChosenMembers}
 														isChosen={chosenMembers}
 														setIsOpenOption={setIsMembersOpen}
+														isComboBox={true}
+														selectedItems={selectedMembers}
+														onSelectedItemsChange={setSelectedMembers}
 													/>
 												</ClickOutsideWrapper>
 											)}

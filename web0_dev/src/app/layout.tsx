@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.scss';
-import ConsoleLogger from '@/components/General/Consolelogger';
-import LenisWrapper from '@/components/General/LenisWrapper';
-import LayoutClient from '@/components/General/LayoutClient';
+import ConsoleLogger from '@/components/general/Consolelogger';
+import LenisWrapper from '@/components/general/LenisWrapper';
+import { Toaster } from 'sonner';
+
 import { ThemeProvider } from 'next-themes';
 
 const inter = Inter({
@@ -29,7 +30,8 @@ export default function RootLayout({
 				<ConsoleLogger />
 				<LenisWrapper>
 					<ThemeProvider>
-						<LayoutClient>{children}</LayoutClient>
+						{children}
+						<Toaster />
 					</ThemeProvider>
 				</LenisWrapper>
 			</body>

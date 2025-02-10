@@ -55,12 +55,46 @@
 
 			.leftSide {
 				display: flex;
-				gap: 4px;
+
 				align-items: center;
+				.iconCombo {
+					margin-right: 0px;
+				}
+				.iconNoCombo {
+					margin-right: 4px;
+				}
 				span {
 					font-size: calc(14 / 16 * 1rem);
 					font-weight: 400;
 					line-height: calc(18 / 16 * 1rem);
+				}
+				.checkbox {
+					width: 14px;
+					height: 14px;
+					cursor: pointer;
+					margin-right: 8px;
+					appearance: none;
+					border: 1px solid var(--main-20);
+					border-radius: 4px;
+					padding: 0;
+					position: relative;
+
+					&:checked {
+						background-color: var(--orange-90);
+						border-color: var(--orange-90);
+					}
+
+					&:checked::after {
+						content: '';
+						position: absolute;
+						left: 4px;
+						top: 1px;
+						width: 4px;
+						height: 7px;
+						border: solid white;
+						border-width: 0 1.5px 1.5px 0;
+						transform: rotate(45deg);
+					}
 				}
 			}
 		}

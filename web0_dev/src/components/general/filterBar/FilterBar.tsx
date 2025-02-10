@@ -42,6 +42,7 @@ interface FilterBarProps {
 	query: string;
 	setQuery: React.Dispatch<React.SetStateAction<string>>;
 	model: ModelNames;
+	orgId?: string;
 }
 const FilterBar: React.FC<FilterBarProps> = ({
 	title,
@@ -62,6 +63,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 	phaseId = '',
 	model,
 	ExtraFilters,
+	orgId = '',
 }) => {
 	const [isOpenSort, setIsOpenSort] = useState<boolean>(false);
 	const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
@@ -89,6 +91,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 							type: sortType[0],
 							query: debouncedQuery,
 							isAscending: sortType[1],
+							organizationId: orgId,
 					  })
 					: model === 'file'
 					? await updateFilterFiles({
@@ -112,6 +115,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 							type: sortType[0],
 							query: debouncedQuery,
 							isAscending: sortType[1],
+							organizationId: orgId,
 					  });
 			setData(updatedData.data);
 		}
@@ -125,6 +129,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 		setData,
 		favorite,
 		phaseId,
+		orgId,
 	]);
 	return (
 		<>

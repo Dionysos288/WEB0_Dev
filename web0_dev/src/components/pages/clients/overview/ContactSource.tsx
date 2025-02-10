@@ -1,10 +1,12 @@
 import prisma from '@/lib/db';
-import Spacing from '../../../General/Spacing';
-import BarChartComponent from '../../../General/ui/charts/BarChartComponent';
+import Spacing from '../../../general/Spacing';
+import BarChartComponent from '../../../general/ui/charts/BarChartComponent';
 import styles from './ContactSource.module.scss';
 import { ClientSource } from '@prisma/client';
+import { getUser } from '@/actions/AccountActions';
 
 const ContactSource = async () => {
+	const { data: session } = await getUser();
 	const colors = [
 		'rgba(105, 164, 111,1)',
 		'rgba(137, 141, 205,1)',
@@ -27,6 +29,9 @@ const ContactSource = async () => {
 		by: ['source'],
 		_count: {
 			source: true,
+		},
+		where: {
+			organizationId: session?.session.organizationId,
 		},
 	});
 	const sourceCountMap = new Map(

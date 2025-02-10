@@ -11,12 +11,20 @@ import Team from '@/svgs/Team';
 import ShoppingBagOpen from '@/svgs/ShoppingBagOpen';
 import Notebook from '@/svgs/Notebook';
 import FolderV2 from '@/svgs/FolderV2';
+import { authClient } from '@/lib/auth-clients';
+import Router from 'next/router';
+import { Session } from '@/lib/auth';
 
-const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
+const SideBar = ({
+	libraryItems,
+	session,
+}: {
+	libraryItems: { slug: string }[];
+	session: Session;
+}) => {
 	const items = ['Overview', 'Projects'];
 	const [favState, setFavState] = useState(true);
 	const [openClient, setOpenClient] = useState(false);
-
 	const toggleFav = () => {
 		setFavState(!favState);
 	};
@@ -32,7 +40,20 @@ const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 							height={24}
 						/>
 					</div>
-					<p>Dion Zeneli</p>
+					<p>{session.user.name}</p>
+					<button
+						onClick={async () => {
+							await authClient.signOut({
+								fetchOptions: {
+									onSuccess: () => {
+										Router.push('/sign-in');
+									},
+								},
+							});
+						}}
+					>
+						out
+					</button>
 				</div>
 				<div className={styles.highlight}>
 					<div className={styles.favorites}>
@@ -57,7 +78,7 @@ const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 					</div>
 					<div className={styles.items}>
 						{items.map((item, index) => (
-							<Link href={'/'} className={styles.horizontal} key={index}>
+							<Link href={`/${session.session.organizationSlug}`} className={styles.horizontal} key={index}>
 								<div className={styles.circle}></div>
 								<p className={styles.item}>{item}</p>
 							</Link>
@@ -66,14 +87,14 @@ const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 				</div>
 				<div className={styles.dashboards}>
 					<h2>Dashboards</h2>
-					<Link href={'/'} className={styles.hor}>
+					<Link href={`/${session.session.organizationSlug}`} className={styles.hor}>
 						<ArrowLineRight fill="transparant" height="16" width="16" />
 
 						<ChartPieSlice width="20" height="20" fill="var(--main)" />
 						<p>Home</p>
 					</Link>
 
-					<Link href={'/projects'} className={styles.hor}>
+					<Link href={`/${session.session.organizationSlug}/projects`} className={styles.hor}>
 						<ArrowLineRight fill="transparant" height="16" width="16" />
 
 						<FolderV2 width="20" height="20" fill="var(--main)" />
@@ -106,16 +127,16 @@ const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 						className={styles.items}
 					>
 						<li>
-							<Link href={'/clients'}>Overview</Link>
+							<Link href={`/${session.session.organizationSlug}/clients`}>Overview</Link>
 						</li>
 						<li>
-							<Link href={'/clients/leads'}>Leads</Link>
+							<Link href={`/${session.session.organizationSlug}/clients/leads`}>Leads</Link>
 						</li>
 					</motion.ul>
 				</div>
 				<div className={styles.dashboards}>
 					<h2>Library</h2>
-					<Link href={'/library'} className={styles.hor}>
+					<Link href={`/${session.session.organizationSlug}/library`} className={styles.hor}>
 						<ArrowLineRight fill="transparant" height="16" width="16" />
 
 						<ShoppingBagOpen fill="var(--main)" width="20" height="20" />
@@ -124,7 +145,7 @@ const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 					</Link>
 					{libraryItems.map((item, index) => (
 						<Link
-							href={`/library/category/${item.slug}`}
+							href={`/${session.session.organizationSlug}/library/category/${item.slug}`}
 							className={styles.hor}
 							key={index}
 						>
@@ -135,14 +156,14 @@ const SideBar = ({ libraryItems }: { libraryItems: { slug: string }[] }) => {
 							<p>{item.slug}</p>
 						</Link>
 					))}
-					<Link href={'/library/favorite'} className={styles.hor}>
+					<Link href={`/${session.session.organizationSlug}/library/favorite`} className={styles.hor}>
 						<ArrowLineRight fill="transparant" height="16" width="16" />
 
 						<ShoppingBagOpen fill="var(--main)" width="20" height="20" />
 
 						<p>Favorite</p>
 					</Link>
-					<Link href={'/notes'} className={styles.hor}>
+					<Link href={`/${session.session.organizationSlug}/notes`} className={styles.hor}>
 						<ArrowLineRight fill="transparant" height="16" width="16" />
 
 						<Notebook fill="var(--main)" width="20" height="20" />

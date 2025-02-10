@@ -1,10 +1,12 @@
 import prisma from '@/lib/db';
-import SideBar from '../General/header/SideBar';
+import SideBar from '../general/header/SideBar';
+import { getUser } from '@/actions/AccountActions';
 
 export default async function ServerSideBar() {
 	const libraryItems = await prisma.libraryType.findMany({
 		select: { slug: true },
 	});
-
-	return <SideBar libraryItems={libraryItems} />;
+	const { data: session } = await getUser()
+	console.log(session)
+	return <SideBar libraryItems={libraryItems} session={session} />;
 }

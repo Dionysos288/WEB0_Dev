@@ -1,6 +1,6 @@
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import styles from './MonthlyRevenue.module.scss';
-import LineChartComponent from '@/components/General/ui/charts/LineChartComponent';
+import LineChartComponent from '@/components/general/ui/charts/LineChartComponent';
 const data = [
 	{ name: 'Jan', value: 100 },
 	{ name: 'Feb', value: 120 },

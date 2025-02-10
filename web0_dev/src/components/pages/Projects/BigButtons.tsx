@@ -4,14 +4,23 @@ import styles from './BigButtons.module.scss';
 import Folder from '@/svgs/Folder';
 import CurrencyCircleDollar from '@/svgs/CurrencyCircleDollar';
 import Team from '@/svgs/Team';
+import { getUser } from '@/actions/AccountActions';
 const BigButtons = async () => {
-	const allProjects = await prisma.project.count();
+	const { data: session } = await getUser();
+	const allProjects = await prisma.project.count({
+		where: { organizationId: 'session?.session.organizationId' },
+	});
 	const budget = await prisma.project.aggregate({
 		_sum: {
 			budget: true,
 		},
+		where: {
+			organizationId: session?.session.organizationId,
+		},
 	});
-	const clients = await prisma.client.count();
+	const clients = await prisma.client.count({
+		where: { organizationId: session?.session.organizationId },
+	});
 	return (
 		<>
 			<h2 className={styles.header}>My Projects</h2>

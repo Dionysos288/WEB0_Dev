@@ -22,6 +22,7 @@ export default function FilterSideBar({
 	setSelectedCategories,
 	query,
 	sortType,
+	organizationId,
 }: {
 	data: LibraryData | LibraryData[];
 	favorite: boolean;
@@ -32,6 +33,7 @@ export default function FilterSideBar({
 	setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
 	query: string;
 	sortType: [SortOptions, boolean];
+	organizationId: string;
 }) {
 	console.log(setIsFilterOpen);
 	const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
@@ -76,6 +78,7 @@ export default function FilterSideBar({
 			query,
 			favorite: favorite,
 			isAscending: sortType[1],
+			organizationId,
 		});
 		setData(updatedData.data);
 	}
