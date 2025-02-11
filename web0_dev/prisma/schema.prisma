@@ -9,10 +9,19 @@ generator client {
 }
 
 enum ProjectStatus {
+  backlog
+  planned
   progress
-  rejected
-  pending
   completed
+  canceled
+}
+
+enum Priority {
+  noPriority
+  low
+  medium
+  high
+  urgent
 }
 
 enum PhaseStatus {
@@ -40,8 +49,11 @@ enum ClientSource {
 
 enum TaskStatus {
   Backlog
-  In_Progress
+  todo
+  inProgress
+  inReview
   Completed
+  canceled
 }
 
 enum libraryComponent {
@@ -105,7 +117,7 @@ model Task {
   description    String?
   projectId      String
   project        Project       @relation(fields: [projectId], references: [id])
-  priority       Int
+  priority       Priority?
   status         TaskStatus
   Organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
@@ -116,23 +128,26 @@ model Task {
 }
 
 model Project {
-  id             String        @id @default(cuid())
+  id             String           @id @default(cuid())
   title          String
   description    String?
   start          DateTime
   due            DateTime
-  team           String[]
   status         ProjectStatus
+  priority       Priority?
   organizationId String
-  Organization   Organization  @relation(fields: [organizationId], references: [id])
+  Organization   Organization     @relation(fields: [organizationId], references: [id])
   budget         Decimal
+  leadId         String?
+  lead           Member?          @relation("ProjectLead", fields: [leadId], references: [id])
+  members        Member[]         @relation("ProjectMembers")
   tasks          Task[]
   completed      Int
   phases         Phase[]
   Files          File[]
   Library        Library[]
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 model Phase {
@@ -299,13 +314,15 @@ model Organization {
 }
 
 model Member {
-  id             String       @id
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  userId         String
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role           String
-  createdAt      DateTime
+  id               String       @id
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId           String
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role             String
+  createdAt        DateTime
+  leadingProjects  Project[]    @relation("ProjectLead")
+  memberOfProjects Project[]    @relation("ProjectMembers")
 
   @@map("member")
 }

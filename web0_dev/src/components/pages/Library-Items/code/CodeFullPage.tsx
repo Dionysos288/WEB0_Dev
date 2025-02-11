@@ -1,7 +1,7 @@
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import EditorScreen from './EditorScreen';
 import Toolbar from '../components/ToolBar';
-import EditHeader from '@/components/General/EditHeader';
+import EditHeader from '@/components/general/EditHeader';
 
 const CodeFullPage = () => {
 	return (

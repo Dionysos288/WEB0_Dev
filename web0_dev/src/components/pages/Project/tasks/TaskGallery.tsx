@@ -1,4 +1,3 @@
-'use client';
 import styles from './TaskGallery.module.scss';
 import {
 	DndContext,
@@ -9,52 +8,171 @@ import {
 	useSensor,
 	useSensors,
 	DragOverEvent,
+	useDroppable,
 } from '@dnd-kit/core';
 
-import { useEffect, useState } from 'react';
+import {
+	useEffect,
+	useMemo,
+	useState,
+	useCallback,
+	useTransition,
+} from 'react';
 import Column from './Column';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
 import TaskComponent from './Task';
-import { Task } from '@prisma/client';
+import { Phase, Task, TaskStatus } from '@prisma/client';
 import { TaskColumnType } from '@/components/types/types';
+import ArrowLineRight from '@/svgs/ArrowLineRight';
+import SVG from '@/components/general/SVG';
+import Dots from '@/svgs/Dots';
+import { useOutsideRef } from '@/utils/useOutsideRef';
+import { updateTaskStatus } from '@/actions/CRUDTask';
+import { toast } from 'sonner';
+
+const statusHeaderMap: Record<TaskStatus, string> = {
+	Backlog: 'Backlog',
+	todo: 'To Do',
+	inProgress: 'In Progress',
+	inReview: 'In Review',
+	Completed: 'Completed',
+	canceled: 'Canceled',
+};
+
+const HiddenColumn = ({
+	column,
+	onShowColumn,
+}: {
+	column: TaskColumnType;
+	onShowColumn?: (columnId: number) => void;
+}) => {
+	const { setNodeRef, isOver, active } = useDroppable({
+		id: `hidden-${column.id}`,
+		data: { type: 'column', title: column.title },
+	});
+
+	const [showDropdown, setShowDropdown] = useState(false);
+	const handleClickOutside = useCallback(() => {
+		setShowDropdown(false);
+	}, []);
+
+	const dropdownRef = useOutsideRef(handleClickOutside);
+	const isValidDrop = active?.data?.current?.type === 'task' && isOver;
+
+	return (
+		<div
+			ref={setNodeRef}
+			className={`${styles.hiddenColumn} ${isValidDrop ? styles.isOver : ''}`}
+			data-column-id={column.id}
+		>
+			<span>{statusHeaderMap[column.title as TaskStatus] || column.title}</span>
+			<span>{column.tasks.length}</span>
+			{column.tasks.length > 0 && (
+				<div className={styles.headerRight} ref={dropdownRef}>
+					<SVG onClick={() => setShowDropdown(!showDropdown)}>
+						<Dots fill={'var(--main)'} width="18" height="18" />
+					</SVG>
+					{showDropdown && (
+						<div className={styles.dropdown}>
+							<button
+								onClick={() => {
+									onShowColumn?.(column.id);
+									setShowDropdown(false);
+								}}
+							>
+								Show column
+							</button>
+						</div>
+					)}
+				</div>
+			)}
+		</div>
+	);
+};
 
 const TaskGallery = ({
 	tasks,
 	setTasks,
+	projectId,
+	orgUrl,
 }: {
-	tasks: Task[];
-	setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+	tasks: (Task & { phase?: Phase })[];
+	setTasks: React.Dispatch<React.SetStateAction<(Task & { phase?: Phase })[]>>;
+	projectId: string;
+	orgUrl: string;
 }) => {
-	const columnsData: TaskColumnType[] = [
-		{
-			id: 1,
-			title: 'Backlog',
-			tasks: tasks.filter((task) => task.status === 'Backlog'),
-		},
-		{
-			id: 2,
-			title: 'In_Progress',
-			tasks: tasks.filter((task) => task.status === 'In_Progress'),
-		},
-		{
-			id: 3,
-			title: 'Completed',
-			tasks: tasks.filter((task) => task.status === 'Completed'),
-		},
-	];
-	const [colums, setColumns] = useState<TaskColumnType[]>(columnsData);
+	const [, startTransition] = useTransition();
+	const statuses = useMemo<TaskStatus[]>(
+		() => [
+			'Backlog',
+			'todo',
+			'inProgress',
+			'inReview',
+			'Completed',
+			'canceled',
+		],
+		[]
+	);
+
+	const [visibleColumns, setVisibleColumns] = useState<TaskColumnType[]>([]);
+	const [hiddenColumns, setHiddenColumns] = useState<TaskColumnType[]>([]);
+	const [manuallyHiddenColumns, setManuallyHiddenColumns] = useState<string[]>(
+		[]
+	);
 	const [activeTask, setActiveTask] = useState<Task | null>(null);
+	const [isHiddenCollapsed, setIsHiddenCollapsed] = useState(false);
+
+	const handleHideColumn = (columnId: number) => {
+		const columnToHide = visibleColumns.find((col) => col.id === columnId);
+		if (columnToHide) {
+			setVisibleColumns((prev) => prev.filter((col) => col.id !== columnId));
+			setHiddenColumns((prev) => [...prev, columnToHide]);
+			setManuallyHiddenColumns((prev) => [...prev, columnToHide.title]);
+		}
+	};
+
+	const handleShowColumn = (columnId: number) => {
+		const columnToShow = hiddenColumns.find((col) => col.id === columnId);
+		if (columnToShow) {
+			setHiddenColumns((prev) => prev.filter((col) => col.id !== columnId));
+			setVisibleColumns((prev) => [...prev, columnToShow]);
+			setManuallyHiddenColumns((prev) =>
+				prev.filter((title) => title !== columnToShow.title)
+			);
+		}
+	};
+
 	useEffect(() => {
-		setColumns((columns) => {
-			return columns.map((column) => {
-				return {
-					...column,
-					tasks: tasks.filter((task) => task.status === column.title),
-				};
-			});
+		const updatedColumnsData = statuses.map((status, index) => {
+			const tasksForStatus = tasks.filter((task) => task.status === status);
+			return {
+				id: index + 1,
+				title: status,
+				displayTitle: statusHeaderMap[status],
+				tasks: tasksForStatus,
+			};
 		});
-	}, [tasks]);
+
+		const newVisibleColumns: TaskColumnType[] = [];
+		const newHiddenColumns: TaskColumnType[] = [];
+
+		updatedColumnsData.forEach((column) => {
+			if (manuallyHiddenColumns.includes(column.title)) {
+				newHiddenColumns.push(column);
+			} else if (column.tasks.length === 0) {
+				newHiddenColumns.push(column);
+			} else {
+				newVisibleColumns.push(column);
+			}
+		});
+
+		setVisibleColumns(newVisibleColumns);
+		if (!activeTask) {
+			setHiddenColumns(newHiddenColumns);
+		}
+	}, [tasks, statuses, activeTask, manuallyHiddenColumns]);
+
 	const sensors = useSensors(
 		useSensor(PointerSensor, {
 			activationConstraint: {
@@ -67,38 +185,143 @@ const TaskGallery = ({
 		})
 	);
 
+	const updateTaskStatusWithOptimisticUI = useCallback(
+		async (
+			taskId: string,
+			newStatus: TaskStatus,
+			previousTasks: (Task & { phase?: Phase })[]
+		) => {
+			try {
+				const { error } = await updateTaskStatus(
+					taskId,
+					newStatus,
+					projectId,
+					orgUrl
+				);
+				if (error) {
+					setTasks(previousTasks);
+					toast.error('Failed to update task status');
+				}
+			} catch (err: unknown) {
+				setTasks(previousTasks);
+				toast.error('Failed to update task status');
+				console.error('Error updating task status:', err);
+			}
+		},
+		[projectId, orgUrl, setTasks]
+	);
+
 	function onDragStart(event: DragOverEvent) {
 		if (event.active.data.current?.type === 'task') {
 			setActiveTask(event.active.data.current.task);
-			return;
 		}
 	}
+
 	function onDragOver(event: DragOverEvent) {
 		const { active, over } = event;
 		if (!over) return;
+
 		const activeId = active.id;
 		const overId = over.id;
+
 		if (active.id === over.id) return;
+
 		const isActiveTask = active.data.current?.type === 'task';
 		const isOverTask = over.data.current?.type === 'task';
-		if (isActiveTask && isOverTask) {
-			setTasks((task) => {
-				const activeIndex = task.findIndex((t) => t.id === activeId);
-				const overIndex = task.findIndex((t) => t.id === overId);
-				tasks[activeIndex].status = tasks[overIndex].status;
-				return arrayMove(tasks, activeIndex, overIndex);
-			});
-		}
 		const isOverColumn = over.data.current?.type === 'column';
 		const overColumnTitle = over?.data.current?.title;
 
-		if (isActiveTask && isOverColumn) {
-			setTasks((task) => {
-				const activeIndex = task.findIndex((t) => t.id === activeId);
-				tasks[activeIndex].status = overColumnTitle;
-				return arrayMove(tasks, activeIndex, Number(overId));
+		if (isActiveTask && isOverTask) {
+			setTasks((prevTasks) => {
+				const activeIndex = prevTasks.findIndex((t) => t.id === activeId);
+				const overIndex = prevTasks.findIndex((t) => t.id === overId);
+				const newStatus = prevTasks[overIndex].status;
+
+				const updatedTasks = [...prevTasks];
+				updatedTasks[activeIndex] = {
+					...updatedTasks[activeIndex],
+					status: newStatus,
+				};
+
+				return arrayMove(updatedTasks, activeIndex, overIndex);
 			});
 		}
+
+		if (
+			isActiveTask &&
+			isOverColumn &&
+			!hiddenColumns.some((col) => col.title === overColumnTitle)
+		) {
+			setTasks((prevTasks) => {
+				const activeIndex = prevTasks.findIndex((t) => t.id === activeId);
+				const updatedTasks = [...prevTasks];
+				updatedTasks[activeIndex] = {
+					...updatedTasks[activeIndex],
+					status: overColumnTitle,
+				};
+
+				return arrayMove(updatedTasks, activeIndex, activeIndex);
+			});
+		}
+	}
+
+	function onDragEnd(event: DragOverEvent) {
+		const { active, over } = event;
+
+		if (over) {
+			const isOverColumn = over.data.current?.type === 'column';
+			const isOverTask = over.data.current?.type === 'task';
+			const overColumnTitle = over?.data.current?.title;
+			const activeId = active.id;
+
+			const previousTasks = [...tasks];
+
+			if (isOverTask) {
+				const overId = over.id;
+				const task = tasks.find((t) => t.id === overId);
+				if (task) {
+					setTasks((prevTasks) => {
+						const updatedTasks = [...prevTasks];
+						const activeIndex = updatedTasks.findIndex(
+							(t) => t.id === activeId
+						);
+						updatedTasks[activeIndex] = {
+							...updatedTasks[activeIndex],
+							status: task.status,
+						};
+						return updatedTasks;
+					});
+
+					startTransition(() => {
+						updateTaskStatusWithOptimisticUI(
+							activeId as string,
+							task.status,
+							previousTasks
+						);
+					});
+				}
+			} else if (isOverColumn && overColumnTitle) {
+				setTasks((prevTasks) => {
+					const updatedTasks = [...prevTasks];
+					const activeIndex = updatedTasks.findIndex((t) => t.id === activeId);
+					updatedTasks[activeIndex] = {
+						...updatedTasks[activeIndex],
+						status: overColumnTitle,
+					};
+					return updatedTasks;
+				});
+
+				startTransition(() => {
+					updateTaskStatusWithOptimisticUI(
+						activeId as string,
+						overColumnTitle as TaskStatus,
+						previousTasks
+					);
+				});
+			}
+		}
+
+		setActiveTask(null);
 	}
 
 	return (
@@ -106,13 +329,49 @@ const TaskGallery = ({
 			<DndContext
 				sensors={sensors}
 				onDragStart={onDragStart}
-				onDragEnd={() => setActiveTask(null)}
+				onDragEnd={onDragEnd}
 				onDragOver={onDragOver}
 			>
-				<div className={styles.grid}>
-					{colums.map((column) => (
-						<Column key={column.id} column={column} />
-					))}
+				<div className={styles.container}>
+					<div className={styles.grid}>
+						{visibleColumns.map((column) => (
+							<Column
+								key={column.id}
+								column={column}
+								onHideColumn={handleHideColumn}
+							/>
+						))}
+					</div>
+
+					<div
+						className={`${styles.hiddenColumns} ${
+							isHiddenCollapsed ? styles.collapsed : ''
+						}`}
+					>
+						<button
+							className={styles.hiddenHeader}
+							onClick={() => setIsHiddenCollapsed(!isHiddenCollapsed)}
+						>
+							<div className={styles.headerContent}>
+								<h3>Hidden columns</h3>
+								<span>{hiddenColumns.length}</span>
+							</div>
+							<ArrowLineRight
+								width="16"
+								height="16"
+								className={styles.chevron}
+							/>
+						</button>
+						<div className={styles.hiddenList}>
+							{hiddenColumns.map((column) => (
+								<HiddenColumn
+									key={column.id}
+									column={column}
+									onShowColumn={handleShowColumn}
+								/>
+							))}
+						</div>
+					</div>
 				</div>
 				{createPortal(
 					<DragOverlay>

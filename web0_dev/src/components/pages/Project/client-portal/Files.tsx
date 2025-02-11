@@ -1,4 +1,4 @@
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import styles from './Files.module.scss';
 import { File } from '@prisma/client';
 import Link from 'next/link';

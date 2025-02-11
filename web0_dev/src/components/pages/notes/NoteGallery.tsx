@@ -5,6 +5,7 @@ import prisma from '@/lib/db';
 import { Folder as folderType, Note as noteType } from '@prisma/client';
 import PlusFilled from '@/svgs/Plus-Filled';
 import Folder from '@/svgs/Folder';
+import { getUser } from '@/actions/AccountActions';
 
 const NoteGallery = async ({
 	notesData,
@@ -17,9 +18,11 @@ const NoteGallery = async ({
 }) => {
 	let folders;
 	let notes;
+	const { data: session } = await getUser();
+	const organizationId = session?.session.activeOrganizationId;
 	if (foldersData === undefined || notesData === undefined) {
-		folders = await prisma.folder.findMany();
-		notes = await prisma.note.findMany();
+		folders = await prisma.folder.findMany({ where: { organizationId } });
+		notes = await prisma.note.findMany({ where: { organizationId } });
 	} else {
 		folders = foldersData;
 		notes = notesData;
@@ -81,7 +84,7 @@ const NoteGallery = async ({
 				? notes?.map((item, index) => {
 						return (
 							<Link
-								href={`/notes/${item.id}`}
+								href={`/${organizationId}/notes/${item.id}`}
 								key={index}
 								className={styles.folder}
 								style={{
@@ -103,8 +106,8 @@ const NoteGallery = async ({
 							<Link
 								href={
 									'note' in item
-										? `/notes/${item.note.id}`
-										: `/notes/folder/${item.folder.id}`
+										? `/${organizationId}/notes/${item.note.id}`
+										: `/${organizationId}/notes/folder/${item.folder.id}`
 								}
 								key={index}
 								className={styles.folder}

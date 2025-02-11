@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import TopMenu from '@/components/general/TopMenu';
 import prisma from '@/lib/db';
 import LibraryPage from '@/components/pages/library/LibraryPage';

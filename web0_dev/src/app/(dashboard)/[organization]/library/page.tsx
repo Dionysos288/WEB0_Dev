@@ -5,6 +5,7 @@ import { getUser } from '@/actions/AccountActions';
 export default async function Page() {
 	const { data: session } = await getUser();
 	const organizationSlug = session?.session.organizationSlug;
+	const organizationId = session?.session.activeOrganizationId;
 	const libraryData = await prisma.libraryType.findMany({
 		orderBy: {
 			createdAt: 'desc',
@@ -19,7 +20,7 @@ export default async function Page() {
 					},
 				},
 				where: {
-					organizationId: 'session?.session.organizationId,',
+					organizationId,
 				},
 			},
 			libraries: {
@@ -31,7 +32,7 @@ export default async function Page() {
 					createdAt: 'desc',
 				},
 				where: {
-					organizationId: session?.session.organizationId,
+					organizationId,
 				},
 			},
 		},
@@ -61,7 +62,7 @@ export default async function Page() {
 					menuLinks={menuLinks}
 					libraryData={libraryData}
 					slug={organizationSlug}
-					orgId={session?.session.organizationId}
+					orgId={organizationId}
 				/>
 			</>
 		);

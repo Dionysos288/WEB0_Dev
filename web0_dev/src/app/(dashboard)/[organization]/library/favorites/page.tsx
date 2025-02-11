@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 const page = async () => {
 	const { data: session } = await getUser();
 	const organizationSlug = session?.session.organizationSlug;
+	const organizationId = session?.session.activeOrganizationId;
+
 	const libraryData = await prisma.libraryType.findMany({
 		orderBy: {
 			createdAt: 'desc',
@@ -23,6 +25,9 @@ const page = async () => {
 						},
 					},
 				},
+				where: {
+					organizationId,
+				},
 			},
 			libraries: {
 				include: {
@@ -30,6 +35,7 @@ const page = async () => {
 				},
 				where: {
 					favorite: true,
+					organizationId,
 				},
 				orderBy: {
 					createdAt: 'desc',
@@ -62,6 +68,7 @@ const page = async () => {
 					menuLinks={menuLinks}
 					libraryData={libraryData}
 					slug={organizationSlug}
+					orgId={organizationId}
 				/>
 			</>
 		);

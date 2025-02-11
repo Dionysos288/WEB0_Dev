@@ -4,8 +4,8 @@ const prisma = new PrismaClient();
 const tasks = [
 	{ title: 'Task #1 (Alltasks P1)', columnStatus: 'Backlog' },
 	{ title: 'Task #2 (Alltasks P1)', columnStatus: 'Completed' },
-	{ title: 'Task #3 (Alltasks P1)', columnStatus: 'In_Progress' },
-	{ title: 'Task #4 (Alltasks P1)', columnStatus: 'In_Progress' },
+	{ title: 'Task #3 (Alltasks P1)', columnStatus: 'inProgress' },
+	{ title: 'Task #4 (Alltasks P1)', columnStatus: 'inProgress' },
 	{ title: 'Task #5 (Alltasks P1)', columnStatus: 'Backlog' },
 	{ title: 'Task #6 (Alltasks P1)', columnStatus: 'Backlog' },
 ];
@@ -13,7 +13,8 @@ const tasks = [
 const completedCount = tasks.filter(
 	(t) => t.columnStatus === 'Completed'
 ).length;
-const organizationId = '3jCJWR1cFNgXYhNyS5kzYmuib01dp4wk';
+const organizationId = 'COMhDJeWfdlOxGfDMQcmzZsG0xH2H14q';
+const memberId1 = 'YYcq5cf6luny5EHXwFt81MgVYqcKNa4S';
 const projectData: Prisma.ProjectCreateInput[] = [
 	{
 		id: '1ABC',
@@ -22,8 +23,15 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		budget: 1000,
 		start: new Date(),
 		due: new Date(Date.now() + 100 * 86400000),
-		team: ['John', 'Doe'],
-		status: 'pending',
+		status: 'planned',
+		lead: {
+			connect: {
+				id: memberId1,
+			},
+		},
+		members: {
+			connect: [{ id: memberId1 }, { id: memberId1 }],
+		},
 		completed: completedCount,
 		Organization: {
 			connect: {
@@ -75,7 +83,7 @@ const projectData: Prisma.ProjectCreateInput[] = [
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
 					priority: 1,
-					status: 'In_Progress',
+					status: 'inProgress',
 					phaseId: 'A123',
 				},
 				{
@@ -89,7 +97,7 @@ const projectData: Prisma.ProjectCreateInput[] = [
 					title: 'Task #4 (Alltasks P1)',
 					priority: 2,
 					description: 'Task #4 description',
-					status: 'In_Progress',
+					status: 'inProgress',
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
@@ -131,8 +139,7 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		budget: 1000,
 		start: new Date(),
 		due: new Date(Date.now() + 100 * 86400000),
-		team: ['John', 'Doe'],
-		status: 'rejected',
+		status: 'canceled',
 		completed: completedCount,
 		Organization: {
 			connect: {
@@ -151,7 +158,7 @@ const projectData: Prisma.ProjectCreateInput[] = [
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
 					priority: 1,
-					status: 'In_Progress',
+					status: 'inProgress',
 				},
 				{
 					title: 'Task #3 (Alltasks P1)',
@@ -164,7 +171,7 @@ const projectData: Prisma.ProjectCreateInput[] = [
 					title: 'Task #4 (Alltasks P1)',
 					priority: 2,
 					description: 'Task #4 description',
-					status: 'In_Progress',
+					status: 'inProgress',
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
@@ -238,7 +245,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		budget: 1000,
 		start: new Date(),
 		due: new Date(Date.now() + 100 * 86400000),
-		team: ['John', 'Doe'],
 		status: 'progress',
 		completed: completedCount,
 		Organization: {
@@ -258,7 +264,7 @@ const projectData: Prisma.ProjectCreateInput[] = [
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
 					priority: 1,
-					status: 'In_Progress',
+					status: 'inProgress',
 				},
 				{
 					title: 'Task #3 (Alltasks P1)',
@@ -271,7 +277,7 @@ const projectData: Prisma.ProjectCreateInput[] = [
 					title: 'Task #4 (Alltasks P1)',
 					priority: 2,
 					description: 'Task #4 description',
-					status: 'In_Progress',
+					status: 'inProgress',
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
@@ -343,7 +349,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		budget: 1000,
 		start: new Date(),
 		due: new Date(Date.now() + 100 * 86400000),
-		team: ['John', 'Doe'],
 		status: 'completed',
 		completed: 0,
 		Organization: {

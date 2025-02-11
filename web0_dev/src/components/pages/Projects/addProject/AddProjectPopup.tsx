@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import styles from './AddProjectPopup.module.scss';
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ButtonSelector from './ButtonSelector';
 import SingleDatePicker from '@/components/general/ui/date/SingleDatePicker';

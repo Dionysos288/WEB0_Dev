@@ -28,10 +28,15 @@
 	--main-15: rgba(72, 70, 67, 0.15);
 	--main-10: rgba(72, 70, 67, 0.1);
 	--main-5: rgba(72, 70, 67, 0.05);
+	--main-4: rgba(72, 70, 67, 0.04);
+	--main-3: rgba(72, 70, 67, 0.03);
+	--main-2: rgba(72, 70, 67, 0.02);
+	--main-1: rgba(72, 70, 67, 0.01);
 	--backdrop: rgba(72, 70, 67, 0.07);
 
 	--orange: rgba(200, 90, 20, 1);
 	--orange-90: rgba(200, 90, 20, 0.9);
+	--orange-5: rgba(200, 90, 20, 0.05);
 	--whiteSpecial: rgba(237, 233, 221, 1);
 	--whiteSpecial-5: rgba(237, 233, 221, 0.05);
 	--whiteSpecial-10: rgba(237, 233, 221, 0.1);
@@ -46,11 +51,14 @@
 	--progressText: rgba(138, 140, 217, 1);
 	--progress: rgba(149, 164, 252, 1);
 
-	--rejectedText: rgba(72, 70, 67, 0.6);
-	--rejected: rgba(72, 70, 67, 0.4);
+	--canceledText: rgba(72, 70, 67, 0.6);
+	--canceled: rgba(72, 70, 67, 0.4);
 
-	--pendingText: rgba(89, 168, 212, 1);
-	--pending: rgba(177, 227, 255, 1);
+	--plannedText: rgba(89, 168, 212, 1);
+	--planned: rgba(177, 227, 255, 1);
+
+	--backlogText: rgba(89, 168, 212, 1);
+	--backlog: rgba(177, 227, 255, 1);
 
 	--notStarted-bg: rgba(89, 168, 212, 0.3);
 	--notStarted-text: rgba(89, 168, 212, 1);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import styles from './ButtonSelector.module.scss';
 import Text from '@/svgs/Text';
 import Check from '@/svgs/Check';
@@ -38,7 +38,6 @@ const ButtonSelector = ({
 	onSelectedItemsChange?: (items: string[]) => void;
 }) => {
 	const [activeIndex, setActiveIndex] = useState<number>(-1);
-	
 
 	useEffect(() => {
 		const chosenIndex = options.findIndex((option) => option === isChosen);

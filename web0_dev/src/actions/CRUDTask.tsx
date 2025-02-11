@@ -2,7 +2,8 @@
 
 import { SortOptions } from '@/components/types/types';
 import prisma from '@/lib/db';
-import { Prisma, Task } from '@prisma/client';
+import { Phase, Prisma, Task, TaskStatus } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 
 const updateFilterTasks = async ({
 	id,
@@ -40,7 +41,10 @@ const updateFilterTasks = async ({
 		const data = (await prisma.task.findMany({
 			where,
 			orderBy,
-		})) as Task[];
+			include: {
+				Phase: true,
+			},
+		})) as (Task & { Phase: Phase })[];
 
 		return { data };
 	} catch (error) {
@@ -52,4 +56,32 @@ const updateFilterTasks = async ({
 	}
 };
 
-export { updateFilterTasks };
+const updateTaskStatus = async (
+	taskId: string,
+	status: TaskStatus,
+	projectId: string,
+	orgUrl: string
+) => {
+	try {
+		const updatedTask = await prisma.task.update({
+			where: { id: taskId },
+			data: { status },
+			include: {
+				Phase: true,
+			},
+		});
+
+		// Revalidate the tasks page for this project
+		revalidatePath(`/${orgUrl}/projects/${projectId}/tasks`);
+
+		return { data: updatedTask, error: null };
+	} catch (error) {
+		console.error('Error updating task status:', error);
+		return {
+			data: null,
+			error: 'Failed to update task status',
+		};
+	}
+};
+
+export { updateFilterTasks, updateTaskStatus };

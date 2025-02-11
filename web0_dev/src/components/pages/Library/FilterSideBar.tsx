@@ -35,7 +35,6 @@ export default function FilterSideBar({
 	sortType: [SortOptions, boolean];
 	organizationId: string;
 }) {
-	console.log(setIsFilterOpen);
 	const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
 		{}
 	);
@@ -78,7 +77,7 @@ export default function FilterSideBar({
 			query,
 			favorite: favorite,
 			isAscending: sortType[1],
-			organizationId,
+			organizationId: organizationId,
 		});
 		setData(updatedData.data);
 	}

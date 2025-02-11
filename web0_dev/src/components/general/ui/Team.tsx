@@ -2,6 +2,7 @@ import Image from 'next/image';
 import styles from './Team.module.scss';
 
 const Team = ({ team }: { team: string[] }) => {
+	if (!team || team.length === 0) return null;
 	return (
 		<div className={styles.TeamWrapper}>
 			{team.map((member, index) => {

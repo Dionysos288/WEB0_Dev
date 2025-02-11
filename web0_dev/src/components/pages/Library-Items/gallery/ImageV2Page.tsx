@@ -1,5 +1,5 @@
-import Spacing from '@/components/General/Spacing';
-import EditHeader from '@/components/General/EditHeader';
+import Spacing from '@/components/general/Spacing';
+import EditHeader from '@/components/general/EditHeader';
 import Toolbar from '../components/ToolBar';
 import GalleryV2 from './GalleryV2';
 

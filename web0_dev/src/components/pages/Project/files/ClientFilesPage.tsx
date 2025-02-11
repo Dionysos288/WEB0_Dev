@@ -1,7 +1,7 @@
 'use client';
-import FilterBar from '@/components/General/filterBar/FilterBar';
-import Spacing from '@/components/General/Spacing';
-import TableData from '@/components/General/ui/TableData';
+import FilterBar from '@/components/general/filterBar/FilterBar';
+import Spacing from '@/components/general/Spacing';
+import TableData from '@/components/general/ui/TableData';
 import { fileType, SortOptions, TableHeader } from '@/components/types/types';
 import { useState } from 'react';
 

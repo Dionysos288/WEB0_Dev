@@ -1,6 +1,6 @@
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import styles from './Colors.module.scss';
-import SVG from '@/components/General/SVG';
+import SVG from '@/components/general/SVG';
 import ClipboardText from '@/svgs/ClipboardText';
 interface colorsProps {
 	color: string[][];

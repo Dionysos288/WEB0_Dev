@@ -1,5 +1,5 @@
 import prisma from '@/lib/db';
-import Spacing from '../../General/Spacing';
+import Spacing from '../../general/Spacing';
 import styles from './BigButtons.module.scss';
 import Folder from '@/svgs/Folder';
 import CurrencyCircleDollar from '@/svgs/CurrencyCircleDollar';
@@ -8,7 +8,7 @@ import { getUser } from '@/actions/AccountActions';
 const BigButtons = async () => {
 	const { data: session } = await getUser();
 	const allProjects = await prisma.project.count({
-		where: { organizationId: 'session?.session.organizationId' },
+		where: { organizationId: session?.session.organizationId },
 	});
 	const budget = await prisma.project.aggregate({
 		_sum: {

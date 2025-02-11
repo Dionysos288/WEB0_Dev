@@ -1,6 +1,6 @@
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import styles from './ProjectHeader.module.scss';
-import Team from '@/components/General/ui/Team';
+import Team from '@/components/general/ui/Team';
 import Image from 'next/image';
 import { Project, Task } from '@prisma/client';
 type projectAndTasks = Omit<Project, 'budget'> & {

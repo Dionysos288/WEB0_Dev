@@ -44,6 +44,7 @@ const LibraryPage = ({
 		false,
 	]);
 	const id = Array.isArray(libraryData) ? undefined : libraryData.id;
+	console.log(galleryData);
 
 	return (
 		<>

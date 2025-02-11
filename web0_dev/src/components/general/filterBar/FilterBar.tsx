@@ -3,7 +3,7 @@ import SVG from '../SVG';
 import styles from './FilterBar.module.scss';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
-import { Library, Task } from '@prisma/client';
+import { Library, Phase, Task } from '@prisma/client';
 import {
 	ExtendedLibrary,
 	fileType,
@@ -30,9 +30,11 @@ interface FilterBarProps {
 	ExtraFilters?: string[];
 	id?: string;
 	phaseId?: string;
-	data: Library[] | fileType[] | Task[];
+	data: Library[] | fileType[] | (Task & { phase?: Phase })[];
 	setData: React.Dispatch<
-		React.SetStateAction<ExtendedLibrary[] | fileType[] | Task[]>
+		React.SetStateAction<
+			ExtendedLibrary[] | fileType[] | (Task & { phase?: Phase })[]
+		>
 	>;
 	favorite?: boolean;
 	options: SortOptions[];

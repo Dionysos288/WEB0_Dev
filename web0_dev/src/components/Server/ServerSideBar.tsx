@@ -6,7 +6,7 @@ export default async function ServerSideBar() {
 	const libraryItems = await prisma.libraryType.findMany({
 		select: { slug: true },
 	});
-	const { data: session } = await getUser()
-	console.log(session)
+	const { data: session } = await getUser();
+	console.log(session);
 	return <SideBar libraryItems={libraryItems} session={session} />;
 }

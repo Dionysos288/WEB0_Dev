@@ -1,7 +1,6 @@
 'use server';
 
 import { ExtendedLibrary, SortOptions } from '@/components/types/types';
-import { Session } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
@@ -33,22 +32,46 @@ async function updateFilterLibrary({
 
 		const where: Prisma.LibraryWhereInput = {
 			organizationId,
-			...(id ? { libraryTypeId: id } : {}),
-			...(favorite ? { favorite: true } : {}),
-			...(selectedCategories?.length
-				? { Category: { name: { in: selectedCategories } } }
-				: {}),
-			...(query ? { title: { contains: query, mode: 'insensitive' } } : {}),
 		};
 
-		const data = (await prisma.library.findMany({
+		if (id) {
+			where.libraryTypeId = id;
+		}
+
+		if (favorite) {
+			where.favorite = true;
+		}
+
+		if (selectedCategories?.length > 0) {
+			where.Category = {
+				name: {
+					in: selectedCategories,
+				},
+			};
+		}
+
+		if (query) {
+			where.title = {
+				contains: query,
+				mode: 'insensitive',
+			};
+		}
+
+		const data = await prisma.library.findMany({
 			where,
 			orderBy,
-			include: { Category: true },
-		})) as ExtendedLibrary[];
-		return { data };
+			include: {
+				Category: true,
+			},
+		});
+
+		if (!data) {
+			return { data: [], error: 'No data found' };
+		}
+
+		return { data: data as ExtendedLibrary[] };
 	} catch (error) {
-		console.error(error);
+		console.error('Query error:', error);
 		return {
 			data: [],
 			error: 'An error occurred while fetching data.',

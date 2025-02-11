@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'motion/react';
 import styles from './Timeline.module.scss';
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import React, { CSSProperties } from 'react';
 import { Phase, Project } from '@prisma/client';
 

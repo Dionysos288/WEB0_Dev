@@ -41,6 +41,9 @@
 			justify-content: space-between;
 			align-items: center;
 			.leftSide {
+				display: flex;
+
+				align-items: center;
 				.member {
 					margin-right: -6px;
 					img {
@@ -98,20 +101,28 @@
 					color: var(--progressText);
 				}
 			}
-			.rejected {
+			.canceled {
 				div {
-					background-color: var(--rejected);
+					background-color: var(--canceled);
 				}
 				p {
-					color: var(--rejectedText);
+					color: var(--canceledText);
 				}
 			}
-			.pending {
+			.planned {
 				div {
-					background-color: var(--pending);
+					background-color: var(--planned);
 				}
 				p {
-					color: var(--pendingText);
+					color: var(--plannedText);
+				}
+			}
+			.backlog {
+				div {
+					background-color: var(--backlog);
+				}
+				p {
+					color: var(--backlogText);
 				}
 			}
 		}
@@ -130,11 +141,14 @@
 			.progress {
 				background-color: var(--progress);
 			}
-			.rejected {
-				background-color: var(--rejected);
+			.canceled {
+				background-color: var(--canceled);
 			}
-			.pending {
-				background-color: var(--pending);
+			.planned {
+				background-color: var(--planned);
+			}
+			.backlog {
+				background-color: var(--backlog);
 			}
 		}
 		.bottomPart {
@@ -143,7 +157,12 @@
 			align-items: center;
 			.leftSide {
 				display: flex;
+				align-items: center;
 				gap: 3px;
+				width: 100%;
+				.spaceLeft {
+					margin-left: 3px;
+				}
 				p,
 				span {
 					font-size: calc(12 / 16 * 1rem);
@@ -154,7 +173,8 @@
 					color: var(--main-40);
 				}
 			}
-			p {
+			.rightSide {
+				margin-left: auto;
 				font-size: calc(12 / 16 * 1rem);
 				font-weight: 400;
 				line-height: calc(18 / 16 * 1rem);

@@ -1,5 +1,5 @@
-import EditHeader from '@/components/General/EditHeader';
-import Spacing from '@/components/General/Spacing';
+import EditHeader from '@/components/general/EditHeader';
+import Spacing from '@/components/general/Spacing';
 import GalleryV2 from '@/components/pages/library-items/gallery/GalleryV2';
 import Toolbar from '@/components/pages/library-items/components/ToolBar';
 import Colors from '@/components/pages/library-items/color/Colors';

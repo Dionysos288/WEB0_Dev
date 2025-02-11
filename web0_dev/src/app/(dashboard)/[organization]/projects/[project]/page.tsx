@@ -2,7 +2,7 @@ import ProjectHeader from '@/components/pages/project/overview/ProjectHeader';
 import ProjectMiddleLeft from '@/components/pages/project/overview/ProjectMiddleLeft';
 import type { Metadata } from 'next';
 import styles from './page.module.scss';
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import ProjectMiddleRight from '@/components/pages/project/overview/ProjectMiddleRight';
 import Timeline from '@/components/pages/project/components/Timeline';
 import TopMenu from '@/components/general/TopMenu';
@@ -26,7 +26,6 @@ const page = async ({ params }: { params: { project: string } }) => {
 	const projectData = await prisma.project.findUnique({
 		where: {
 			id: project,
-
 		},
 		include: {
 			tasks: true,
@@ -64,12 +63,10 @@ const page = async ({ params }: { params: { project: string } }) => {
 					]}
 					AddItem="Add Task"
 					foundLink="overview"
-
 				/>
 				<ProjectHeader project={plainProjectData} />
 				<Spacing space={28} />
 				<div className={styles.middlePart}>
-
 					<ProjectMiddleLeft />
 					<ProjectMiddleRight project={plainProjectData} />
 				</div>

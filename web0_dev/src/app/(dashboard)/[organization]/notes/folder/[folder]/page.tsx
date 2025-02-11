@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import Spacing from '@/components/General/Spacing';
-// import FilterBar from '@/components/General/filterBar/FilterBar';
+import Spacing from '@/components/general/Spacing';
+// import FilterBar from '@/components/general/filterBar/FilterBar';
 import NoteGallery from '@/components/pages/notes/NoteGallery';
 import prisma from '@/lib/db';
+import { getUser } from '@/actions/AccountActions';
 
 export async function generateMetadata({
 	params,
@@ -16,10 +17,12 @@ export async function generateMetadata({
 }
 const page = async ({ params }: { params: { folder: string } }) => {
 	const { folder } = await params;
-
+	const { data: session } = await getUser();
+	const organizationId = session?.session.activeOrganizationId;
 	const Folder = await prisma.folder.findUnique({
 		where: {
 			id: folder,
+			organizationId,
 		},
 		include: {
 			notes: true,

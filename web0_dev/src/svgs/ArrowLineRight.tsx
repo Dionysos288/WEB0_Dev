@@ -5,6 +5,7 @@ function ArrowLineRight(props: {
 	width?: string;
 	height?: string;
 	style?: React.CSSProperties;
+	className?: string;
 }) {
 	const fill = props.fill || 'currentColor';
 	const width = props.width || '1em';
@@ -17,6 +18,7 @@ function ArrowLineRight(props: {
 			viewBox="0 0 16 16"
 			xmlns="http://www.w3.org/2000/svg"
 			{...props}
+			className={props.className}
 		>
 			<g fill="none">
 				<path

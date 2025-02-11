@@ -1,18 +1,35 @@
+'use client';
 import styles from './Column.module.scss';
 import {
 	SortableContext,
 	useSortable,
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import TaskComponent from './Task';
-import React, { useMemo } from 'react';
-import Spacing from '@/components/General/Spacing';
+import React, { useMemo, useState, useCallback } from 'react';
+import Spacing from '@/components/general/Spacing';
 import { TaskColumnType } from '@/components/types/types';
 import PlusFilled from '@/svgs/Plus-Filled';
+import TaskComponent from './Task';
+import SVG from '@/components/general/SVG';
+import Dots from '@/svgs/Dots';
+import { useOutsideRef } from '@/utils/useOutsideRef';
 
-const Column = ({ column }: { column: TaskColumnType }) => {
-	const { title, tasks } = column;
+interface ColumnProps {
+	column: TaskColumnType;
+	onHideColumn?: (columnId: number) => void;
+}
+
+const Column = ({ column, onHideColumn }: ColumnProps) => {
+	const { title, displayTitle, tasks } = column;
 	const allTasks = tasks.length;
+	const [showDropdown, setShowDropdown] = useState(false);
+
+	const handleClickOutside = useCallback(() => {
+		setShowDropdown(false);
+	}, []);
+
+	const dropdownRef = useOutsideRef(handleClickOutside);
+
 	const tasksId = useMemo(() => {
 		return tasks.map((task) => task.id);
 	}, [tasks]);
@@ -23,31 +40,54 @@ const Column = ({ column }: { column: TaskColumnType }) => {
 		disabled: true,
 	});
 
+	const getColumnColor = (title: string) => {
+		switch (title) {
+			case 'Backlog':
+				return 'var(--canceled)';
+			case 'inProgress':
+				return 'var(--progress)';
+			case 'Completed':
+				return 'var(--completed)';
+			default:
+				return 'var(--main-25)';
+		}
+	};
+
 	return (
-		<div ref={setNodeRef} {...attributes} {...listeners}>
+		<div
+			ref={setNodeRef}
+			{...attributes}
+			{...listeners}
+			className={`${styles.columnWrapper} `}
+		>
 			<div className={styles.header}>
-				<h2 className={styles.title}>{title}</h2>
-				<p>{allTasks}</p>
+				<div className={styles.headerLeft}>
+					<h2 className={styles.title}>{displayTitle || title}</h2>
+					<p>{allTasks}</p>
+				</div>
+				<div className={styles.headerRight} ref={dropdownRef}>
+					<SVG onClick={() => setShowDropdown(!showDropdown)}>
+						<Dots fill={'var(--main)'} width="18" height="18" />
+					</SVG>
+					<div
+						className={`${styles.dropdown} ${showDropdown ? styles.show : ''}`}
+					>
+						<button
+							onClick={() => {
+								onHideColumn?.(column.id);
+								setShowDropdown(false);
+							}}
+						>
+							Hide column
+						</button>
+					</div>
+				</div>
 			</div>
 			<Spacing space={8} />
-			{title === 'Backlog' && (
-				<div
-					className={styles.line}
-					style={{ backgroundColor: 'var(--rejected)' }}
-				/>
-			)}
-			{title === 'In_Progress' && (
-				<div
-					className={styles.line}
-					style={{ backgroundColor: 'var(--progress)' }}
-				/>
-			)}
-			{title === 'Completed' && (
-				<div
-					className={styles.line}
-					style={{ backgroundColor: 'var(--completed)' }}
-				/>
-			)}
+			<div
+				className={styles.line}
+				style={{ backgroundColor: getColumnColor(title) }}
+			/>
 			<Spacing space={16} />
 			<div className={styles.column}>
 				<SortableContext items={tasksId} strategy={verticalListSortingStrategy}>
@@ -56,8 +96,7 @@ const Column = ({ column }: { column: TaskColumnType }) => {
 					))}
 				</SortableContext>
 				<button className={styles.addTask}>
-					<PlusFilled fill={'var(--main-80)'} width="16" height="16" />
-					<span>Add User</span>
+					<PlusFilled width="13" height="13" />
 				</button>
 			</div>
 		</div>

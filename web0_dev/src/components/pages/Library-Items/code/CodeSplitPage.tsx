@@ -1,6 +1,6 @@
-import EditHeader from '@/components/General/EditHeader';
+import EditHeader from '@/components/general/EditHeader';
 import Toolbar from '../components/ToolBar';
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import Editor from './EditorScreen';
 
 const CodeSplitPage = () => {

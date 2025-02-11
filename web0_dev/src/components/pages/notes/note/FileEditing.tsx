@@ -1,5 +1,5 @@
 import styles from './FileEditing.module.scss';
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import Document from '@/svgs/Document';
 import Figma from '@/svgs/Figma';
 import { Note } from '@prisma/client';

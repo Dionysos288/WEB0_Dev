@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import styles from './GalleryV1.module.scss';
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 const GalleryV1 = () => {
 	return (
 		<div className={styles.galleryWrapper}>

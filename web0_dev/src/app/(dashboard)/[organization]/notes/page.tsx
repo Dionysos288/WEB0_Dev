@@ -1,5 +1,5 @@
-// import FilterBar from '@/components/General/filterBar/FilterBar';
-import Spacing from '@/components/General/Spacing';
+// import FilterBar from '@/components/general/filterBar/FilterBar';
+import Spacing from '@/components/general/Spacing';
 import NoteGallery from '@/components/pages/notes/NoteGallery';
 
 export default function NotesPage() {

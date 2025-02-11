@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import Spacing from '@/components/General/Spacing';
-import EditHeader from '@/components/General/EditHeader';
+import Spacing from '@/components/general/Spacing';
+import EditHeader from '@/components/general/EditHeader';
 import NoteHeader from '@/components/pages/notes/note/NoteHeader';
 import FileEditing from '@/components/pages/notes/note/FileEditing';
 import prisma from '@/lib/db';

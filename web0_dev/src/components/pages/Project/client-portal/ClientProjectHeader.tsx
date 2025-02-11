@@ -1,6 +1,6 @@
 import styles from './ClientProjectHeader.module.scss';
-import Spacing from '@/components/General/Spacing';
-import Team from '@/components/General/ui/Team';
+import Spacing from '@/components/general/Spacing';
+import Team from '@/components/general/ui/Team';
 import Image from 'next/image';
 import { Phase, PhaseStatus, Project, Task } from '@prisma/client';
 

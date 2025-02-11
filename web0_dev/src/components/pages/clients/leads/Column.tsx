@@ -6,7 +6,7 @@ import {
 } from '@dnd-kit/sortable';
 import Task from './Task';
 import React, { useMemo } from 'react';
-import Spacing from '@/components/General/Spacing';
+import Spacing from '@/components/general/Spacing';
 import { ClientColumnType } from '@/components/types/types';
 import PlusFilled from '@/svgs/Plus-Filled';
 

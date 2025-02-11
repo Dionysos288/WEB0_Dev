@@ -1,44 +1,126 @@
 .header {
 	display: flex;
-	margin-left: 4px;
-	gap: 6px;
-	.title,
-	p {
-		font-size: calc(14 / 16 * 1rem);
-		font-weight: 600;
-		line-height: calc(20 / 16 * 1rem);
+	align-items: center;
+	justify-content: space-between;
+	.headerLeft {
+		display: flex;
+		margin-left: 4px;
+		gap: 6px;
+		.title,
+		p {
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 600;
+			line-height: calc(20 / 16 * 1rem);
+		}
+		p {
+			color: var(--main-60);
+			transform: translateY(1px);
+		}
 	}
-	p {
-		color: var(--main-60);
-		transform: translateY(1px);
+	.headerRight {
+		display: flex;
+		gap: 2px;
+		position: relative;
+
+		.dropdown {
+			position: absolute;
+			top: 100%;
+			right: 0;
+			margin-top: 4px;
+			background: var(--main-0);
+			border: 1px solid var(--main-10);
+			border-radius: 6px;
+			box-shadow: var(--boxShadow-lg);
+			min-width: 120px;
+			z-index: 10;
+			opacity: 0;
+			pointer-events: none;
+			transform: translateY(-4px);
+			transition: all 0.2s ease;
+
+			&.show {
+				opacity: 1;
+				pointer-events: all;
+				transform: translateY(0);
+			}
+
+			button {
+				width: 100%;
+				text-align: left;
+				padding: 8px 12px;
+				font-size: calc(13 / 16 * 1rem);
+				color: var(--main-90);
+				transition: all 0.15s ease;
+
+				&:hover {
+					background: var(--main-5);
+				}
+
+				&:first-child {
+					border-top-left-radius: 6px;
+					border-top-right-radius: 6px;
+				}
+
+				&:last-child {
+					border-bottom-left-radius: 6px;
+					border-bottom-right-radius: 6px;
+				}
+			}
+		}
 	}
 }
+
 .line {
 	width: 100%;
 	height: 4px;
 	border-radius: 16px;
 	background-color: var(--completed);
+	transition: all 0.2s ease;
+	transform-origin: left center;
 }
+
+.columnWrapper {
+	&:hover {
+		.addTask {
+			opacity: 1;
+			pointer-events: all;
+		}
+	}
+}
+
 .column {
 	display: flex;
 	flex-direction: column;
-	gap: 26px;
+	gap: 12px;
+
 	.addTask {
+		margin-top: 2px;
 		width: 100%;
-		padding: 14px 0;
+		padding: 6px 0;
 		display: flex;
 		gap: 6px;
 		justify-content: center;
 		align-items: center;
-		border: 1px dashed var(--main-25);
-		border-radius: 16px;
+		border: 1px solid var(--main-10);
+		background-color: var(--main-3);
+		border-radius: 10px;
 		box-shadow: var(--boxShadow-xs);
+		opacity: 0;
+		pointer-events: none;
+		transition: all 0.1s ease;
 
-		span {
-			font-size: calc(14 / 16 * 1rem);
-			font-weight: 600;
-			line-height: calc(20 / 16 * 1rem);
-			color: var(--main-80);
+		&:hover {
+			background-color: var(--main-5);
+			border-color: var(--main-15);
+
+			svg {
+				color: var(--main);
+			}
+		}
+
+		svg {
+			color: var(--main-75);
+			transition: color 0.1s ease;
 		}
 	}
 }
