@@ -13,13 +13,15 @@ import TaskComponent from './Task';
 import SVG from '@/components/general/SVG';
 import Dots from '@/svgs/Dots';
 import { useOutsideRef } from '@/utils/useOutsideRef';
+import { useDroppable } from '@dnd-kit/core';
 
 interface ColumnProps {
 	column: TaskColumnType;
-	onHideColumn?: (columnId: number) => void;
+	onHideColumn: (columnId: number) => void;
+	orgUrl: string;
 }
 
-const Column = ({ column, onHideColumn }: ColumnProps) => {
+const Column = ({ column, onHideColumn, orgUrl }: ColumnProps) => {
 	const { title, displayTitle, tasks } = column;
 	const allTasks = tasks.length;
 	const [showDropdown, setShowDropdown] = useState(false);
@@ -92,7 +94,7 @@ const Column = ({ column, onHideColumn }: ColumnProps) => {
 			<div className={styles.column}>
 				<SortableContext items={tasksId} strategy={verticalListSortingStrategy}>
 					{tasks.map((task) => (
-						<TaskComponent key={task.id} task={task} />
+						<TaskComponent key={task.id} task={task} orgUrl={orgUrl} />
 					))}
 				</SortableContext>
 				<button className={styles.addTask}>

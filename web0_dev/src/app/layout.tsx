@@ -4,6 +4,7 @@ import './globals.scss';
 import ConsoleLogger from '@/components/general/Consolelogger';
 import LenisWrapper from '@/components/general/LenisWrapper';
 import { Toaster } from 'sonner';
+import ServiceWorkerRegistration from '@/components/general/ServiceWorkerRegistration';
 
 import { ThemeProvider } from 'next-themes';
 
@@ -28,6 +29,7 @@ export default function RootLayout({
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${inter.variable}`}>
 				<ConsoleLogger />
+				<ServiceWorkerRegistration />
 				<LenisWrapper>
 					<ThemeProvider>
 						{children}

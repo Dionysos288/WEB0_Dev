@@ -16,7 +16,7 @@ enum ProjectStatus {
   canceled
 }
 
-enum Priority {
+enum projectPriority {
   noPriority
   low
   medium
@@ -115,14 +115,17 @@ model Task {
   id             String        @id @default(cuid())
   title          String
   description    String?
+  content        String?       @db.Text
   projectId      String
   project        Project       @relation(fields: [projectId], references: [id])
-  priority       Priority?
+  priority       projectPriority
   status         TaskStatus
   Organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
   phaseId        String?
   Phase          Phase?        @relation(fields: [phaseId], references: [id])
+  comments       Comment[]
+  activities     Activity[]
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 }
@@ -133,8 +136,9 @@ model Project {
   description    String?
   start          DateTime
   due            DateTime
+  team           String[]
   status         ProjectStatus
-  priority       Priority?
+  priority       projectPriority?
   organizationId String
   Organization   Organization     @relation(fields: [organizationId], references: [id])
   budget         Decimal
@@ -306,6 +310,8 @@ model Organization {
   Phase       Phase[]
   Project     Project[]
   Task        Task[]
+  Comment     Comment[]
+  Activity    Activity[]
   Category    Category[]
   Library     Library[]
 
@@ -323,6 +329,8 @@ model Member {
   createdAt        DateTime
   leadingProjects  Project[]    @relation("ProjectLead")
   memberOfProjects Project[]    @relation("ProjectMembers")
+  comments         Comment[]
+  activities       Activity[]
 
   @@map("member")
 }
@@ -339,4 +347,30 @@ model Invitation {
   user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
 
   @@map("invitation")
+}
+
+model Comment {
+  id             String        @id @default(cuid())
+  content        String
+  taskId         String
+  task           Task          @relation(fields: [taskId], references: [id])
+  authorId       String
+  author         Member        @relation(fields: [authorId], references: [id])
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Activity {
+  id             String        @id @default(cuid())
+  type           String        // e.g., "status_change", "comment_added", "description_updated"
+  description    String
+  taskId         String
+  task           Task          @relation(fields: [taskId], references: [id])
+  actorId        String
+  actor          Member        @relation(fields: [actorId], references: [id])
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
+  createdAt      DateTime      @default(now())
 }

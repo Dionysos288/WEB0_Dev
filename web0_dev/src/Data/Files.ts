@@ -1,133 +1,255 @@
-const someJSCodeExample = `
- import React from "react";
-export default function App() {
-  return <h1 className="text-red-500">Hello Tailwind!</h1>;
+interface FileData {
+	name: string;
+	language: string;
+	value: string;
+	linkedFiles?: string[];
+	type:
+		| 'component'
+		| 'style'
+		| 'util'
+		| 'html'
+		| 'javascript'
+		| 'css'
+		| 'python'
+		| 'text';
+	description?: string;
 }
-`;
 
-const someCSSCodeExample = `
-  body { margin: 0; padding: 0; }
-`;
+interface Files {
+	[key: string]: FileData;
+}
 
-const someHTMLCodeExample = `
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="utf-8" />
-      <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-      <!-- https://web.dev/uses-rel-preconnect -->
-      <link rel="preconnect" href="https://storage.googleapis.com">
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="theme-color" content="#111" />
-
-      <meta
-        name="description"
-        content="Wlist"
-        data-react-helmet="true"
-      />
-      <meta
-        property="og:title"
-        content="Wlist"
-        data-react-helmet="true"
-      >
-      <meta
-        property="og:description"
-        content="Wlist"
-        data-react-helmet="true"
-      >
-      <meta
-        property="og:url"
-        content="%PUBLIC_URL%"
-        data-react-helmet="true"
-      >
-      <meta
-        property="og:image"
-        content="%PUBLIC_URL%/images/cover.png"
-        data-react-helmet="true"
-      />
-      <meta
-        name="twitter:card"
-        content="summary"
-        data-react-helmet="true"
-      />
-      <meta property="og:type" content="website" />
-      <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-      <!--
-        manifest.json provides metadata used when your web app is installed on a
-        user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-      -->
-      <link rel="manifest" href="%PUBLIC_URL%/manifest.json" crossorigin="use-credentials" />
-      <!-- https://web.dev/defer-non-critical-css/ -->
-      <link rel="preload" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-
-      <title>Wlist</title>
-
-      <!-- ie -->
-      <script type="text/javascript">
-        var ua = navigator.userAgent;
-        var is_ie = ua.indexOf('MSIE ') > -1 || ua.indexOf('Trident/') > -1;
-
-        if (is_ie) {
-          document.ie = 'true';
-
-          var ie_script = document.createElement('script');
-          var ie_styles = document.createElement('link');
-
-          ie_script.src = 'no-ie/init.js';
-          ie_styles.rel = 'stylesheet';
-          ie_styles.href = 'no-ie/styles.css';
-
-          function injectScripts() {
-            document.body.innerHTML = '';
-            document.body.appendChild(ie_styles);
-            document.body.appendChild(ie_script);
-          }
-
-          if (document.addEventListener) {
-            document.addEventListener('DOMContentLoaded', injectScripts);
-          } else { // before IE 9
-            document.attachEvent('DOMContentLoaded', injectScripts);
-          }
-
-        }
-      </script>
-    </head>
-    <body>
-      <noscript>You need to enable JavaScript to run this app.</noscript>
-      <script type="text/javascript">
-        // set the body color before app initialization, to avoid blinking
-        var themeMode = localStorage.getItem('theme-mode');
-        var initialBodyStyles = document.createElement('style');
-        var currentThemeColor = themeMode === 'light' ? '#fafafa': '#111';
-        initialBodyStyles.innerText = 'body { background-color: ' + currentThemeColor + ' }';
-        document.head.appendChild(initialBodyStyles);
-
-        // also set meta[name="theme-color"] content
-        var metaTheme = document.querySelector('meta[name="theme-color"]');
-
-        metaTheme.content = currentThemeColor;
-      </script>
-      <div id="root"></div>
-    </body>
-  </html>
-`;
-
-const files = {
-	'App.jsx': {
-		name: 'App.jsx',
-		language: 'javascript',
-		value: someJSCodeExample,
-		tailwind: true,
+const files: Files = {
+	'index.html': {
+		name: 'index.html',
+		language: 'html',
+		type: 'html',
+		description: 'Main HTML file',
+		value: `<div class="container">
+    <h1>Welcome to My Web Page</h1>
+    <p>This is a sample HTML file.</p>
+    <button id="myButton">Click Me</button>
+</div>`,
 	},
 	'styles.css': {
 		name: 'styles.css',
 		language: 'css',
-		value: someCSSCodeExample,
+		type: 'css',
+		description: 'Main CSS file',
+		value: `/* Main styles */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}`,
 	},
-	'index.html': {
-		name: 'index.html',
-		language: 'html',
-		value: someHTMLCodeExample,
+	'script.js': {
+		name: 'script.js',
+		language: 'javascript',
+		type: 'javascript',
+		description: 'Main JavaScript file',
+		value: `// Main JavaScript code
+document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('myButton');
+    
+    button.addEventListener('click', () => {
+        alert('Button clicked!');
+    });
+});
+
+// Example function
+function calculateSum(a, b) {
+    return a + b;
+}`,
+	},
+	'App.jsx': {
+		name: 'App.jsx',
+		language: 'javascript',
+		type: 'component',
+		linkedFiles: ['App.module.css'],
+		description: 'Main component',
+		value: `// Write your React component here
+// You can use either function or const declaration
+const App = () => {
+	return (
+		<div className="app">
+			<h1>Hello World</h1>
+			<Button>Click me</Button>
+		</div>
+	);
+}`,
+	},
+	'Button.jsx': {
+		name: 'Button.jsx',
+		language: 'javascript',
+		type: 'component',
+		linkedFiles: ['Button.module.css'],
+		description: 'Reusable button component',
+		value: `// Example of a reusable button component
+const Button = ({ children, ...props }) => {
+	return (
+		<button className="button" {...props}>
+			{children}
+		</button>
+	);
+}`,
+	},
+	'App.module.css': {
+		name: 'App.module.css',
+		language: 'css',
+		type: 'style',
+		description: 'Styles for App component',
+		value: `/* Styles for App component */
+.app {
+	text-align: center;
+	padding: 20px;
+	font-family: Arial, sans-serif;
+}
+
+h1 {
+	color: #2c3e50;
+	font-size: 2.5em;
+}`,
+	},
+	'Button.module.css': {
+		name: 'Button.module.css',
+		language: 'css',
+		type: 'style',
+		description: 'Styles for Button component',
+		value: `/* Styles for Button component */
+.button {
+	background-color: #3498db;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 1em;
+	transition: background-color 0.3s;
+}
+
+.button:hover {
+	background-color: #2980b9;
+}`,
+	},
+	'utils.js': {
+		name: 'utils.js',
+		language: 'javascript',
+		type: 'util',
+		description: 'Utility functions',
+		value: `// Example utility functions
+export const formatDate = (date) => {
+	return new Date(date).toLocaleDateString();
+};
+
+export const capitalize = (str) => {
+	return str.charAt(0).toUpperCase() + str.slice(1);
+};`,
+	},
+	'main.py': {
+		name: 'main.py',
+		language: 'python',
+		type: 'python',
+		description: 'Main Python script',
+		value: `print("Simple Addition Program")
+print("------------------------")
+
+first = input("Enter first number: ")
+second = input("Enter second number: ")
+
+try:
+    num1 = float(first)
+    num2 = float(second)
+    sum = num1 + num2
+    print(f"{num1} + {num2} = {sum}")
+except ValueError:
+    print("Please enter valid numbers!")`,
+	},
+	'utils.py': {
+		name: 'utils.py',
+		language: 'python',
+		type: 'python',
+		description: 'Python utility functions',
+		value: `print("Grade Calculator")
+print("------------------------")
+
+score = input("Enter score (0-100): ")
+
+try:
+    num = float(score)
+    if 0 <= num <= 100:
+        if num >= 90:
+            grade = 'A'
+        elif num >= 80:
+            grade = 'B'
+        elif num >= 70:
+            grade = 'C'
+        elif num >= 60:
+            grade = 'D'
+        else:
+            grade = 'F'
+        print(f"Score: {num}")
+        print(f"Grade: {grade}")
+    else:
+        print("Score must be between 0 and 100")
+except ValueError:
+    print("Please enter a valid number!")`,
+	},
+	'example.py': {
+		name: 'example.py',
+		language: 'python',
+		type: 'python',
+		description: 'Example Python code with classes',
+		value: `print("Basic Calculator")
+print("------------------------")
+
+first = input("Enter first number: ")
+second = input("Enter second number: ")
+operation = input("Enter operation (+, -, *, /): ")
+
+try:
+    num1 = float(first)
+    num2 = float(second)
+    
+    if operation == '+':
+        result = num1 + num2
+        print(f"{num1} + {num2} = {result}")
+    elif operation == '-':
+        result = num1 - num2
+        print(f"{num1} - {num2} = {result}")
+    elif operation == '*':
+        result = num1 * num2
+        print(f"{num1} * {num2} = {result}")
+    elif operation == '/':
+        if num2 == 0:
+            print("Error: Cannot divide by zero")
+        else:
+            result = num1 / num2
+            print(f"{num1} / {num2} = {result}")
+    else:
+        print("Invalid operation. Please use +, -, *, or /")
+except ValueError:
+    print("Please enter valid numbers!")`,
 	},
 };
 

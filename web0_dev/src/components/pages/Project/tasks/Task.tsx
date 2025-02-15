@@ -2,17 +2,20 @@ import styles from './Task.module.scss';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Image from 'next/image';
-import { Phase, Task as TaskType } from '@prisma/client';
+import { Phase, Task as TaskType, projectPriority } from '@prisma/client';
 import Clock from '@/svgs/Clock';
 import ChatText from '@/svgs/ChatText';
 import PhaseIcon from '@/svgs/Phase';
 import Text from '@/svgs/Text';
+import { useRouter } from 'next/navigation';
 
 interface TaskProps {
 	task: TaskType & { phase?: Phase };
+	orgUrl?: string;
 }
 
-const Task = ({ task }: TaskProps) => {
+const Task = ({ task, orgUrl }: TaskProps) => {
+	const router = useRouter();
 	const {
 		attributes,
 		listeners,
@@ -26,6 +29,35 @@ const Task = ({ task }: TaskProps) => {
 	});
 
 	const style = { transition, transform: CSS.Transform.toString(transform) };
+
+	const handleClick = (e: React.MouseEvent) => {
+		// Prevent click when dragging
+		if (isDragging) return;
+
+		// Don't navigate if we're clicking on a draggable handle
+		if ((e.target as HTMLElement).closest('[data-handle]')) return;
+
+		if (orgUrl) {
+			router.push(`/${orgUrl}/projects/${task.projectId}/tasks/${task.id}`);
+		}
+	};
+
+	const getPriorityClass = (priority: projectPriority) => {
+		switch (priority) {
+			case 'noPriority':
+				return styles.noPriority;
+			case 'low':
+				return styles.low;
+			case 'medium':
+				return styles.medium;
+			case 'high':
+				return styles.high;
+			case 'urgent':
+				return styles.urgent;
+			default:
+				return styles.noPriority;
+		}
+	};
 
 	if (isDragging) {
 		return (
@@ -46,8 +78,9 @@ const Task = ({ task }: TaskProps) => {
 			{...listeners}
 			style={style}
 			className={styles.task}
+			onClick={handleClick}
 		>
-			<div className={styles.row}>
+			<div className={styles.row} data-handle>
 				{task.status === 'Backlog' && (
 					<Text fill={'var(--main-70)'} width="14" height="14" />
 				)}
@@ -78,8 +111,8 @@ const Task = ({ task }: TaskProps) => {
 						height={24}
 					/>
 				</div>
-				<div className={`${styles.wrapper} ${styles.low}`}>
-					<p>Low</p>
+				<div className={`${styles.wrapper} ${getPriorityClass(task.priority)}`}>
+					<p>{task.priority}</p>
 				</div>
 				<div className={styles.wrapper}>
 					<PhaseIcon fill={'var(--main-70)'} width="12" height="12" />

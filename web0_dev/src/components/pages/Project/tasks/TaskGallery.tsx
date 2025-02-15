@@ -339,6 +339,7 @@ const TaskGallery = ({
 								key={column.id}
 								column={column}
 								onHideColumn={handleHideColumn}
+								orgUrl={orgUrl}
 							/>
 						))}
 					</div>
@@ -375,7 +376,7 @@ const TaskGallery = ({
 				</div>
 				{createPortal(
 					<DragOverlay>
-						{activeTask && <TaskComponent task={activeTask} />}
+						{activeTask && <TaskComponent task={activeTask} orgUrl={orgUrl} />}
 					</DragOverlay>,
 					document.body
 				)}

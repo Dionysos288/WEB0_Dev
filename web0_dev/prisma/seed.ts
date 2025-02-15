@@ -1,4 +1,9 @@
-import { PrismaClient, Prisma, Category } from '@prisma/client';
+import {
+	PrismaClient,
+	Prisma,
+	Category,
+	projectPriority,
+} from '@prisma/client';
 
 const prisma = new PrismaClient();
 const tasks = [
@@ -13,8 +18,8 @@ const tasks = [
 const completedCount = tasks.filter(
 	(t) => t.columnStatus === 'Completed'
 ).length;
-const organizationId = 'COMhDJeWfdlOxGfDMQcmzZsG0xH2H14q';
-const memberId1 = 'YYcq5cf6luny5EHXwFt81MgVYqcKNa4S';
+const organizationId = '8nUWa71XhtazE8KzgxZo12VROPcmeLX9';
+const memberId1 = 'Gp4MdGqIfZQW5SbaGKg95k8VWAK9WBTO';
 const projectData: Prisma.ProjectCreateInput[] = [
 	{
 		id: '1ABC',
@@ -24,6 +29,7 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		start: new Date(),
 		due: new Date(Date.now() + 100 * 86400000),
 		status: 'planned',
+		priority: projectPriority.high,
 		lead: {
 			connect: {
 				id: memberId1,
@@ -75,39 +81,39 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				{
 					title: 'Task #1 (Alltasks P1)',
 					description: 'Task #1 description',
-					priority: 3,
+					priority: projectPriority.high,
 					status: 'Backlog',
 					phaseId: 'A123',
 				},
 				{
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
-					priority: 1,
+					priority: projectPriority.low,
 					status: 'inProgress',
 					phaseId: 'A123',
 				},
 				{
 					title: 'Task #3 (Alltasks P1)',
-					priority: 4,
+					priority: projectPriority.urgent,
 					description: 'Task #3 description',
 					status: 'Completed',
 					phaseId: 'A123',
 				},
 				{
 					title: 'Task #4 (Alltasks P1)',
-					priority: 2,
+					priority: projectPriority.medium,
 					description: 'Task #4 description',
 					status: 'inProgress',
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
-					priority: 3,
+					priority: projectPriority.high,
 					description: 'Task #5 description',
 					status: 'Backlog',
 				},
 				{
 					title: 'Task #6 (Alltasks P1)',
-					priority: 2,
+					priority: projectPriority.medium,
 					description: 'Task #6 description',
 					status: 'Backlog',
 				},
@@ -140,6 +146,7 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		start: new Date(),
 		due: new Date(Date.now() + 100 * 86400000),
 		status: 'canceled',
+		priority: projectPriority.medium,
 		completed: completedCount,
 		Organization: {
 			connect: {
@@ -151,37 +158,37 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				{
 					title: 'Task #1 (Alltasks P1)',
 					description: 'Task #1 description',
-					priority: 3,
+					priority: projectPriority.high,
 					status: 'Backlog',
 				},
 				{
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
-					priority: 1,
+					priority: projectPriority.low,
 					status: 'inProgress',
 				},
 				{
 					title: 'Task #3 (Alltasks P1)',
-					priority: 2,
+					priority: projectPriority.medium,
 					description: 'Task #3 description',
 					status: 'Completed',
 					phaseId: 'A123',
 				},
 				{
 					title: 'Task #4 (Alltasks P1)',
-					priority: 2,
+					priority: projectPriority.medium,
 					description: 'Task #4 description',
 					status: 'inProgress',
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
-					priority: 3,
+					priority: projectPriority.high,
 					description: 'Task #5 description',
 					status: 'Backlog',
 				},
 				{
 					title: 'Task #6 (Alltasks P1)',
-					priority: 2,
+					priority: projectPriority.medium,
 					description: 'Task #6 description',
 					status: 'Backlog',
 				},
@@ -246,6 +253,7 @@ const projectData: Prisma.ProjectCreateInput[] = [
 		start: new Date(),
 		due: new Date(Date.now() + 100 * 86400000),
 		status: 'progress',
+		priority: projectPriority.urgent,
 		completed: completedCount,
 		Organization: {
 			connect: {
@@ -257,37 +265,37 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				{
 					title: 'Task #1 (Alltasks P1)',
 					description: 'Task #1 description',
-					priority: 3,
+					priority: projectPriority.high,
 					status: 'Backlog',
 				},
 				{
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
-					priority: 1,
+					priority: projectPriority.low,
 					status: 'inProgress',
 				},
 				{
 					title: 'Task #3 (Alltasks P1)',
-					priority: 2,
+					priority: projectPriority.medium,
 					description: 'Task #3 description',
 					status: 'Completed',
 					phaseId: 'A123',
 				},
 				{
 					title: 'Task #4 (Alltasks P1)',
-					priority: 2,
+					priority: projectPriority.medium,
 					description: 'Task #4 description',
 					status: 'inProgress',
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
-					priority: 3,
+					priority: projectPriority.high,
 					description: 'Task #5 description',
 					status: 'Backlog',
 				},
 				{
 					title: 'Task #6 (Alltasks P1)',
-					priority: 2,
+					priority: projectPriority.medium,
 					description: 'Task #6 description',
 					status: 'Backlog',
 				},

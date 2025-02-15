@@ -42,30 +42,46 @@
 			align-items: center;
 			.leftSide {
 				display: flex;
-
+				gap: 12px;
 				align-items: center;
-				.member {
-					margin-right: -6px;
-					img {
-						border: 1px solid var(--lightBlue);
-
-						object-fit: cover;
-						border-radius: 360px;
-					}
-				}
-				.extra {
-					border: 1px solid var(--lightBlue);
-					border-radius: 360px;
+				.priority {
 					display: flex;
-					justify-content: center;
 					align-items: center;
-					width: 26px;
-					height: 26px;
-					background-color: var(--purple);
+					border-radius: 6px;
+					padding: 2px 4px;
+
 					p {
-						font-size: calc(12 / 16 * 1rem);
+						font-size: calc(10 / 16 * 1rem);
 						font-weight: 400;
 						line-height: calc(18 / 16 * 1rem);
+					}
+				}
+				.low {
+					background-color: var(--orange-5);
+					border: 1px dashed var(--orange-90);
+					p {
+						color: var(--orange);
+					}
+				}
+				.medium {
+					background-color: var(--orange-5);
+					border: 1px dashed var(--orange-90);
+					p {
+						color: var(--orange);
+					}
+				}
+				.high {
+					background-color: var(--orange-5);
+					border: 1px dashed var(--orange-90);
+					p {
+						color: var(--orange);
+					}
+				}
+				.urgent {
+					background-color: var(--orange-5);
+					border: 1px dashed var(--orange-90);
+					p {
+						color: var(--orange);
 					}
 				}
 			}
@@ -160,9 +176,7 @@
 				align-items: center;
 				gap: 3px;
 				width: 100%;
-				.spaceLeft {
-					margin-left: 3px;
-				}
+
 				p,
 				span {
 					font-size: calc(12 / 16 * 1rem);

@@ -63,6 +63,27 @@ const ProjectGallery = async () => {
 						<div className={styles.middlePart}>
 							<div className={styles.leftSide}>
 								<Team team={team} />
+								{project.priority === 'noPriority' && <></>}
+								{project.priority === 'low' && (
+									<div className={`${styles.priority} ${styles.low}`}>
+										<p>Low</p>
+									</div>
+								)}
+								{project.priority === 'medium' && (
+									<div className={`${styles.priority} ${styles.medium}`}>
+										<p>Medium</p>
+									</div>
+								)}
+								{project.priority === 'high' && (
+									<div className={`${styles.priority} ${styles.high}`}>
+										<p>High</p>
+									</div>
+								)}
+								{project.priority === 'urgent' && (
+									<div className={`${styles.priority} ${styles.urgent}`}>
+										<p>Urgent</p>
+									</div>
+								)}
 							</div>
 							{project.status === 'completed' && (
 								<div className={`${styles.status} ${styles.completed}`}>
@@ -159,31 +180,6 @@ const ProjectGallery = async () => {
 						<Spacing space={8} />
 						<div className={styles.bottomPart}>
 							<div className={styles.leftSide}>
-								{project.priority === 'noPriority' && <></>}
-								{project.priority === 'low' && (
-									<LowPriority width="14" height="14" fill={'var(--main-80)'} />
-								)}
-								{project.priority === 'medium' && (
-									<MediumPriority
-										width="14"
-										height="14"
-										fill={'var(--main-80)'}
-									/>
-								)}
-								{project.priority === 'high' && (
-									<HighPriority
-										width="14"
-										height="14"
-										fill={'var(--main-80)'}
-									/>
-								)}
-								{project.priority === 'urgent' && (
-									<UrgentPriority
-										width="14"
-										height="14"
-										fill={'var(--main-75)'}
-									/>
-								)}
 								{project.status === 'backlog' ||
 								project.status === 'planned' ? (
 									<>
