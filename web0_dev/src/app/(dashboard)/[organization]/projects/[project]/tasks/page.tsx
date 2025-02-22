@@ -62,6 +62,7 @@ const page = async ({ params }: { params: { project: string } }) => {
 					tasksData={project.tasks}
 					phase={true}
 					orgUrl={organizationSlug}
+					projectId={project.id}
 				/>
 			</>
 		);

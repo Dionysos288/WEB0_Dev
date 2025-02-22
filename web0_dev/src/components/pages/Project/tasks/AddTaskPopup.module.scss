@@ -1,0 +1,129 @@
+.popupWrapper {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: var(--backdrop);
+	backdrop-filter: blur(4px);
+	z-index: 1000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	.popup {
+		position: relative;
+		min-width: 500px;
+		display: grid;
+		row-gap: 28px;
+		background-color: var(--white);
+		border-radius: 16px;
+		padding: 16px 28px;
+		border: 1px solid var(--main-10);
+		box-shadow: var(--boxShadow-md);
+
+		h2 {
+			margin: 0 auto;
+			width: fit-content;
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 400;
+			line-height: calc(20 / 16 * 1rem);
+			color: var(--main-60);
+		}
+
+		.inputWrapper {
+			display: flex;
+			gap: 12px;
+			flex-direction: column;
+			input,
+			textarea {
+				border: 0px solid;
+				background-color: transparent;
+
+				&:focus {
+					outline: none;
+				}
+
+				&::placeholder {
+					color: var(--main-40);
+				}
+			}
+			textarea {
+				resize: none;
+			}
+			.header {
+				font-size: calc(22 / 16 * 1rem);
+				font-weight: 600;
+				line-height: calc(20 / 16 * 1rem);
+				color: var(--main-90);
+				&:-webkit-autofill {
+					-webkit-box-shadow: 0 0 0 30px var(--white) inset !important;
+					-webkit-text-fill-color: var(--main-90) !important;
+				}
+			}
+			.description {
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(20 / 16 * 1rem);
+				color: var(--main-80);
+				&:-webkit-autofill {
+					-webkit-box-shadow: 0 0 0 30px var(--white) inset !important;
+					-webkit-text-fill-color: var(--main-80) !important;
+				}
+			}
+		}
+		.optionWrapper {
+			display: flex;
+			gap: 8px;
+			.option {
+				width: min-content;
+				position: relative;
+				cursor: default;
+				border: 1px solid var(--main-10);
+				box-shadow: var(--boxShadow-xs);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				padding: 4px 8px;
+				border-radius: 6px;
+				background-color: var(--main-5);
+				span {
+					margin-left: 4px;
+					font-size: calc(12 / 16 * 1rem);
+					font-weight: 400;
+					line-height: calc(18 / 16 * 1rem);
+					width: max-content;
+				}
+			}
+		}
+		.actions {
+			margin: 0 -28px;
+			width: calc(100% + 56px);
+			display: flex;
+			justify-content: flex-end;
+			gap: 16px;
+			border-top: 1px solid var(--main-10);
+			padding-top: 16px;
+
+			button {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				padding: 8px 16px;
+				border-radius: 8px;
+				box-shadow: var(--boxShadow-xs);
+				border: 1px solid var(--main-5);
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(20 / 16 * 1rem);
+			}
+			.cancelButton {
+				background-color: var(--lightBlue);
+			}
+			.createButton {
+				margin-right: 16px;
+				background-color: var(--orange);
+				color: var(--whiteSpecial);
+			}
+		}
+	}
+}

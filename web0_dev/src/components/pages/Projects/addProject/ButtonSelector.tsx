@@ -4,7 +4,37 @@ import styles from './ButtonSelector.module.scss';
 import Text from '@/svgs/Text';
 import Check from '@/svgs/Check';
 
-const ButtonSelector = ({
+interface OptionItem {
+	label: string;
+	value: string;
+	icon?: React.ComponentType<{
+		fill?: string;
+		width?: string;
+		height?: string;
+	}>;
+}
+
+interface ButtonSelectorProps<T> {
+	query: string;
+	onQueryChange: (
+		e: React.ChangeEvent<HTMLInputElement>,
+		setOptions: React.Dispatch<React.SetStateAction<T[]>>,
+		oldData: T[]
+	) => void;
+	inputRef: React.RefObject<HTMLInputElement> | React.RefObject<null>;
+	options: T[];
+	placeholder: string;
+	oldData: T[];
+	setOptions: React.Dispatch<React.SetStateAction<T[]>>;
+	setIsChosen: (value: string | T) => void;
+	setIsOpenOption: React.Dispatch<React.SetStateAction<boolean>>;
+	isChosen: string;
+	isComboBox?: boolean;
+	selectedItems?: string[];
+	onSelectedItemsChange?: (items: string[]) => void;
+}
+
+function ButtonSelector<T extends OptionItem>({
 	query,
 	onQueryChange,
 	inputRef,
@@ -18,50 +48,53 @@ const ButtonSelector = ({
 	isComboBox = false,
 	selectedItems = [],
 	onSelectedItemsChange = () => {},
-}: {
-	query: string;
-	onQueryChange: (
-		e: React.ChangeEvent<HTMLInputElement>,
-		setOptions: React.Dispatch<React.SetStateAction<string[]>>,
-		oldData: string[]
-	) => void;
-	inputRef: React.RefObject<HTMLInputElement> | React.RefObject<null>;
-	options: string[];
-	placeholder: string;
-	oldData: string[];
-	setOptions: React.Dispatch<React.SetStateAction<string[]>>;
-	setIsChosen: React.Dispatch<React.SetStateAction<string>>;
-	setIsOpenOption: React.Dispatch<React.SetStateAction<boolean>>;
-	isChosen: string;
-	isComboBox?: boolean;
-	selectedItems?: string[];
-	onSelectedItemsChange?: (items: string[]) => void;
-}) => {
+}: ButtonSelectorProps<T>) {
 	const [activeIndex, setActiveIndex] = useState<number>(-1);
+	console.log(oldData);
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [inputRef]);
 
 	useEffect(() => {
-		const chosenIndex = options.findIndex((option) => option === isChosen);
+		const chosenIndex = options.findIndex(
+			(option) => option.value === isChosen
+		);
 		setActiveIndex(chosenIndex !== -1 ? chosenIndex : 0);
 	}, [isChosen, options]);
 
-	const handleItemClick = (option: string) => {
+	const handleItemClick = (option: T) => {
 		if (isComboBox) {
-			const newSelectedItems = selectedItems.includes(option)
-				? selectedItems.filter((item) => item !== option)
-				: [...selectedItems, option];
+			const newSelectedItems = selectedItems.includes(option.value)
+				? selectedItems.filter((item) => item !== option.value)
+				: [...selectedItems, option.value];
 			onSelectedItemsChange(newSelectedItems);
+
+			if (newSelectedItems.length === 0) {
+				setIsChosen({ ...option, label: placeholder } as T);
+			} else if (newSelectedItems.length === 1) {
+				const selectedOption = options.find(
+					(opt) => opt.value === newSelectedItems[0]
+				);
+				if (selectedOption) {
+					setIsChosen(selectedOption);
+				}
+			} else {
+				setIsChosen({
+					...option,
+					label: `${newSelectedItems.length} Assignees`,
+				} as T);
+			}
 		} else {
 			setIsChosen(option);
 			setIsOpenOption(false);
+			setOptions(oldData);
+			const emptyEvent = {
+				target: { value: '' },
+			} as React.ChangeEvent<HTMLInputElement>;
+			onQueryChange(emptyEvent, setOptions, oldData);
 		}
-	};
-
-	const handleCheckboxClick = (
-		e: React.MouseEvent<HTMLInputElement>,
-		option: string
-	) => {
-		e.stopPropagation();
-		handleItemClick(option);
 	};
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -81,6 +114,17 @@ const ButtonSelector = ({
 		}
 	};
 
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		onQueryChange(e, setOptions, oldData);
+		console.log(value);
+		if (value === '') {
+			console.log('reset');
+			console.log(oldData);
+			setOptions(oldData);
+		}
+	};
+
 	return (
 		<div
 			className={styles.inputs}
@@ -92,7 +136,7 @@ const ButtonSelector = ({
 				type="text"
 				placeholder={placeholder}
 				value={query}
-				onChange={(e) => onQueryChange(e, setOptions, oldData)}
+				onChange={handleInputChange}
 				ref={inputRef}
 			/>
 			<Spacing space={6} />
@@ -101,52 +145,55 @@ const ButtonSelector = ({
 
 			<div className={styles.options}>
 				{Array.isArray(options) &&
-					options.map((option, index) => (
-						<button
-							className={`${styles.optionItem} ${
-								index === activeIndex ? styles.active : ''
-							}`}
-							key={index}
-							onMouseOverCapture={() => setActiveIndex(index)}
-							onClick={() => handleItemClick(option)}
-							tabIndex={-1}
-						>
-							<div className={styles.leftSide}>
-								{isComboBox ? (
-									<>
-										<input
-											type="checkbox"
-											checked={selectedItems.includes(option)}
-											onChange={() => {}}
-											onClick={(e) => handleCheckboxClick(e, option)}
-											className={styles.checkbox}
-										/>
-										<div className={styles.iconCombo}>
-											<Text fill={'var(--main)'} width="16" height="16" />
+					options.map((option, index) => {
+						const Icon = option.icon || Text;
+						return (
+							<button
+								className={`${styles.optionItem} ${
+									index === activeIndex ? styles.active : ''
+								}`}
+								key={index}
+								onMouseEnter={() => setActiveIndex(index)}
+								onClick={() => handleItemClick(option)}
+								tabIndex={-1}
+							>
+								<div className={styles.leftSide}>
+									{isComboBox ? (
+										<>
+											<input
+												type="checkbox"
+												checked={selectedItems.includes(option.value)}
+												onChange={() => handleItemClick(option)}
+												onClick={(e) => e.stopPropagation()}
+												className={styles.checkbox}
+											/>
+											<div className={styles.iconCombo}>
+												<Icon fill={'var(--main)'} width="16" height="16" />
+											</div>
+										</>
+									) : (
+										<div className={styles.iconNoCombo}>
+											<Icon fill={'var(--main)'} width="16" height="16" />
 										</div>
-									</>
-								) : (
-									<div className={styles.iconNoCombo}>
-										<Text fill={'var(--main)'} width="16" height="16" />
+									)}
+									<span>{option.label}</span>
+								</div>
+								{!isComboBox && (
+									<div className={styles.leftSide}>
+										<Check
+											fill={'var(--main-90)'}
+											width="16"
+											height="16"
+											style={{ opacity: isChosen === option.value ? '1' : '0' }}
+										/>
 									</div>
 								)}
-								<span>{option}</span>
-							</div>
-							{!isComboBox && (
-								<div className={styles.leftSide}>
-									<Check
-										fill={'var(--main-90)'}
-										width="16"
-										height="16"
-										style={{ opacity: isChosen === option ? '1' : '0' }}
-									/>
-								</div>
-							)}
-						</button>
-					))}
+							</button>
+						);
+					})}
 			</div>
 		</div>
 	);
-};
+}
 
 export default ButtonSelector;

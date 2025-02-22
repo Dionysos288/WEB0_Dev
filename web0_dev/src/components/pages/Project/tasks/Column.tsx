@@ -13,18 +13,20 @@ import TaskComponent from './Task';
 import SVG from '@/components/general/SVG';
 import Dots from '@/svgs/Dots';
 import { useOutsideRef } from '@/utils/useOutsideRef';
-import { useDroppable } from '@dnd-kit/core';
+import AddTaskPopup from './AddTaskPopup';
 
 interface ColumnProps {
 	column: TaskColumnType;
 	onHideColumn: (columnId: number) => void;
 	orgUrl: string;
+	projectId: string;
 }
 
-const Column = ({ column, onHideColumn, orgUrl }: ColumnProps) => {
+const Column = ({ column, onHideColumn, orgUrl, projectId }: ColumnProps) => {
 	const { title, displayTitle, tasks } = column;
 	const allTasks = tasks.length;
 	const [showDropdown, setShowDropdown] = useState(false);
+	const [showAddTask, setShowAddTask] = useState(false);
 
 	const handleClickOutside = useCallback(() => {
 		setShowDropdown(false);
@@ -56,52 +58,67 @@ const Column = ({ column, onHideColumn, orgUrl }: ColumnProps) => {
 	};
 
 	return (
-		<div
-			ref={setNodeRef}
-			{...attributes}
-			{...listeners}
-			className={`${styles.columnWrapper} `}
-		>
-			<div className={styles.header}>
-				<div className={styles.headerLeft}>
-					<h2 className={styles.title}>{displayTitle || title}</h2>
-					<p>{allTasks}</p>
-				</div>
-				<div className={styles.headerRight} ref={dropdownRef}>
-					<SVG onClick={() => setShowDropdown(!showDropdown)}>
-						<Dots fill={'var(--main)'} width="18" height="18" />
-					</SVG>
-					<div
-						className={`${styles.dropdown} ${showDropdown ? styles.show : ''}`}
-					>
-						<button
-							onClick={() => {
-								onHideColumn?.(column.id);
-								setShowDropdown(false);
-							}}
+		<>
+			<div
+				ref={setNodeRef}
+				{...attributes}
+				{...listeners}
+				className={`${styles.columnWrapper} `}
+			>
+				<div className={styles.header}>
+					<div className={styles.headerLeft}>
+						<h2 className={styles.title}>{displayTitle || title}</h2>
+						<p>{allTasks}</p>
+					</div>
+					<div className={styles.headerRight} ref={dropdownRef}>
+						<SVG onClick={() => setShowDropdown(!showDropdown)}>
+							<Dots fill={'var(--main)'} width="18" height="18" />
+						</SVG>
+						<div
+							className={`${styles.dropdown} ${
+								showDropdown ? styles.show : ''
+							}`}
 						>
-							Hide column
-						</button>
+							<button
+								onClick={() => {
+									onHideColumn?.(column.id);
+									setShowDropdown(false);
+								}}
+							>
+								Hide column
+							</button>
+						</div>
 					</div>
 				</div>
+				<Spacing space={8} />
+				<div
+					className={styles.line}
+					style={{ backgroundColor: getColumnColor(title) }}
+				/>
+				<Spacing space={16} />
+				<div className={styles.column}>
+					<SortableContext
+						items={tasksId}
+						strategy={verticalListSortingStrategy}
+					>
+						{tasks.map((task) => (
+							<TaskComponent key={task.id} task={task} orgUrl={orgUrl} />
+						))}
+					</SortableContext>
+					<button
+						className={styles.addTask}
+						onClick={() => setShowAddTask(true)}
+					>
+						<PlusFilled width="13" height="13" />
+					</button>
+				</div>
 			</div>
-			<Spacing space={8} />
-			<div
-				className={styles.line}
-				style={{ backgroundColor: getColumnColor(title) }}
+			<AddTaskPopup
+				isOpen={showAddTask}
+				onClose={() => setShowAddTask(!showAddTask)}
+				projectId={projectId}
 			/>
-			<Spacing space={16} />
-			<div className={styles.column}>
-				<SortableContext items={tasksId} strategy={verticalListSortingStrategy}>
-					{tasks.map((task) => (
-						<TaskComponent key={task.id} task={task} orgUrl={orgUrl} />
-					))}
-				</SortableContext>
-				<button className={styles.addTask}>
-					<PlusFilled width="13" height="13" />
-				</button>
-			</div>
-		</div>
+		</>
 	);
 };
 

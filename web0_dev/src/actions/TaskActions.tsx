@@ -2,7 +2,116 @@
 
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/db';
-import { Task, projectPriority } from '@prisma/client';
+import { Task, projectPriority, Prisma, TaskStatus } from '@prisma/client';
+
+interface CreateTaskData extends Partial<Task> {
+	assignees?: string[];
+	labels?: string[];
+}
+
+export const createTask = async (
+	taskData: CreateTaskData,
+	organizationSlug: string
+) => {
+	try {
+		if (!taskData.organizationId || !taskData.title) {
+			throw new Error('Organization ID and title are required');
+		}
+
+		const organization = await prisma.organization.findUnique({
+			where: { slug: organizationSlug },
+			select: {
+				taskCounter: true,
+			},
+		});
+
+		if (!organization) {
+			throw new Error('Organization not found');
+		}
+
+		const newTaskCounter = organization.taskCounter + 1;
+
+		await prisma.organization.update({
+			where: { slug: organizationSlug },
+			data: { taskCounter: newTaskCounter },
+		});
+
+		const createData = {
+			customId: `${organizationSlug}-${newTaskCounter}`,
+			title: taskData.title,
+			description: taskData.description || null,
+			priority: (taskData.priority || 'noPriority') as projectPriority,
+			status: (taskData.status || 'Backlog') as TaskStatus,
+			dueDate: taskData.dueDate ? new Date(taskData.dueDate) : null,
+			estimatedTime: taskData.estimatedTime || null,
+			content: null,
+			organizationId: taskData.organizationId,
+			projectId: taskData.projectId,
+			phaseId: taskData.phaseId,
+			cycleId: taskData.cycleId,
+		};
+
+		const task = await prisma.task.create({
+			data: createData,
+			include: {
+				Organization: true,
+				project: true,
+				Phase: true,
+				cycle: true,
+			},
+		});
+
+		// Revalidate paths after initial task creation
+		revalidatePath(`/${organizationSlug}/projects/${taskData.projectId}/tasks`);
+		revalidatePath(`/${organizationSlug}/projects/${taskData.projectId}`);
+		revalidatePath(`/${organizationSlug}/projects`);
+
+		if (taskData.assignees?.length || taskData.labels?.length) {
+			const updateData: Prisma.TaskUpdateInput = {};
+
+			if (taskData.assignees?.length) {
+				updateData.assignees = {
+					connect: taskData.assignees.map((id) => ({ id })),
+				};
+			}
+
+			if (taskData.labels?.length) {
+				updateData.labels = {
+					connect: taskData.labels.map((id) => ({ id })),
+				};
+			}
+
+			await prisma.task.update({
+				where: { id: task.id },
+				data: updateData,
+				include: {
+					assignees: true,
+					labels: true,
+				},
+			});
+
+			// Revalidate paths after updating task with relations
+			revalidatePath(
+				`/${organizationSlug}/projects/${taskData.projectId}/tasks`
+			);
+			revalidatePath(`/${organizationSlug}/projects/${taskData.projectId}`);
+			revalidatePath(`/${organizationSlug}/projects`);
+			revalidatePath(
+				`/${organizationSlug}/projects/${taskData.projectId}/tasks/${task.id}`
+			);
+
+			return { data: null, error: null };
+		}
+
+		return { data: null, error: null };
+	} catch (error) {
+		console.error(
+			'Error creating task - Stack trace:',
+			error instanceof Error ? error.stack : 'Unknown error'
+		);
+		return { data: null, error: 'Failed to create task' };
+	}
+};
 
 export const updateTask = async (
 	taskId: string,
@@ -58,7 +167,7 @@ export const updateTask = async (
 			...task,
 			project: {
 				...task.project,
-				budget: task.project.budget.toNumber(),
+				budget: task.project?.budget ? task.project.budget.toNumber() : null,
 			},
 			Phase: task.Phase
 				? {
@@ -69,7 +178,10 @@ export const updateTask = async (
 
 		return { data: { taskData, activity }, error: null };
 	} catch (error) {
-		console.error('Error updating task:', error);
+		console.error(
+			'Error updating task - Stack trace:',
+			error instanceof Error ? error.stack : 'Unknown error'
+		);
 		return {
 			data: null,
 			error: 'Failed to update task',
@@ -102,7 +214,10 @@ export const addComment = async (
 
 		return { data: comment, error: null };
 	} catch (error) {
-		console.error('Error adding comment:', error);
+		console.error(
+			'Error adding comment - Stack trace:',
+			error instanceof Error ? error.stack : 'Unknown error'
+		);
 		return {
 			data: null,
 			error: 'Failed to add comment',
@@ -128,7 +243,10 @@ export const getTaskComments = async (taskId: string) => {
 
 		return { data: comments, error: null };
 	} catch (error) {
-		console.error('Error fetching comments:', error);
+		console.error(
+			'Error fetching comments - Stack trace:',
+			error instanceof Error ? error.stack : 'Unknown error'
+		);
 		return {
 			data: null,
 			error: 'Failed to fetch comments',
@@ -154,7 +272,10 @@ export const getTaskActivities = async (taskId: string) => {
 
 		return { data: activities, error: null };
 	} catch (error) {
-		console.error('Error fetching activities:', error);
+		console.error(
+			'Error fetching activities - Stack trace:',
+			error instanceof Error ? error.stack : 'Unknown error'
+		);
 		return {
 			data: null,
 			error: 'Failed to fetch activities',
@@ -194,7 +315,10 @@ const createActivity = async ({
 		});
 		return { data: activity, error: null };
 	} catch (error) {
-		console.error('Error creating activity:', error);
+		console.error(
+			'Error creating activity - Stack trace:',
+			error instanceof Error ? error.stack : 'Unknown error'
+		);
 		return { data: null, error: 'Failed to create activity' };
 	}
 };

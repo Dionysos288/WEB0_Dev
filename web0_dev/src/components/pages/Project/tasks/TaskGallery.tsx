@@ -340,6 +340,7 @@ const TaskGallery = ({
 								column={column}
 								onHideColumn={handleHideColumn}
 								orgUrl={orgUrl}
+								projectId={projectId}
 							/>
 						))}
 					</div>

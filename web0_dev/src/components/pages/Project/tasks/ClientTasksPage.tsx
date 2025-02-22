@@ -3,7 +3,7 @@
 import FilterBar from '@/components/general/filterBar/FilterBar';
 import Spacing from '@/components/general/Spacing';
 import { SortOptions } from '@/components/types/types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TaskGallery from './TaskGallery';
 import { Phase, Task } from '@prisma/client';
 
@@ -11,10 +11,12 @@ const ClientTasksPage = ({
 	tasksData,
 	phase,
 	orgUrl,
+	projectId,
 }: {
 	tasksData: (Task & { phase?: Phase })[];
 	phase: boolean;
 	orgUrl: string;
+	projectId: string;
 }) => {
 	const [tasks, setTasks] = useState<(Task & { phase?: Phase })[]>(tasksData);
 	const [options, setOptions] = useState<string[]>([]);
@@ -23,6 +25,11 @@ const ClientTasksPage = ({
 		'date',
 		false,
 	]);
+
+	useEffect(() => {
+		setTasks(tasksData);
+	}, [tasksData]);
+
 	return (
 		<>
 			{phase ? (
@@ -31,7 +38,7 @@ const ClientTasksPage = ({
 					data={tasks}
 					setData={setTasks}
 					model={'task'}
-					id={tasksData[0].projectId}
+					id={tasksData[0]?.projectId}
 					setQuery={setQuery}
 					query={query}
 					filters={options}
@@ -44,7 +51,7 @@ const ClientTasksPage = ({
 					data={tasks}
 					setData={setTasks}
 					model={'task'}
-					id={tasksData[0].projectId}
+					id={tasksData[0]?.projectId}
 					setQuery={setQuery}
 					query={query}
 					filters={options}
@@ -54,7 +61,12 @@ const ClientTasksPage = ({
 			)}
 
 			<Spacing space={28} />
-			<TaskGallery tasks={tasks} setTasks={setTasks} orgUrl={orgUrl} />
+			<TaskGallery
+				tasks={tasks}
+				setTasks={setTasks}
+				orgUrl={orgUrl}
+				projectId={projectId}
+			/>
 		</>
 	);
 };
