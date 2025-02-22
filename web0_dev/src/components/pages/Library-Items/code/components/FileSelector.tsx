@@ -26,7 +26,9 @@ const FileSelector: React.FC<FileSelectorProps> = ({
 		<div className={styles.fileSelectors}>
 			{Object.entries(fileGroups).map(([groupName, groupFiles]) => (
 				<div key={groupName} className={styles.fileGroup}>
-					<h6 className={styles.groupTitle}>{groupName}</h6>
+					<h6 className={styles.groupTitle}>
+						{groupName == 'cpp' ? 'C++' : groupName}
+					</h6>
 					{groupFiles.map((file: FileOption) => (
 						<button
 							key={file.name}

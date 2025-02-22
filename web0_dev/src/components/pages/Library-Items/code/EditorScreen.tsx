@@ -8,50 +8,150 @@ import Terminal from './components/Terminal';
 import FileSelector from './components/FileSelector';
 import Toolbar from './components/Toolbar';
 import Color from '@/svgs/Color';
-import { PythonProvider, usePython } from 'react-py';
+import { runCode, LANGUAGE_IDS } from '@/actions/compiler';
 
 interface EditorScreenProps {
 	fullscreen?: boolean;
 }
 
-// Set this to 'html' or 'react' or 'python' to switch between project types
-const PROJECT_TYPE = 'python' as ProjectType;
+// Set this to 'html' or 'react' or 'python' or 'csharp' or 'java' or 'javascript' or 'php' or 'go'
+// or 'c' or 'cpp' (C++) or 'rust' or 'ruby' to switch between project types
+const PROJECT_TYPE = 'react' as ProjectType;
+
+const TerminalOutput: React.FC<{
+	projectType: ProjectType;
+	output: { text: string; className?: string }[];
+	setOutput: React.Dispatch<
+		React.SetStateAction<{ text: string; className?: string }[]>
+	>;
+	inputs: string[];
+	setInputs: (inputs: string[]) => void;
+}> = ({ projectType, output, setOutput, inputs, setInputs }) => {
+	// Show terminal for all languages except HTML and React
+	if (projectType === 'html' || projectType === 'react') {
+		return null;
+	}
+
+	return (
+		<Terminal
+			output={output}
+			setOutput={setOutput}
+			isAwaitingInput={false}
+			sendInput={() => {}}
+			inputs={inputs}
+			setInputs={setInputs}
+		/>
+	);
+};
 
 const EditorContent: React.FC<{
 	fileName: string;
 	editorContent: FileContent;
 	onEditorChange: (value: string | undefined) => void;
-	onPythonOutput: (stdout: string, stderr: string, clear?: boolean) => void;
-}> = ({ fileName, editorContent, onEditorChange, onPythonOutput }) => {
-	const { runPython, stdout, stderr, isRunning } = usePython();
-	const [lastStdout, setLastStdout] = useState<string>('');
-	const [lastStderr, setLastStderr] = useState<string>('');
+	setOutput: React.Dispatch<
+		React.SetStateAction<{ text: string; className?: string }[]>
+	>;
+	inputs: string[];
+}> = ({ fileName, editorContent, onEditorChange, setOutput, inputs }) => {
+	const [isCompiling, setIsCompiling] = useState(false);
 
-	useEffect(() => {
-		if (stdout !== lastStdout) {
-			setLastStdout(stdout);
-			onPythonOutput(stdout, '');
-		}
-		if (stderr !== lastStderr) {
-			setLastStderr(stderr);
-			onPythonOutput('', stderr);
-		}
-	}, [stdout, stderr, lastStdout, lastStderr, onPythonOutput]);
+	const handleRun = async () => {
+		setIsCompiling(true);
+		setOutput([]); // Clear previous output
+		try {
+			let languageId: number;
+			switch (PROJECT_TYPE) {
+				case 'python':
+					languageId = LANGUAGE_IDS.PYTHON;
+					break;
+				case 'csharp':
+					languageId = LANGUAGE_IDS.CSHARP;
+					break;
+				case 'java':
+					languageId = LANGUAGE_IDS.JAVA;
+					break;
+				case 'javascript':
+					languageId = LANGUAGE_IDS.JAVASCRIPT;
+					break;
+				case 'php':
+					languageId = LANGUAGE_IDS.PHP;
+					break;
+				case 'go':
+					languageId = LANGUAGE_IDS.GO;
+					break;
+				case 'c':
+					languageId = LANGUAGE_IDS.C;
+					break;
+				case 'cpp':
+					languageId = LANGUAGE_IDS.CPP;
+					break;
+				case 'rust':
+					languageId = LANGUAGE_IDS.RUST;
+					break;
+				case 'ruby':
+					languageId = LANGUAGE_IDS.RUBY;
+					break;
+				default:
+					throw new Error('Unsupported language');
+			}
 
-	const handleRunPython = async () => {
-		if (PROJECT_TYPE !== 'python') return;
-		setLastStdout('');
-		setLastStderr('');
-		onPythonOutput('', '', true); // Clear output
-		runPython(editorContent[fileName]);
+			const result = await runCode(editorContent[fileName], languageId, inputs);
+
+			// Handle compilation output first if it exists
+			if (result.stderr) {
+				setOutput((prev) => [
+					...prev,
+					{ text: result.stderr, className: 'errorMessage' },
+				]);
+			}
+
+			// Then handle standard output
+			if (result.stdout) {
+				setOutput((prev) => [...prev, { text: result.stdout }]);
+			}
+
+			// If there's a status message and it's not "Accepted", show it
+			if (result.status && result.status !== 'Accepted') {
+				setOutput((prev) => [
+					...prev,
+					{ text: `Status: ${result.status}\n`, className: 'errorMessage' },
+				]);
+			}
+
+			// Show execution details if available
+			if (result.time || result.memory) {
+				const details: string[] = [];
+				if (result.time) details.push(`Time: ${result.time}s`);
+				if (result.memory) details.push(`Memory: ${result.memory}KB`);
+				if (details.length > 0) {
+					setOutput((prev) => [
+						...prev,
+						{ text: `\n${details.join(' | ')}\n` },
+					]);
+				}
+			}
+		} catch (error) {
+			console.error('Failed to run code:', error);
+			setOutput((prev) => [
+				...prev,
+				{
+					text: `Error: ${
+						error instanceof Error ? error.message : 'Unknown error'
+					}\n`,
+					className: 'errorMessage',
+				},
+			]);
+		} finally {
+			setIsCompiling(false);
+		}
 	};
 
 	return (
 		<>
 			<Toolbar
-				isRunning={isRunning}
-				onRun={handleRunPython}
-				showRunButton={PROJECT_TYPE === 'python'}
+				isRunning={isCompiling}
+				onRun={handleRun}
+				showRunButton={PROJECT_TYPE !== 'html' && PROJECT_TYPE !== 'react'}
 			/>
 			<CodeEditor
 				fileName={fileName}
@@ -72,6 +172,24 @@ const EditorScreen: React.FC<EditorScreenProps> = ({ fullscreen }) => {
 				return 'App.jsx';
 			case 'python':
 				return 'main.py';
+			case 'csharp':
+				return 'Program.cs';
+			case 'java':
+				return 'Main.java';
+			case 'javascript':
+				return 'index.js';
+			case 'php':
+				return 'index.php';
+			case 'go':
+				return 'main.go';
+			case 'c':
+				return 'main.c';
+			case 'cpp':
+				return 'main.cpp';
+			case 'rust':
+				return 'main.rs';
+			case 'ruby':
+				return 'main.rb';
 			default:
 				return 'main.py';
 		}
@@ -84,12 +202,14 @@ const EditorScreen: React.FC<EditorScreenProps> = ({ fullscreen }) => {
 		}, {} as FileContent);
 	});
 
-	const [output, setOutput] = useState<string>('');
-	const [inputs, setInputs] = useState<string[]>([]);
 	const [previewHtml, setPreviewHtml] = useState<string>('');
 	const [backgroundColor, setBackgroundColor] = useState('#FFFFFF');
 	const [showColorInput, setShowColorInput] = useState(false);
 	const colorInputRef = useRef<HTMLInputElement>(null);
+	const [output, setOutput] = useState<{ text: string; className?: string }[]>(
+		[]
+	);
+	const [inputs, setInputs] = useState<string[]>([]);
 
 	useEffect(() => {
 		if (PROJECT_TYPE === 'html') {
@@ -148,15 +268,6 @@ const EditorScreen: React.FC<EditorScreenProps> = ({ fullscreen }) => {
 		}
 	}, [editorContent, PROJECT_TYPE]);
 
-	const handleClearTerminal = () => {
-		setInputs([]);
-		setOutput('');
-	};
-
-	const handleAddNote = (note: string) => {
-		setInputs((prev) => [...prev, note]);
-	};
-
 	const handleEditorChange = (value: string | undefined) => {
 		if (value !== undefined) {
 			setEditorContent((prev) => ({
@@ -177,20 +288,6 @@ const EditorScreen: React.FC<EditorScreenProps> = ({ fullscreen }) => {
 		const newColor = e.target.value;
 		setBackgroundColor(newColor);
 		setShowColorInput(false);
-	};
-
-	const handlePythonOutput = (
-		stdout: string,
-		stderr: string,
-		clear?: boolean
-	) => {
-		if (clear) {
-			setOutput('');
-			return;
-		}
-		if (stdout || stderr) {
-			setOutput((prev) => prev + stdout + (stderr ? `\nError: ${stderr}` : ''));
-		}
 	};
 
 	const getFileGroups = () => {
@@ -216,6 +313,33 @@ const EditorScreen: React.FC<EditorScreenProps> = ({ fullscreen }) => {
 			case 'python':
 				groups.python = fileOptions.filter((f) => f.type === 'python');
 				break;
+			case 'csharp':
+				groups.csharp = fileOptions.filter((f) => f.type === 'csharp');
+				break;
+			case 'java':
+				groups.java = fileOptions.filter((f) => f.type === 'java');
+				break;
+			case 'javascript':
+				groups.javascript = fileOptions.filter((f) => f.type === 'javascript');
+				break;
+			case 'php':
+				groups.php = fileOptions.filter((f) => f.type === 'php');
+				break;
+			case 'go':
+				groups.go = fileOptions.filter((f) => f.type === 'go');
+				break;
+			case 'c':
+				groups.c = fileOptions.filter((f) => f.type === 'c');
+				break;
+			case 'cpp':
+				groups.cpp = fileOptions.filter((f) => f.type === 'cpp');
+				break;
+			case 'rust':
+				groups.rust = fileOptions.filter((f) => f.type === 'rust');
+				break;
+			case 'ruby':
+				groups.ruby = fileOptions.filter((f) => f.type === 'ruby');
+				break;
 		}
 
 		return groups;
@@ -223,31 +347,18 @@ const EditorScreen: React.FC<EditorScreenProps> = ({ fullscreen }) => {
 
 	const renderContent = () => {
 		const mainContent = (
-			<PythonProvider>
-				<EditorContent
-					fileName={fileName}
-					editorContent={editorContent}
-					onEditorChange={handleEditorChange}
-					onPythonOutput={handlePythonOutput}
-				/>
-			</PythonProvider>
+			<EditorContent
+				fileName={fileName}
+				editorContent={editorContent}
+				onEditorChange={handleEditorChange}
+				setOutput={setOutput}
+				inputs={inputs}
+			/>
 		);
 
 		const outputContent = (
 			<div className={styles.outputContent}>
-				{PROJECT_TYPE === 'python' ? (
-					<Terminal
-						output={output}
-						inputs={inputs}
-						onInputSubmit={(input) => {
-							setOutput((prev) => prev + input + '\n');
-						}}
-						onClear={handleClearTerminal}
-						onClearHistory={() => setInputs([])}
-						onAddNote={handleAddNote}
-						waitingForInput={false}
-					/>
-				) : (
+				{PROJECT_TYPE === 'html' || PROJECT_TYPE === 'react' ? (
 					<>
 						<iframe
 							srcDoc={previewHtml}
@@ -281,6 +392,14 @@ const EditorScreen: React.FC<EditorScreenProps> = ({ fullscreen }) => {
 							/>
 						</div>
 					</>
+				) : (
+					<TerminalOutput
+						projectType={PROJECT_TYPE}
+						output={output}
+						setOutput={setOutput}
+						inputs={inputs}
+						setInputs={setInputs}
+					/>
 				)}
 			</div>
 		);
@@ -321,7 +440,7 @@ const EditorScreen: React.FC<EditorScreenProps> = ({ fullscreen }) => {
 		);
 	};
 
-	return <div>{renderContent()}</div>;
+	return renderContent();
 };
 
 export default EditorScreen;

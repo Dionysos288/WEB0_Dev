@@ -1,102 +1,104 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from '../EditorScreen.module.scss';
+import { CompilationResult } from '../types';
 
 interface TerminalProps {
-	output: string;
-	inputs: string[];
-	onInputSubmit: (input: string) => void;
-	onClear: () => void;
-	onClearHistory: () => void;
-	onAddNote: (note: string) => void;
-	waitingForInput: boolean;
+	output: { text: string; className?: string }[];
+	setOutput: React.Dispatch<
+		React.SetStateAction<{ text: string; className?: string }[]>
+	>;
+	isAwaitingInput: boolean;
+	sendInput: (input: string) => void;
+	prompt?: string;
+	runPython?: (input: string) => Promise<void>;
+	runCSharp?: (input: string) => Promise<CompilationResult>;
+	inputs?: string[];
+	setInputs?: (inputs: string[]) => void;
 }
 
 const Terminal: React.FC<TerminalProps> = ({
 	output,
-	inputs,
-	onInputSubmit,
-	onClear,
-	onClearHistory,
-	onAddNote,
-	waitingForInput,
+	setOutput,
+	isAwaitingInput,
+
+	inputs = [],
+	setInputs = () => {},
 }) => {
-	const [noteInput, setNoteInput] = useState('');
-	const [terminalInput, setTerminalInput] = useState('');
-	const terminalRef = useRef<HTMLDivElement>(null);
-	const inputRef = useRef<HTMLInputElement>(null);
+	const [currentInput, setCurrentInput] = useState('');
 
-	useEffect(() => {
-		if (terminalRef.current) {
-			terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
-		}
-	}, [output, inputs]);
-
-	useEffect(() => {
-		if (waitingForInput && inputRef.current) {
-			inputRef.current.focus();
-		}
-	}, [waitingForInput]);
-
-	const handleTerminalKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter' && terminalInput.trim()) {
-			onInputSubmit(terminalInput);
-			setTerminalInput('');
+	const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter' && currentInput.trim()) {
+			setInputs([...inputs, currentInput.trim()]);
+			setCurrentInput('');
 		}
 	};
 
-	const handleNoteKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter' && noteInput.trim()) {
-			onAddNote(noteInput);
-			setNoteInput('');
-		}
+	const handleRemoveInput = (index: number) => {
+		setInputs(inputs.filter((_, i) => i !== index));
+	};
+
+	const handleClearInputs = () => {
+		setInputs([]);
+	};
+
+	const handleClear = () => {
+		setOutput([]);
 	};
 
 	return (
 		<div className={styles.terminal}>
 			<div className={styles.header}>
 				<div className={styles.title}>Terminal Output</div>
-				<button onClick={onClear} className={styles.clearButton}>
+				<button onClick={handleClear} className={styles.clearButton}>
 					Clear
 				</button>
 			</div>
-			<div className={styles.content} ref={terminalRef}>
-				<pre>{output}</pre>
-				{waitingForInput && (
-					<div className={styles.inputWrapper}>
-						<input
-							ref={inputRef}
-							type="text"
-							value={terminalInput}
-							onChange={(e) => setTerminalInput(e.target.value)}
-							onKeyDown={handleTerminalKeyDown}
-							className={styles.input}
-							placeholder="Enter your input..."
-						/>
-					</div>
-				)}
+			<div className={styles.content}>
+				<pre>
+					{output.length === 0 && !isAwaitingInput ? (
+						<code className={styles.welcomeMessage}>
+							Press &quot;Run&quot; to start...
+						</code>
+					) : (
+						output.map((line, i) => {
+							const cn = line.className;
+							return (
+								<code key={i} className={cn ? styles[cn] : undefined}>
+									{line.text}
+								</code>
+							);
+						})
+					)}
+				</pre>
 			</div>
-			<div className={styles.notes}>
+			<div className={styles.inputs}>
 				<div className={styles.notesHeader}>
-					<div className={styles.title}>Notes</div>
-					<button onClick={onClearHistory} className={styles.clearButton}>
-						Clear
+					<div className={styles.title}>Program Inputs</div>
+					<button onClick={handleClearInputs} className={styles.clearButton}>
+						Clear All
 					</button>
 				</div>
-				<div className={styles.notesList}>
+				<div className={styles.inputsList}>
 					{inputs.map((input, index) => (
-						<div key={index} className={styles.noteItem}>
-							{input}
+						<div key={index} className={styles.inputItem}>
+							<span>{input}</span>
+							<button
+								onClick={() => handleRemoveInput(index)}
+								className={styles.removeButton}
+							>
+								×
+							</button>
 						</div>
 					))}
 				</div>
 				<div className={styles.inputWrapper}>
 					<input
 						type="text"
-						value={noteInput}
-						onChange={(e) => setNoteInput(e.target.value)}
-						onKeyDown={handleNoteKeyDown}
+						value={currentInput}
+						onChange={(e) => setCurrentInput(e.target.value)}
+						onKeyDown={handleInputKeyDown}
 						className={styles.input}
-						placeholder="Add a note..."
+						placeholder="Add an input (press Enter)..."
 					/>
 				</div>
 			</div>

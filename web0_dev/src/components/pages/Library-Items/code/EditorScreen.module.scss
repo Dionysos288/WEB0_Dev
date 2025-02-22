@@ -181,7 +181,6 @@
 	white-space: pre-wrap;
 	z-index: 10;
 }
-
 .terminal {
 	display: flex;
 	flex-direction: column;
@@ -189,7 +188,6 @@
 	background-color: #1e1e1e;
 	color: #d4d4d4;
 	font-family: 'Consolas', 'Courier New', monospace;
-	border-radius: 4px;
 	overflow: hidden;
 
 	.header,
@@ -233,6 +231,8 @@
 		word-wrap: break-word;
 		max-height: calc(100vh - 200px);
 		min-height: 200px;
+		scroll-behavior: smooth;
+		overflow-y: overlay;
 
 		pre {
 			margin: 0;
@@ -289,6 +289,45 @@
 			}
 		}
 	}
+
+	.inputs {
+		border-top: 1px solid #3c3c3c;
+		max-height: 200px;
+		display: flex;
+		flex-direction: column;
+		flex-shrink: 0;
+
+		.inputsList {
+			overflow-y: auto;
+			padding: 8px 12px;
+			max-height: 120px;
+
+			.inputItem {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 4px 8px;
+				background-color: #2d2d2d;
+				border-radius: 4px;
+				margin-bottom: 4px;
+
+				.removeButton {
+					background: none;
+					border: none;
+					color: #858585;
+					cursor: pointer;
+					font-size: 16px;
+					padding: 0 4px;
+					border-radius: 4px;
+
+					&:hover {
+						background-color: #3c3c3c;
+						color: #ff6b6b;
+					}
+				}
+			}
+		}
+	}
 }
 
 // Scrollbar styles
@@ -324,4 +363,13 @@
 		background: var(--main-20);
 		transition: all var(--hover-in);
 	}
+}
+
+.welcomeMessage {
+	color: #858585;
+	padding: 8px;
+	font-style: italic;
+}
+.errorMessage {
+	color: #ff6b6b;
 }

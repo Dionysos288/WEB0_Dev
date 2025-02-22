@@ -16,7 +16,7 @@ const ServiceWorkerRegistration = () => {
 				.then(() => {
 					// Then register the new service worker
 					return navigator.serviceWorker.register('/react-py-sw.js', {
-						scope: '/',
+						scope: '/react-py-sw.js',
 					});
 				})
 				.then((registration) => {

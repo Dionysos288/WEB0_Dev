@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getUser } from '@/actions/AccountActions';
 import prisma from '@/lib/db';
-import TaskDetails from '@/components/pages/project/tasks/TaskDetails';
+import TaskDetails from '@/components/pages/project/taskDetail/TaskDetails';
 
 export async function generateMetadata({
 	params,

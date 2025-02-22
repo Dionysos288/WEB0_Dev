@@ -3,6 +3,7 @@ import {
 	Prisma,
 	Category,
 	projectPriority,
+	TaskStatus,
 } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -18,8 +19,61 @@ const tasks = [
 const completedCount = tasks.filter(
 	(t) => t.columnStatus === 'Completed'
 ).length;
-const organizationId = '8nUWa71XhtazE8KzgxZo12VROPcmeLX9';
-const memberId1 = 'Gp4MdGqIfZQW5SbaGKg95k8VWAK9WBTO';
+const organizationId = 'VZShwoYCSXFGK95BLqxJO49HDtgpZenu';
+const memberId1 = 'T4SBX9ooNqRj9rnlnNXXXlhDaxTh8qeR';
+
+const defaultLabels: Prisma.LabelCreateInput[] = [
+	{
+		name: 'Bug',
+		color: '#FF0000',
+		organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
+	},
+	{
+		name: 'Feature',
+		color: '#00FF00',
+		organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
+	},
+	{
+		name: 'Improvement',
+		color: '#0000FF',
+		organization: {
+			connect: {
+				id: organizationId,
+			},
+		},
+	},
+];
+
+const generateCustomId = (orgSlug: string, counter: number) => {
+	return `${orgSlug}-${counter}`;
+};
+
+const createCyclesForProject = () => {
+	const now = new Date();
+	return [
+		{
+			cycleNumber: 1,
+			startDate: now,
+			endDate: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000), // 2 weeks
+			organizationId,
+		},
+		{
+			cycleNumber: 2,
+			startDate: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000),
+			endDate: new Date(now.getTime() + 28 * 24 * 60 * 60 * 1000),
+			organizationId,
+		},
+	];
+};
+
 const projectData: Prisma.ProjectCreateInput[] = [
 	{
 		id: '1ABC',
@@ -44,7 +98,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				id: organizationId,
 			},
 		},
-
 		phases: {
 			create: [
 				{
@@ -58,7 +111,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				},
 				{
 					id: 'B123',
-
 					title: 'UI',
 					description: 'UI',
 					startDate: new Date(Date.now() - 15 * 86400000),
@@ -67,7 +119,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				},
 				{
 					id: 'C123',
-
 					title: 'Ending Phase',
 					description: 'Ending Phase',
 					startDate: new Date(Date.now() + 10 * 86400000),
@@ -76,46 +127,74 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				},
 			],
 		},
+		cycles: {
+			create: createCyclesForProject(),
+		},
 		tasks: {
 			create: [
 				{
+					id: '1',
 					title: 'Task #1 (Alltasks P1)',
 					description: 'Task #1 description',
 					priority: projectPriority.high,
-					status: 'Backlog',
+					status: TaskStatus.Backlog,
 					phaseId: 'A123',
+					customId: generateCustomId('test123', 1),
+					dueDate: new Date(Date.now() + 7 * 86400000),
+					estimatedTime: 240, // 4 hours
+					organizationId,
 				},
 				{
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
 					priority: projectPriority.low,
-					status: 'inProgress',
+					status: TaskStatus.inProgress,
 					phaseId: 'A123',
+					customId: generateCustomId('test123', 2),
+					dueDate: new Date(Date.now() + 14 * 86400000),
+					estimatedTime: 120, // 2 hours
+					organizationId,
 				},
 				{
 					title: 'Task #3 (Alltasks P1)',
 					priority: projectPriority.urgent,
 					description: 'Task #3 description',
-					status: 'Completed',
+					status: TaskStatus.Completed,
 					phaseId: 'A123',
+					customId: generateCustomId('test123', 3),
+					dueDate: new Date(Date.now() + 21 * 86400000),
+					estimatedTime: 480, // 8 hours
+					organizationId,
 				},
 				{
 					title: 'Task #4 (Alltasks P1)',
 					priority: projectPriority.medium,
 					description: 'Task #4 description',
-					status: 'inProgress',
+					status: TaskStatus.inProgress,
+					customId: generateCustomId('test123', 4),
+					dueDate: new Date(Date.now() + 28 * 86400000),
+					estimatedTime: 360, // 6 hours
+					organizationId,
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
 					priority: projectPriority.high,
 					description: 'Task #5 description',
-					status: 'Backlog',
+					status: TaskStatus.Backlog,
+					customId: generateCustomId('test123', 5),
+					dueDate: new Date(Date.now() + 35 * 86400000),
+					estimatedTime: 180, // 3 hours
+					organizationId,
 				},
 				{
 					title: 'Task #6 (Alltasks P1)',
 					priority: projectPriority.medium,
 					description: 'Task #6 description',
-					status: 'Backlog',
+					status: TaskStatus.Backlog,
+					customId: generateCustomId('test123', 6),
+					dueDate: new Date(Date.now() + 42 * 86400000),
+					estimatedTime: 300, // 5 hours
+					organizationId,
 				},
 			],
 		},
@@ -159,38 +238,62 @@ const projectData: Prisma.ProjectCreateInput[] = [
 					title: 'Task #1 (Alltasks P1)',
 					description: 'Task #1 description',
 					priority: projectPriority.high,
-					status: 'Backlog',
+					status: TaskStatus.Backlog,
+					customId: generateCustomId('test123', 7),
+					dueDate: new Date(Date.now() + 7 * 86400000),
+					estimatedTime: 180, // 3 hours
+					organizationId,
 				},
 				{
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
 					priority: projectPriority.low,
-					status: 'inProgress',
+					status: TaskStatus.inProgress,
+					customId: generateCustomId('test123', 8),
+					dueDate: new Date(Date.now() + 14 * 86400000),
+					estimatedTime: 240, // 4 hours
+					organizationId,
 				},
 				{
 					title: 'Task #3 (Alltasks P1)',
 					priority: projectPriority.medium,
 					description: 'Task #3 description',
-					status: 'Completed',
+					status: TaskStatus.Completed,
 					phaseId: 'A123',
+					customId: generateCustomId('test123', 9),
+					dueDate: new Date(Date.now() + 21 * 86400000),
+					estimatedTime: 420, // 7 hours
+					organizationId,
 				},
 				{
 					title: 'Task #4 (Alltasks P1)',
 					priority: projectPriority.medium,
 					description: 'Task #4 description',
-					status: 'inProgress',
+					status: TaskStatus.inProgress,
+					customId: generateCustomId('test123', 10),
+					dueDate: new Date(Date.now() + 28 * 86400000),
+					estimatedTime: 150, // 2.5 hours
+					organizationId,
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
 					priority: projectPriority.high,
 					description: 'Task #5 description',
-					status: 'Backlog',
+					status: TaskStatus.Backlog,
+					customId: generateCustomId('test123', 11),
+					dueDate: new Date(Date.now() + 35 * 86400000),
+					estimatedTime: 90, // 1.5 hours
+					organizationId,
 				},
 				{
 					title: 'Task #6 (Alltasks P1)',
 					priority: projectPriority.medium,
 					description: 'Task #6 description',
-					status: 'Backlog',
+					status: TaskStatus.Backlog,
+					customId: generateCustomId('test123', 12),
+					dueDate: new Date(Date.now() + 42 * 86400000),
+					estimatedTime: 600, // 10 hours
+					organizationId,
 				},
 			],
 		},
@@ -198,7 +301,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 			create: [
 				{
 					id: 'D123',
-
 					title: 'Testing',
 					description: 'Testing',
 					startDate: new Date(Date.now() - 10 * 86400000),
@@ -207,7 +309,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				},
 				{
 					id: 'E123',
-
 					title: 'UI',
 					description: 'UI',
 					startDate: new Date(Date.now() - 1 * 86400000),
@@ -216,7 +317,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				},
 				{
 					id: 'F123',
-
 					title: 'Ending Phase',
 					description: 'Ending Phase',
 					startDate: new Date(Date.now() + 1 * 86400000),
@@ -229,7 +329,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 			create: [
 				{
 					phaseId: 'D123',
-
 					name: 'File 1',
 					url: 'https://www.google.com',
 					description: 'File 1 description',
@@ -266,38 +365,62 @@ const projectData: Prisma.ProjectCreateInput[] = [
 					title: 'Task #1 (Alltasks P1)',
 					description: 'Task #1 description',
 					priority: projectPriority.high,
-					status: 'Backlog',
+					status: TaskStatus.Backlog,
+					customId: generateCustomId('test123', 13),
+					dueDate: new Date(Date.now() + 7 * 86400000),
+					estimatedTime: 240, // 4 hours
+					organizationId,
 				},
 				{
 					title: 'Task #2 (Alltasks P1)',
 					description: 'Task #2 description',
 					priority: projectPriority.low,
-					status: 'inProgress',
+					status: TaskStatus.inProgress,
+					customId: generateCustomId('test123', 14),
+					dueDate: new Date(Date.now() + 14 * 86400000),
+					estimatedTime: 360, // 6 hours
+					organizationId,
 				},
 				{
 					title: 'Task #3 (Alltasks P1)',
 					priority: projectPriority.medium,
 					description: 'Task #3 description',
-					status: 'Completed',
+					status: TaskStatus.Completed,
 					phaseId: 'A123',
+					customId: generateCustomId('test123', 15),
+					dueDate: new Date(Date.now() + 21 * 86400000),
+					estimatedTime: 480, // 8 hours
+					organizationId,
 				},
 				{
 					title: 'Task #4 (Alltasks P1)',
 					priority: projectPriority.medium,
 					description: 'Task #4 description',
-					status: 'inProgress',
+					status: TaskStatus.inProgress,
+					customId: generateCustomId('test123', 16),
+					dueDate: new Date(Date.now() + 28 * 86400000),
+					estimatedTime: 120, // 2 hours
+					organizationId,
 				},
 				{
 					title: 'Task #5 (Alltasks P1)',
 					priority: projectPriority.high,
 					description: 'Task #5 description',
-					status: 'Backlog',
+					status: TaskStatus.Backlog,
+					customId: generateCustomId('test123', 17),
+					dueDate: new Date(Date.now() + 35 * 86400000),
+					estimatedTime: 300, // 5 hours
+					organizationId,
 				},
 				{
 					title: 'Task #6 (Alltasks P1)',
 					priority: projectPriority.medium,
 					description: 'Task #6 description',
-					status: 'Backlog',
+					status: TaskStatus.Backlog,
+					customId: generateCustomId('test123', 18),
+					dueDate: new Date(Date.now() + 42 * 86400000),
+					estimatedTime: 180, // 3 hours
+					organizationId,
 				},
 			],
 		},
@@ -305,7 +428,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 			create: [
 				{
 					id: 'G123',
-
 					title: 'Testing',
 					description: 'Testing',
 					startDate: new Date(Date.now() - 10 * 86400000),
@@ -314,7 +436,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				},
 				{
 					id: 'H123',
-
 					title: 'UI',
 					description: 'UI',
 					startDate: new Date(Date.now() - 1 * 86400000),
@@ -323,7 +444,6 @@ const projectData: Prisma.ProjectCreateInput[] = [
 				},
 				{
 					id: 'I123',
-
 					title: 'Ending Phase',
 					description: 'Ending Phase',
 					startDate: new Date(Date.now() + 1 * 86400000),
@@ -646,11 +766,29 @@ const noteData: Prisma.NoteCreateInput[] = [
 ];
 
 export async function main() {
+	for (const label of defaultLabels) {
+		await prisma.label.create({
+			data: label,
+		});
+	}
+
 	for (const project of projectData) {
 		await prisma.project.create({
 			data: project,
 		});
 	}
+
+	await prisma.timeLog.create({
+		data: {
+			taskId: '1',
+			memberId: memberId1,
+			duration: 120, // 2 hours in minutes
+			description: 'Initial implementation',
+			startTime: new Date(Date.now() - 2 * 60 * 60 * 1000),
+			endTime: new Date(),
+			organizationId,
+		},
+	});
 
 	for (const u of clientData) {
 		await prisma.client.create({
