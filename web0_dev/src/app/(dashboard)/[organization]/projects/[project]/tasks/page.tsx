@@ -9,8 +9,8 @@ export async function generateMetadata({
 	params: { project: string };
 }): Promise<Metadata> {
 	return {
-		title: `${params} | Web0`,
-		description: `View ${params} on Web0`,
+		title: `${params.project} | Web0`,
+		description: `View ${params.project} on Web0`,
 	};
 }
 const page = async ({ params }: { params: { project: string } }) => {
@@ -27,7 +27,12 @@ const page = async ({ params }: { params: { project: string } }) => {
 			tasks: {
 				include: {
 					Phase: true,
+					Comment: true,
+					timeLogs: true,
+					labels: true,
+					assignees: true,
 				},
+
 				orderBy: {
 					createdAt: 'desc',
 				},
@@ -35,6 +40,15 @@ const page = async ({ params }: { params: { project: string } }) => {
 		},
 	});
 	if (project) {
+		const transformedTasks = project.tasks.map((task) => ({
+			...task,
+			Phase: task.Phase || undefined,
+			Comment: task.Comment || undefined,
+			timeLogs: task.timeLogs || undefined,
+			labels: task.labels || undefined,
+			assignees: task.assignees || undefined,
+		}));
+		console.log(transformedTasks);
 		return (
 			<>
 				<TopMenu
@@ -59,8 +73,7 @@ const page = async ({ params }: { params: { project: string } }) => {
 				/>
 
 				<ClientTasksPage
-					tasksData={project.tasks}
-					phase={true}
+					tasksData={transformedTasks}
 					orgUrl={organizationSlug}
 					projectId={project.id}
 				/>

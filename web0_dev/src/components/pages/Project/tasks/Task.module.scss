@@ -5,10 +5,7 @@
 }
 
 .task {
-	padding: 24px;
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
+	padding: 16px 24px;
 	max-width: 278px;
 	border-radius: 16px;
 	background-color: var(--lightBlue);
@@ -16,86 +13,64 @@
 	border: 1px solid var(--main-5);
 	box-shadow: var(--boxShadow-xs);
 	cursor: pointer;
-}
-
-.row {
-	display: flex;
-	gap: 4px;
-	align-items: center;
-	h3 {
-		font-size: calc(14 / 16 * 1rem);
-		font-weight: 600;
-		line-height: calc(20 / 16 * 1rem);
-	}
-}
-
-.bottom {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 6px;
-	.imgWrapper {
-		img {
-			object-fit: cover;
-			border-radius: 6px;
-		}
-	}
-
-	.wrapper {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-		padding: 2px 6px;
-		border-radius: 4px;
-		background: var(--bg-tertiary);
-
+	.topRow {
+		margin-bottom: 6px;
 		p {
-			font-size: calc(12 / 16 * 1rem);
+			font-size: calc(11.5 / 16 * 1rem);
 			font-weight: 400;
-			line-height: calc(18 / 16 * 1rem);
-			color: var(--text-75);
-			text-transform: capitalize;
+			color: var(--main-60);
 		}
+	}
+	.row {
+		display: flex;
+		gap: 4px;
+		align-items: center;
+		margin-bottom: 10px;
+		h3 {
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 600;
+			line-height: calc(20 / 16 * 1rem);
+		}
+	}
+	.bottom {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		.assignees {
+			display: flex;
 
-		&.noPriority {
-			background: var(--bg-tertiary);
-			p {
-				color: var(--text-50);
+			.imgWrapper {
+				&:not(:first-of-type) {
+					margin-left: -6px;
+				}
+
+				img {
+					object-fit: cover;
+					border-radius: 6px;
+				}
 			}
 		}
 
-		&.low {
-			background: var(--blue-10);
-			p {
-				color: var(--blue);
+		.wrapper {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			padding: 2px 6px;
+			border-radius: 4px;
+			border: 1px solid var(--main-20);
+			background: var(--main-8);
+			min-height: 24px;
+			.label {
+				width: 9px;
+				height: 9px;
+				border-radius: 50%;
 			}
-		}
-
-		&.medium {
-			background: var(--orange-10);
 			p {
-				color: var(--orange);
-			}
-		}
-
-		&.high {
-			background: var(--red-10);
-			p {
-				color: var(--red);
-			}
-		}
-
-		&.urgent {
-			background: var(--red-15);
-			p {
-				color: var(--red);
-				font-weight: 500;
-			}
-		}
-
-		&.full {
-			background: var(--main-15);
-			p {
-				color: var(--main-65);
+				font-size: calc(12 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(18 / 16 * 1rem);
+				color: var(--text-75);
+				text-transform: capitalize;
 			}
 		}
 	}

@@ -12,6 +12,7 @@ interface OptionItem {
 		width?: string;
 		height?: string;
 	}>;
+	color?: string;
 }
 
 interface ButtonSelectorProps<T> {
@@ -32,6 +33,7 @@ interface ButtonSelectorProps<T> {
 	isComboBox?: boolean;
 	selectedItems?: string[];
 	onSelectedItemsChange?: (items: string[]) => void;
+	showColorBadge?: boolean;
 }
 
 function ButtonSelector<T extends OptionItem>({
@@ -48,6 +50,7 @@ function ButtonSelector<T extends OptionItem>({
 	isComboBox = false,
 	selectedItems = [],
 	onSelectedItemsChange = () => {},
+	showColorBadge = false,
 }: ButtonSelectorProps<T>) {
 	const [activeIndex, setActiveIndex] = useState<number>(-1);
 	console.log(oldData);
@@ -167,9 +170,16 @@ function ButtonSelector<T extends OptionItem>({
 												onClick={(e) => e.stopPropagation()}
 												className={styles.checkbox}
 											/>
-											<div className={styles.iconCombo}>
-												<Icon fill={'var(--main)'} width="16" height="16" />
-											</div>
+											{showColorBadge && option.color ? (
+												<div
+													className={styles.colorBadge}
+													style={{ backgroundColor: option.color }}
+												/>
+											) : (
+												<div className={styles.iconCombo}>
+													<Icon fill={'var(--main)'} width="16" height="16" />
+												</div>
+											)}
 										</>
 									) : (
 										<div className={styles.iconNoCombo}>

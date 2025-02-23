@@ -16,6 +16,12 @@ import { createTask } from '@/actions/TaskActions';
 import { projectPriority, TaskStatus } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import DatePicker from '@/svgs/DatePicker';
+import { getProjectsAndPhases } from '@/actions/ProjectActions';
+import ProjectIcon from '@/svgs/Project';
+import PhaseIcon from '@/svgs/Phase';
+import Label from '@/svgs/Label';
+import { getLabels } from '@/actions/LabelActions';
+import Dismiss from '@/svgs/Dismiss';
 
 interface OptionItem {
 	label: string;
@@ -25,6 +31,7 @@ interface OptionItem {
 		width?: string;
 		height?: string;
 	}>;
+	color?: string;
 }
 
 interface AddTaskPopupProps {
@@ -102,20 +109,105 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 	const [isStatusOpen, setIsStatusOpen] = useState(false);
 	const statusRef = useRef(null);
 
+	// Project state
+	const [projectQuery, setProjectQuery] = useState('');
+	const [projectOptions, setProjectOptions] = useState<OptionItem[]>([]);
+	const [oldProjectOptions, setOldProjectOptions] = useState<OptionItem[]>([]);
+	const [chosenProject, setChosenProject] = useState<string | OptionItem>({
+		label: 'Project',
+		value: 'none',
+		icon: ProjectIcon,
+	});
+	const [isProjectOpen, setIsProjectOpen] = useState(false);
+	const projectRef = useRef(null);
+
+	// Phase state
+	const [phaseQuery, setPhaseQuery] = useState('');
+	const [phaseOptions, setPhaseOptions] = useState<OptionItem[]>([]);
+	const [oldPhaseOptions, setOldPhaseOptions] = useState<OptionItem[]>([]);
+	const [chosenPhase, setChosenPhase] = useState<string | OptionItem>({
+		label: 'Phase',
+		value: 'none',
+		icon: PhaseIcon,
+	});
+	const [isPhaseOpen, setIsPhaseOpen] = useState(false);
+	const phaseRef = useRef(null);
+
+	// Label state
+	const [labelQuery, setLabelQuery] = useState('');
+	const [labelOptions, setLabelOptions] = useState<OptionItem[]>([]);
+	const [oldLabelOptions, setOldLabelOptions] = useState<OptionItem[]>([]);
+	const [chosenLabel, setChosenLabel] = useState<string | OptionItem>({
+		label: 'Labels',
+		value: 'none',
+		icon: Label,
+	});
+	const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+	const [isLabelOpen, setIsLabelOpen] = useState(false);
+	const labelRef = useRef(null);
+
+	// Project and phase data cache
+	const [projectsWithPhases, setProjectsWithPhases] = useState<{
+		[key: string]: OptionItem[];
+	}>({});
+
+	const [createAnother, setCreateAnother] = useState(false);
+
 	useEffect(() => {
-		const fetchMembers = async () => {
+		if (!isOpen) {
+			setTitle('');
+			setDescription('');
+			setDueDate(undefined);
+			setChosenPriority(priorityOptions[0]);
+			setChosenStatus(statusOptions[0]);
+			setSelectedMembers([]);
+			setChosenMember({
+				label: 'Assignee',
+				value: 'none',
+				icon: Team,
+			});
+			setSelectedLabels([]);
+			setChosenLabel({
+				label: 'Labels',
+				value: 'none',
+				icon: Label,
+			});
+			if (!projectId) {
+				setChosenProject({
+					label: 'Project',
+					value: 'none',
+					icon: ProjectIcon,
+				});
+				setChosenPhase({
+					label: 'Phase',
+					value: 'none',
+					icon: PhaseIcon,
+				});
+			}
+			setCreateAnother(false);
+		}
+	}, [isOpen, projectId, priorityOptions, statusOptions]);
+
+	useEffect(() => {
+		const fetchData = async () => {
 			const { data: session } = await getUser();
 			if (session?.session.activeOrganizationId) {
 				setOrganizationId(session.session.activeOrganizationId);
 				setOrgUrl(session.session.organizationSlug);
-				const { data, error } = await getMembers(
-					session.session.activeOrganizationId
+
+				const [membersResult, projectsResult, labelsResult] = await Promise.all(
+					[
+						getMembers(session.session.activeOrganizationId),
+						getProjectsAndPhases(session.session.activeOrganizationId),
+						getLabels(session.session.activeOrganizationId),
+					]
 				);
-				if (error) {
-					console.error(error);
+
+				if (membersResult.error) {
+					console.error(membersResult.error);
 				} else {
 					const dataMapped =
-						data?.map((member) => ({
+						membersResult.data?.map((member) => ({
 							label: member.user.email,
 							value: member.id,
 							icon: Team,
@@ -123,12 +215,123 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 					setMemberOptions(dataMapped);
 					setOldMemberOptions(dataMapped);
 				}
+
+				if (projectsResult.data) {
+					const projectsMapped = [
+						{
+							label: 'No Project',
+							value: 'none',
+							icon: ProjectIcon,
+						},
+						...projectsResult.data.projects.map((project) => ({
+							label: project.title,
+							value: project.id,
+							icon: ProjectIcon,
+						})),
+					];
+					setProjectOptions(projectsMapped);
+					setOldProjectOptions(projectsMapped);
+
+					const phasesMap: { [key: string]: OptionItem[] } = {};
+					projectsResult.data.projects.forEach((project) => {
+						if (project.phases && project.phases.length > 0) {
+							phasesMap[project.id] = [
+								{
+									label: 'No Phase',
+									value: 'none',
+									icon: PhaseIcon,
+								},
+								...project.phases.map((phase) => ({
+									label: phase.title,
+									value: phase.id,
+									icon: PhaseIcon,
+								})),
+							];
+						}
+					});
+					setProjectsWithPhases(phasesMap);
+
+					if (projectId) {
+						const defaultProject = projectsMapped.find(
+							(p) => p.value === projectId
+						);
+						if (defaultProject) {
+							setChosenProject(
+								typeof defaultProject === 'string'
+									? defaultProject
+									: {
+											...defaultProject,
+											label:
+												defaultProject.value === 'none'
+													? 'Project'
+													: defaultProject.label,
+									  }
+							);
+							if (phasesMap[projectId]) {
+								setPhaseOptions(phasesMap[projectId]);
+								setOldPhaseOptions(phasesMap[projectId]);
+							}
+						}
+					}
+				}
+
+				if (labelsResult.data) {
+					const labelsMapped = labelsResult.data.map((label) => ({
+						label: label.title,
+						value: label.id,
+						icon: Label,
+						color: label.color,
+					}));
+					setLabelOptions(labelsMapped);
+					setOldLabelOptions(labelsMapped);
+				}
 			}
 		};
+
 		if (isOpen) {
-			fetchMembers();
+			fetchData();
 		}
-	}, [isOpen]);
+	}, [isOpen, projectId]);
+
+	const handleProjectChange = (project: string | OptionItem) => {
+		setChosenProject(
+			typeof project === 'string'
+				? project
+				: {
+						...project,
+						label: project.value === 'none' ? 'Project' : project.label,
+				  }
+		);
+		setIsProjectOpen(false);
+
+		setChosenPhase({
+			label: 'Phase',
+			value: 'none',
+			icon: PhaseIcon,
+		});
+
+		if (typeof project !== 'string' && project.value !== 'none') {
+			const projectPhases = projectsWithPhases[project.value];
+			if (projectPhases) {
+				setPhaseOptions(projectPhases);
+				setOldPhaseOptions(projectPhases);
+			}
+		}
+	};
+
+	const getProjectColor = () => {
+		if (typeof chosenProject === 'string' || chosenProject.value === 'none') {
+			return 'var(--main-65)';
+		}
+		return 'var(--main)';
+	};
+
+	const getPhaseColor = () => {
+		if (typeof chosenPhase === 'string' || chosenPhase.value === 'none') {
+			return 'var(--main-65)';
+		}
+		return 'var(--main)';
+	};
 
 	const onPriorityQueryChange = (
 		e: React.ChangeEvent<HTMLInputElement>,
@@ -166,6 +369,46 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 		);
 	};
 
+	const onProjectQueryChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		setOptions: React.Dispatch<React.SetStateAction<OptionItem[]>>,
+		oldData: OptionItem[]
+	) => {
+		const value = e.target.value.toLowerCase();
+		setProjectQuery(value);
+		setOptions(
+			oldData.filter((item) => item.label.toLowerCase().includes(value))
+		);
+	};
+
+	const onPhaseQueryChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		setOptions: React.Dispatch<React.SetStateAction<OptionItem[]>>,
+		oldData: OptionItem[]
+	) => {
+		const value = e.target.value.toLowerCase();
+		setPhaseQuery(value);
+		setOptions(
+			oldData.filter((item) => item.label.toLowerCase().includes(value))
+		);
+	};
+
+	const onLabelQueryChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		setOptions: React.Dispatch<React.SetStateAction<OptionItem[]>>,
+		oldData: OptionItem[]
+	) => {
+		const value = e.target.value.toLowerCase();
+		setLabelQuery(value);
+		setOptions(
+			oldData.filter((item) => item.label.toLowerCase().includes(value))
+		);
+	};
+
+	const getLabelColor = () => {
+		return selectedLabels.length === 0 ? 'var(--main-65)' : 'var(--main)';
+	};
+
 	const handleSubmit = async () => {
 		if (!organizationId || !title) return;
 
@@ -180,16 +423,55 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 				: chosenStatus.value) as TaskStatus,
 			dueDate: dueDate || undefined,
 			assignees: selectedMembers.length > 0 ? selectedMembers : undefined,
-			projectId: projectId || undefined,
+			labels: selectedLabels.length > 0 ? selectedLabels : undefined,
+			projectId:
+				typeof chosenProject === 'string'
+					? chosenProject === 'none'
+						? undefined
+						: chosenProject
+					: chosenProject.value === 'none'
+					? undefined
+					: chosenProject.value,
+			phaseId:
+				typeof chosenPhase === 'string'
+					? chosenPhase === 'none'
+						? undefined
+						: chosenPhase
+					: chosenPhase.value === 'none'
+					? undefined
+					: chosenPhase.value,
 			organizationId,
 		};
+
+		// Reset form before server request if createAnother is true
+		if (createAnother) {
+			setTitle('');
+			setDescription('');
+			setDueDate(undefined);
+			setChosenPriority(priorityOptions[0]);
+			setChosenStatus(statusOptions[0]);
+			setSelectedMembers([]);
+			setChosenMember({
+				label: 'Assignee',
+				value: 'none',
+				icon: Team,
+			});
+			setSelectedLabels([]);
+			setChosenLabel({
+				label: 'Labels',
+				value: 'none',
+				icon: Label,
+			});
+		}
 
 		const { error } = await createTask(taskData, orgUrl);
 		if (error) {
 			console.error(error);
 		} else {
 			router.refresh();
-			onClose();
+			if (!createAnother) {
+				onClose();
+			}
 		}
 	};
 
@@ -229,6 +511,9 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 		<div className={styles.popupWrapper}>
 			<ClickOutsideWrapper onClose={onClose} closeOnEsc={true}>
 				<div className={styles.popup}>
+					<button className={styles.dismissButton} onClick={onClose}>
+						<Dismiss width="16" height="16" />
+					</button>
 					<div>
 						<h2>New Task</h2>
 					</div>
@@ -352,7 +637,162 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 									</ClickOutsideWrapper>
 								)}
 							</div>
+							<div
+								className={styles.option}
+								onClick={() => setIsProjectOpen(!isProjectOpen)}
+							>
+								{chosenProject && typeof chosenProject !== 'string' && (
+									<>
+										<ProjectIcon
+											fill={getProjectColor()}
+											width="16"
+											height="16"
+										/>
+										<span style={{ color: getProjectColor() }}>
+											{chosenProject.label}
+										</span>
+									</>
+								)}
+								{isProjectOpen && (
+									<ClickOutsideWrapper onClose={() => setIsProjectOpen(false)}>
+										<ButtonSelector<OptionItem>
+											query={projectQuery}
+											onQueryChange={onProjectQueryChange}
+											inputRef={projectRef}
+											options={projectOptions}
+											placeholder="Select Project"
+											oldData={oldProjectOptions}
+											setOptions={setProjectOptions}
+											setIsChosen={handleProjectChange}
+											setIsOpenOption={setIsProjectOpen}
+											isChosen={
+												typeof chosenProject === 'string'
+													? chosenProject
+													: chosenProject.value
+											}
+										/>
+									</ClickOutsideWrapper>
+								)}
+							</div>
 
+							{typeof chosenProject !== 'string' &&
+								chosenProject.value !== 'none' &&
+								projectsWithPhases[chosenProject.value] && (
+									<div
+										className={styles.option}
+										onClick={() => setIsPhaseOpen(!isPhaseOpen)}
+									>
+										{chosenPhase && typeof chosenPhase !== 'string' && (
+											<>
+												<PhaseIcon
+													fill={getPhaseColor()}
+													width="16"
+													height="16"
+												/>
+												<span style={{ color: getPhaseColor() }}>
+													{chosenPhase.label}
+												</span>
+											</>
+										)}
+										{isPhaseOpen && (
+											<ClickOutsideWrapper
+												onClose={() => setIsPhaseOpen(false)}
+											>
+												<ButtonSelector<OptionItem>
+													query={phaseQuery}
+													onQueryChange={onPhaseQueryChange}
+													inputRef={phaseRef}
+													options={phaseOptions}
+													placeholder="Select Phase"
+													oldData={oldPhaseOptions}
+													setOptions={setPhaseOptions}
+													setIsChosen={(phase) => {
+														setChosenPhase(
+															typeof phase === 'string'
+																? phase
+																: {
+																		...phase,
+																		label:
+																			phase.value === 'none'
+																				? 'Phase'
+																				: phase.label,
+																  }
+														);
+														setIsPhaseOpen(false);
+													}}
+													setIsOpenOption={setIsPhaseOpen}
+													isChosen={
+														typeof chosenPhase === 'string'
+															? chosenPhase
+															: chosenPhase.value
+													}
+												/>
+											</ClickOutsideWrapper>
+										)}
+									</div>
+								)}
+							<div
+								className={styles.option}
+								onClick={() => setIsLabelOpen(!isLabelOpen)}
+							>
+								{chosenLabel && typeof chosenLabel !== 'string' && (
+									<div className={styles.selectedLabels}>
+										{selectedLabels.length > 0 ? (
+											<>
+												<div className={styles.labelPills}>
+													{selectedLabels.map((labelId, index) => {
+														const label = labelOptions.find(
+															(l) => l.value === labelId
+														);
+														return label && index < 3 ? (
+															<div
+																key={labelId}
+																className={styles.labelPill}
+																style={{ backgroundColor: label.color }}
+															/>
+														) : null;
+													})}
+												</div>
+												<span style={{ color: getLabelColor() }}>
+													{selectedLabels.length === 1
+														? labelOptions.find(
+																(l) => l.value === selectedLabels[0]
+														  )?.label
+														: `${selectedLabels.length} labels`}
+												</span>
+											</>
+										) : (
+											<>
+												<Label fill={getLabelColor()} width="12" height="12" />
+											</>
+										)}
+									</div>
+								)}
+								{isLabelOpen && (
+									<ClickOutsideWrapper onClose={() => setIsLabelOpen(false)}>
+										<ButtonSelector<OptionItem>
+											query={labelQuery}
+											onQueryChange={onLabelQueryChange}
+											inputRef={labelRef}
+											options={labelOptions}
+											placeholder="Select Labels"
+											oldData={oldLabelOptions}
+											setOptions={setLabelOptions}
+											setIsChosen={setChosenLabel}
+											setIsOpenOption={setIsLabelOpen}
+											isChosen={
+												typeof chosenLabel === 'string'
+													? chosenLabel
+													: chosenLabel.value
+											}
+											isComboBox={true}
+											selectedItems={selectedLabels}
+											onSelectedItemsChange={setSelectedLabels}
+											showColorBadge={true}
+										/>
+									</ClickOutsideWrapper>
+								)}
+							</div>
 							<div
 								className={styles.option}
 								onClick={() => setIsDateOpen(!isDateOpen)}
@@ -378,20 +818,37 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 						</div>
 					</div>
 					<div className={styles.actions}>
-						<button
-							type="button"
-							className={styles.cancelButton}
-							onClick={onClose}
-						>
-							<span>Cancel</span>
-						</button>
-						<button
-							type="button"
-							className={styles.createButton}
-							onClick={handleSubmit}
-						>
-							<span>Create Task</span>
-						</button>
+						<div className={styles.leftActions}>
+							<div
+								className={styles.toggleWrapper}
+								onClick={() => setCreateAnother(!createAnother)}
+							>
+								<div
+									className={`${styles.toggle} ${
+										createAnother ? styles.active : ''
+									}`}
+								>
+									<div className={styles.circle} />
+								</div>
+								<span>Create Another</span>
+							</div>
+						</div>
+						<div className={styles.rightActions}>
+							<button
+								type="button"
+								className={styles.cancelButton}
+								onClick={onClose}
+							>
+								<span>Cancel</span>
+							</button>
+							<button
+								type="button"
+								className={styles.createButton}
+								onClick={handleSubmit}
+							>
+								<span>Create Task</span>
+							</button>
+						</div>
 					</div>
 				</div>
 			</ClickOutsideWrapper>

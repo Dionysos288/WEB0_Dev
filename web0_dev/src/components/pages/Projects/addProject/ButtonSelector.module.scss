@@ -96,6 +96,14 @@
 						transform: rotate(45deg);
 					}
 				}
+
+				.colorBadge {
+					width: 10px;
+					height: 10px;
+					border-radius: 360px;
+					margin-right: 4px;
+					margin-left: 2px;
+				}
 			}
 		}
 		.active {

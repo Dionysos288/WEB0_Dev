@@ -2,15 +2,35 @@ import styles from './Task.module.scss';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Image from 'next/image';
-import { Phase, Task as TaskType, projectPriority } from '@prisma/client';
+import {
+	Phase,
+	Task as TaskType,
+	TimeLog,
+	Comment,
+	Label,
+	Member,
+} from '@prisma/client';
 import Clock from '@/svgs/Clock';
 import ChatText from '@/svgs/ChatText';
 import PhaseIcon from '@/svgs/Phase';
-import Text from '@/svgs/Text';
 import { useRouter } from 'next/navigation';
+import Team from '@/svgs/Team';
+import NoPriority from '@/svgs/NoPriority';
+import MediumPriority from '@/svgs/MediumPriority';
+import HighPriority from '@/svgs/HighPriority';
+import UrgentPriority from '@/svgs/UrgentPriority';
+import LowPriority from '@/svgs/LowPriority';
+import { getDateFormat } from '@/utils/DateHooks';
+import DatePicker from '@/svgs/DatePicker';
 
 interface TaskProps {
-	task: TaskType & { phase?: Phase };
+	task: TaskType & {
+		Phase?: Phase;
+		Comment?: Comment[];
+		timeLogs?: TimeLog[];
+		labels?: Label[];
+		assignees?: Member[];
+	};
 	orgUrl?: string;
 }
 
@@ -27,7 +47,6 @@ const Task = ({ task, orgUrl }: TaskProps) => {
 		id: task.id,
 		data: { type: 'task', task },
 	});
-
 	const style = { transition, transform: CSS.Transform.toString(transform) };
 
 	const handleClick = (e: React.MouseEvent) => {
@@ -39,23 +58,6 @@ const Task = ({ task, orgUrl }: TaskProps) => {
 
 		if (orgUrl) {
 			router.push(`/${orgUrl}/projects/${task.projectId}/tasks/${task.id}`);
-		}
-	};
-
-	const getPriorityClass = (priority: projectPriority) => {
-		switch (priority) {
-			case 'noPriority':
-				return styles.noPriority;
-			case 'low':
-				return styles.low;
-			case 'medium':
-				return styles.medium;
-			case 'high':
-				return styles.high;
-			case 'urgent':
-				return styles.urgent;
-			default:
-				return styles.noPriority;
 		}
 	};
 
@@ -80,52 +82,116 @@ const Task = ({ task, orgUrl }: TaskProps) => {
 			className={styles.task}
 			onClick={handleClick}
 		>
+			<div className={styles.topRow}>
+				<p>{task.customId}</p>
+			</div>
 			<div className={styles.row} data-handle>
 				{task.status === 'Backlog' && (
-					<Text fill={'var(--main-70)'} width="14" height="14" />
+					<Team fill={'var(--main-70)'} width="14" height="14" />
 				)}
 				{task.status === 'todo' && (
-					<Text fill={'var(--main-70)'} width="14" height="14" />
+					<Team fill={'var(--main-70)'} width="14" height="14" />
 				)}
 				{task.status === 'inProgress' && (
-					<Text fill={'var(--main-70)'} width="14" height="14" />
+					<Team fill={'var(--main-70)'} width="14" height="14" />
 				)}
 				{task.status === 'inReview' && (
-					<Text fill={'var(--main-70)'} width="14" height="14" />
+					<Team fill={'var(--main-70)'} width="14" height="14" />
 				)}
 				{task.status === 'Completed' && (
-					<Text fill={'var(--main-70)'} width="14" height="14" />
+					<Team fill={'var(--main-70)'} width="14" height="14" />
 				)}
 				{task.status === 'canceled' && (
-					<Text fill={'var(--main-70)'} width="14" height="14" />
+					<Team fill={'var(--main-70)'} width="14" height="14" />
 				)}
 				<h3>{task.title}</h3>
 			</div>
 
 			<div className={styles.bottom}>
-				<div className={styles.imgWrapper}>
-					<Image
-						src={'https://placehold.co/24'}
-						alt="profilePic"
-						width={24}
-						height={24}
-					/>
+				{task.assignees && task.assignees.length > 0 && (
+					<div className={styles.assignees}>
+						{task.assignees.map((assignee) => (
+							<div className={styles.imgWrapper} key={assignee.id}>
+								<Image
+									src={'https://placehold.co/24'}
+									alt={`User's profile picture`}
+									width={24}
+									height={24}
+									className={styles.profileImage}
+								/>
+							</div>
+						))}
+					</div>
+				)}
+				<div className={`${styles.wrapper} `}>
+					{task.priority === 'noPriority' && (
+						<NoPriority fill={'var(--main)'} width="12" height="12" />
+					)}
+					{task.priority === 'low' && (
+						<LowPriority fill={'var(--main)'} width="12" height="12" />
+					)}
+					{task.priority === 'medium' && (
+						<MediumPriority fill={'var(--main)'} width="12" height="12" />
+					)}
+					{task.priority === 'high' && (
+						<HighPriority fill={'var(--main)'} width="12" height="12" />
+					)}
+					{task.priority === 'urgent' && (
+						<UrgentPriority fill={'var(--orange-90)'} width="12" height="12" />
+					)}
 				</div>
-				<div className={`${styles.wrapper} ${getPriorityClass(task.priority)}`}>
-					<p>{task.priority}</p>
-				</div>
-				<div className={styles.wrapper}>
-					<PhaseIcon fill={'var(--main-70)'} width="12" height="12" />
-					<p>{task.phase?.title}</p>
-				</div>
-				<div className={`${styles.wrapper} ${styles.full}`}>
-					<Clock fill={'var(--main-70)'} width="12" height="12" />
-					<p>6h</p>
-				</div>
-				<div className={`${styles.wrapper} ${styles.full}`}>
-					<ChatText fill={'var(--main-70)'} width="12" height="12" />
-					<p>8</p>
-				</div>
+				{task.Phase && (
+					<div className={styles.wrapper}>
+						<PhaseIcon fill={'var(--main-70)'} width="12" height="12" />
+						<p>{task.Phase?.title}</p>
+					</div>
+				)}
+				{task.dueDate && (
+					<div className={`${styles.wrapper} `}>
+						<DatePicker fill={'var(--main-90)'} width="12" height="12" />
+						<p>{getDateFormat(String(task.dueDate))}</p>
+					</div>
+				)}
+				{(task.estimatedTime ||
+					(task.timeLogs && task.timeLogs.length > 0)) && (
+					<div className={`${styles.wrapper} `}>
+						<Clock fill={'var(--main)'} width="12" height="12" />
+						<p>{`${
+							task.estimatedTime && task.timeLogs && task.timeLogs.length > 0
+								? `${
+										task.timeLogs.reduce((acc, log) => acc + log.duration, 0) /
+										60
+								  }h / ${task.estimatedTime / 60}h`
+								: task.estimatedTime
+								? `${task.estimatedTime / 60}h`
+								: `${
+										(task.timeLogs || []).reduce(
+											(acc, log) => acc + log.duration,
+											0
+										) / 60
+								  }h`
+						}`}</p>
+					</div>
+				)}
+				{task.labels && task.labels.length > 0 && (
+					<>
+						{task.labels.map((label) => (
+							<div key={label.id} className={`${styles.wrapper}`}>
+								<div
+									className={styles.label}
+									style={{ backgroundColor: label.color }}
+								></div>
+								<p>{label.name}</p>
+							</div>
+						))}
+					</>
+				)}
+				{task.Comment && task.Comment.length > 0 && (
+					<div className={`${styles.wrapper} ${styles.full}`}>
+						<ChatText fill={'var(--main-70)'} width="12" height="12" />
+						<p>{task.Comment.length}</p>
+					</div>
+				)}
 			</div>
 		</div>
 	);

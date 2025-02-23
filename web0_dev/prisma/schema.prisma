@@ -349,8 +349,7 @@ model Member {
   activities       Activity[]
   comments         Comment[]
   timeLogs         TimeLog[]
-  Task             Task?        @relation(fields: [taskId], references: [id])
-  taskId           String?
+  Task             Task[]
 
   @@map("member")
 }

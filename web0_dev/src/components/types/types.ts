@@ -9,6 +9,10 @@ import {
 	Phase,
 	Task,
 	TaskStatus,
+	TimeLog,
+	Comment,
+	Label,
+	Member,
 } from '@prisma/client';
 import { ReactNode } from 'react';
 
@@ -27,7 +31,13 @@ interface TaskColumnType {
 	id: number;
 	title: TaskStatus;
 	displayTitle?: string;
-	tasks: (Task & { phase?: Phase })[];
+	tasks: (Task & {
+		Phase?: Phase;
+		Comment?: Comment[];
+		timeLogs?: TimeLog[];
+		labels?: Label[];
+		assignees?: Member[];
+	})[];
 }
 
 type ClientColumnType = {

@@ -22,7 +22,15 @@ import Column from './Column';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
 import TaskComponent from './Task';
-import { Phase, Task, TaskStatus } from '@prisma/client';
+import {
+	Phase,
+	Task,
+	TaskStatus,
+	TimeLog,
+	Comment,
+	Label,
+	Member,
+} from '@prisma/client';
 import { TaskColumnType } from '@/components/types/types';
 import ArrowLineRight from '@/svgs/ArrowLineRight';
 import SVG from '@/components/general/SVG';
@@ -97,8 +105,24 @@ const TaskGallery = ({
 	projectId,
 	orgUrl,
 }: {
-	tasks: (Task & { phase?: Phase })[];
-	setTasks: React.Dispatch<React.SetStateAction<(Task & { phase?: Phase })[]>>;
+	tasks: (Task & {
+		Phase?: Phase;
+		Comment?: Comment[];
+		timeLogs?: TimeLog[];
+		labels?: Label[];
+		assignees?: Member[];
+	})[];
+	setTasks: React.Dispatch<
+		React.SetStateAction<
+			(Task & {
+				Phase?: Phase;
+				Comment?: Comment[];
+				timeLogs?: TimeLog[];
+				labels?: Label[];
+				assignees?: Member[];
+			})[]
+		>
+	>;
 	projectId: string;
 	orgUrl: string;
 }) => {
@@ -189,7 +213,13 @@ const TaskGallery = ({
 		async (
 			taskId: string,
 			newStatus: TaskStatus,
-			previousTasks: (Task & { phase?: Phase })[]
+			previousTasks: (Task & {
+				Phase?: Phase;
+				Comment?: Comment[];
+				timeLogs?: TimeLog[];
+				labels?: Label[];
+				assignees?: Member[];
+			})[]
 		) => {
 			try {
 				const { error } = await updateTaskStatus(

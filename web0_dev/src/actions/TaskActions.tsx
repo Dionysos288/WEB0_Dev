@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/db';
-import { Task, projectPriority, Prisma, TaskStatus } from '@prisma/client';
+import { Task, projectPriority, TaskStatus } from '@prisma/client';
 
 interface CreateTaskData extends Partial<Task> {
 	assignees?: string[];
@@ -49,15 +49,24 @@ export const createTask = async (
 			projectId: taskData.projectId,
 			phaseId: taskData.phaseId,
 			cycleId: taskData.cycleId,
+			labels: {
+				connect: taskData.labels?.map((id) => ({ id })),
+			},
+			assignees: {
+				connect: taskData.assignees?.map((id) => ({ id })),
+			},
 		};
+		console.log(createData);
 
-		const task = await prisma.task.create({
+		await prisma.task.create({
 			data: createData,
 			include: {
 				Organization: true,
 				project: true,
 				Phase: true,
 				cycle: true,
+				labels: true,
+				assignees: true,
 			},
 		});
 
@@ -65,43 +74,6 @@ export const createTask = async (
 		revalidatePath(`/${organizationSlug}/projects/${taskData.projectId}/tasks`);
 		revalidatePath(`/${organizationSlug}/projects/${taskData.projectId}`);
 		revalidatePath(`/${organizationSlug}/projects`);
-
-		if (taskData.assignees?.length || taskData.labels?.length) {
-			const updateData: Prisma.TaskUpdateInput = {};
-
-			if (taskData.assignees?.length) {
-				updateData.assignees = {
-					connect: taskData.assignees.map((id) => ({ id })),
-				};
-			}
-
-			if (taskData.labels?.length) {
-				updateData.labels = {
-					connect: taskData.labels.map((id) => ({ id })),
-				};
-			}
-
-			await prisma.task.update({
-				where: { id: task.id },
-				data: updateData,
-				include: {
-					assignees: true,
-					labels: true,
-				},
-			});
-
-			// Revalidate paths after updating task with relations
-			revalidatePath(
-				`/${organizationSlug}/projects/${taskData.projectId}/tasks`
-			);
-			revalidatePath(`/${organizationSlug}/projects/${taskData.projectId}`);
-			revalidatePath(`/${organizationSlug}/projects`);
-			revalidatePath(
-				`/${organizationSlug}/projects/${taskData.projectId}/tasks/${task.id}`
-			);
-
-			return { data: null, error: null };
-		}
 
 		return { data: null, error: null };
 	} catch (error) {

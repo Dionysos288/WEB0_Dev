@@ -21,6 +21,18 @@
 		border: 1px solid var(--main-10);
 		box-shadow: var(--boxShadow-md);
 
+		.dismissButton {
+			position: absolute;
+			top: 16px;
+			right: 20px;
+			color: var(--main-65);
+			transition: color 0.2s ease;
+
+			&:hover {
+				color: var(--main-75);
+			}
+		}
+
 		h2 {
 			margin: 0 auto;
 			width: fit-content;
@@ -93,16 +105,91 @@
 					line-height: calc(18 / 16 * 1rem);
 					width: max-content;
 				}
+				.selectedLabels {
+					display: flex;
+					align-items: center;
+					gap: 4px;
+
+					.labelPills {
+						display: flex;
+						align-items: center;
+
+						.labelPill {
+							width: 10px;
+							height: 10px;
+							border-radius: 50%;
+
+							&:not(:first-child) {
+								margin-left: -5px;
+							}
+						}
+					}
+
+					span {
+						margin-left: 0;
+					}
+				}
 			}
 		}
 		.actions {
 			margin: 0 -28px;
 			width: calc(100% + 56px);
 			display: flex;
-			justify-content: flex-end;
-			gap: 16px;
+			justify-content: space-between;
 			border-top: 1px solid var(--main-10);
-			padding-top: 16px;
+			padding: 16px 28px 0;
+
+			.leftActions {
+				display: flex;
+				align-items: center;
+
+				.toggleWrapper {
+					display: flex;
+					align-items: center;
+					gap: 6px;
+					cursor: pointer;
+
+					.toggle {
+						width: 28px;
+						height: 16px;
+						background-color: var(--main-20);
+						border-radius: 360px;
+						position: relative;
+						transition: background-color 0.2s ease;
+
+						.circle {
+							width: 12px;
+							height: 12px;
+							background-color: var(--white);
+							border-radius: 50%;
+							position: absolute;
+							top: 2px;
+							left: 2px;
+							transition: transform 0.2s ease;
+						}
+
+						&.active {
+							background-color: var(--orange-90);
+
+							.circle {
+								transform: translateX(100%);
+							}
+						}
+					}
+
+					span {
+						font-size: calc(13 / 16 * 1rem);
+						font-weight: 400;
+						line-height: calc(20 / 16 * 1rem);
+						color: var(--main-90);
+					}
+				}
+			}
+
+			.rightActions {
+				display: flex;
+				gap: 16px;
+			}
 
 			button {
 				display: flex;
@@ -120,7 +207,6 @@
 				background-color: var(--lightBlue);
 			}
 			.createButton {
-				margin-right: 16px;
 				background-color: var(--orange);
 				color: var(--whiteSpecial);
 			}
