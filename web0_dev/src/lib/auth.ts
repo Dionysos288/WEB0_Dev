@@ -3,8 +3,21 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { PrismaClient } from '@prisma/client';
 import { nextCookies } from 'better-auth/next-js';
 import { customSession, organization } from 'better-auth/plugins';
-import { getSlug } from '@/actions/AccountActions';
+
 const prisma = new PrismaClient();
+
+type BaseSession = {
+	id: string;
+	createdAt: Date;
+	updatedAt: Date;
+	userId: string;
+	expiresAt: Date;
+	token: string;
+	ipAddress?: string | null;
+	userAgent?: string | null;
+	activeOrganizationId?: string;
+	organizationSlug?: string;
+};
 
 const options = {
 	database: prismaAdapter(prisma, {
@@ -15,9 +28,18 @@ const options = {
 	},
 	plugins: [
 		organization(),
-		nextCookies(),
 		customSession(async ({ user, session }) => {
-			const organizationSlug = await getSlug(session.activeOrganizationId);
+			const typedSession = session as BaseSession;
+			let organizationSlug = null;
+
+			if (typedSession.activeOrganizationId) {
+				const org = await prisma.organization.findUnique({
+					where: { id: typedSession.activeOrganizationId },
+					select: { slug: true },
+				});
+				organizationSlug = org?.slug;
+			}
+
 			return {
 				user,
 				session: {
@@ -26,9 +48,21 @@ const options = {
 				},
 			};
 		}),
+		nextCookies(),
 	],
 } satisfies BetterAuthOptions;
 
 export const auth = betterAuth(options);
 
-export type Session = typeof auth.$Infer.Session;
+export type Session = {
+	user: {
+		id: string;
+		email: string;
+		emailVerified: boolean;
+		name: string;
+		createdAt: Date;
+		updatedAt: Date;
+		image?: string | null;
+	};
+	session: BaseSession;
+};

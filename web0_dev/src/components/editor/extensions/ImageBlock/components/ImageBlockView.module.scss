@@ -1,0 +1,20 @@
+.wrapper {
+	&.alignLeft {
+		margin-left: 0;
+		margin-right: auto;
+	}
+
+	&.alignRight {
+		margin-left: auto;
+		margin-right: 0;
+	}
+
+	&.alignCenter {
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+
+.image {
+	display: block;
+}

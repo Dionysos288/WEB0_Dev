@@ -19,8 +19,7 @@ import { toast } from 'sonner';
 import Image from 'next/image';
 import ChatText from '@/svgs/ChatText';
 import PhaseIcon from '@/svgs/Phase';
-import { Editor, EditorProvider } from 'react-simple-wysiwyg';
-import TextFormatToolbar from '@/components/general/editor/TextFormatToolbar';
+import TiptapEditor from '@/components/editor/TiptapEditor';
 
 interface TaskDetailsProps {
 	task: Task & {
@@ -70,13 +69,14 @@ const TaskDetails = ({
 	const [title, setTitle] = useState(task.title);
 	const [description, setDescription] = useState(task.description || '');
 	const [status, setStatus] = useState<TaskStatus>(task.status);
-	const [priority, setPriority] = useState<projectPriority>(task.priority);
+	const [priority, setPriority] = useState<projectPriority>(
+		task.priority ?? projectPriority.medium
+	);
 	const [content, setContent] = useState(task.content || '');
 	const [isChatOpen, setIsChatOpen] = useState(true);
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [activities, setActivities] = useState<ActivityWithUser[]>([]);
 	const [newComment, setNewComment] = useState('');
-	const editorRef = useRef<HTMLDivElement>(null);
 
 	const titleTimer = useRef<ReturnType<typeof setTimeout>>(null!);
 	const descriptionTimer = useRef<ReturnType<typeof setTimeout>>(null!);
@@ -162,7 +162,7 @@ const TaskDetails = ({
 							setStatus(task.status);
 							break;
 						case 'priority':
-							setPriority(task.priority);
+							setPriority(task.priority ?? projectPriority.medium);
 							break;
 						case 'content':
 							setContent(task.content || '');
@@ -215,17 +215,6 @@ const TaskDetails = ({
 		}, 500);
 	};
 
-	const handleContentChange = (e: { target: { value: string } }) => {
-		const newContent = e.target.value;
-		setContent(newContent);
-		if (contentTimer.current) {
-			clearTimeout(contentTimer.current);
-		}
-		contentTimer.current = setTimeout(() => {
-			handleUpdate({ content: newContent }, 'Content', 'updated', false);
-		}, 500);
-	};
-
 	const handleStatusChange = (newStatus: TaskStatus) => {
 		setStatus(newStatus);
 		handleUpdate({ status: newStatus }, 'Status', newStatus, true);
@@ -249,35 +238,35 @@ const TaskDetails = ({
 					image: userImage,
 				},
 			},
-		} as Comment;
+		};
 
 		setComments((prev) => [optimisticComment, ...prev]);
-		const commentContent = newComment;
 		setNewComment('');
 
 		try {
 			const { data, error } = await addComment(
 				task.id,
-				commentContent,
+				newComment,
 				memberId,
 				organizationId
 			);
-			if (error || !data) {
+			if (error) {
 				setComments((prev) =>
-					prev.filter((c) => c.id !== optimisticComment.id)
+					prev.filter((comment) => comment.id !== optimisticComment.id)
 				);
-				toast.error(error || 'Failed to add comment');
-				setNewComment(commentContent);
-				return;
+				toast.error('Failed to add comment');
+			} else if (data) {
+				setComments((prev) =>
+					prev.map((comment) =>
+						comment.id === optimisticComment.id ? data : comment
+					)
+				);
 			}
-
-			setComments((prev) =>
-				prev.map((c) => (c.id === optimisticComment.id ? data : c))
-			);
 		} catch {
-			setComments((prev) => prev.filter((c) => c.id !== optimisticComment.id));
+			setComments((prev) =>
+				prev.filter((comment) => comment.id !== optimisticComment.id)
+			);
 			toast.error('Failed to add comment');
-			setNewComment(commentContent);
 		}
 	};
 
@@ -319,12 +308,11 @@ const TaskDetails = ({
 							onChange={(e) => handleStatusChange(e.target.value as TaskStatus)}
 							className={styles.statusSelect}
 						>
-							<option value="Backlog">Backlog</option>
-							<option value="todo">To Do</option>
-							<option value="inProgress">In Progress</option>
-							<option value="inReview">In Review</option>
-							<option value="Completed">Completed</option>
-							<option value="canceled">Canceled</option>
+							{Object.values(TaskStatus).map((s) => (
+								<option key={s} value={s}>
+									{s}
+								</option>
+							))}
 						</select>
 					</div>
 
@@ -337,11 +325,11 @@ const TaskDetails = ({
 							}
 							className={styles.prioritySelect}
 						>
-							<option value="noPriority">No Priority</option>
-							<option value="low">Low</option>
-							<option value="medium">Medium</option>
-							<option value="high">High</option>
-							<option value="urgent">Urgent</option>
+							{Object.values(projectPriority).map((p) => (
+								<option key={p} value={p}>
+									{p}
+								</option>
+							))}
 						</select>
 					</div>
 
@@ -369,24 +357,28 @@ const TaskDetails = ({
 
 				<div className={styles.divider} />
 
-				<div className={styles.content} ref={editorRef}>
-					<EditorProvider>
-						<Editor
-							value={content}
-							onChange={handleContentChange}
-							containerProps={{
-								className: styles.contentEditor,
-								style: {
-									minHeight: '200px',
-									width: '100%',
-									border: 'none',
-									backgroundColor: 'var(--bg)',
-								},
+				<div className={styles.contentSection}>
+					<h3>Content</h3>
+					<div className={styles.editorWrapper}>
+						<TiptapEditor
+							content={content}
+							onChange={(newContent) => {
+								setContent(newContent);
+								if (contentTimer.current) {
+									clearTimeout(contentTimer.current);
+								}
+								contentTimer.current = setTimeout(() => {
+									handleUpdate(
+										{ content: newContent },
+										'Content',
+										'updated',
+										false
+									);
+								}, 500);
 							}}
 							placeholder="Add your content here..."
 						/>
-					</EditorProvider>
-					<TextFormatToolbar editorRef={editorRef} />
+					</div>
 				</div>
 			</div>
 

@@ -1,0 +1,44 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.colorPicker {
+	width: 100%;
+}
+
+.input {
+	width: 100%;
+	padding: 0.5rem;
+	color: var(--black);
+	background-color: var(--white);
+	border: 1px solid var(--neutral-200);
+	border-radius: 0.25rem;
+
+	&:focus {
+		outline: 1px solid var(--neutral-300);
+		outline-offset: -1px;
+		ring: 0;
+	}
+}
+
+.colorsGrid {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25rem;
+	max-width: 15rem;
+}
+
+:global(.dark) {
+	.input {
+		color: var(--white);
+		background-color: var(--black);
+		border-color: var(--neutral-800);
+
+		&:focus {
+			outline-color: var(--neutral-700);
+		}
+	}
+}

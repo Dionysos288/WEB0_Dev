@@ -1,0 +1,22 @@
+.surface {
+	background-color: var(--white);
+	border-radius: 8px;
+
+	&.withShadow {
+		box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+	}
+
+	&.withBorder {
+		border: 1px solid var(--neutral-200);
+	}
+}
+
+:global(.dark) {
+	.surface {
+		background-color: var(--black);
+
+		&.withBorder {
+			border-color: var(--neutral-800);
+		}
+	}
+}

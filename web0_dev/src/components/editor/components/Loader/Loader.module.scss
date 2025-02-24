@@ -1,0 +1,59 @@
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 1rem;
+	color: var(--white);
+	background-color: var(--black);
+	border-radius: 0.5rem;
+	box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+.spinner {
+	width: 2rem;
+	height: 2rem;
+	animation: spin 1s linear infinite;
+}
+
+.label {
+	font-size: 0.875rem;
+	font-weight: 600;
+	line-height: 1.25;
+	color: var(--white);
+}
+
+.overlay {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: rgba(0, 0, 0, 0.6);
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	user-select: none;
+	z-index: 9999;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+:global(.dark) {
+	.wrapper {
+		color: var(--black);
+		background-color: var(--white);
+	}
+
+	.label {
+		color: var(--black);
+	}
+}

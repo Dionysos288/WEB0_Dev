@@ -1,0 +1,40 @@
+.textarea {
+	background-color: rgba(0, 0, 0, 0.05);
+	border: 0;
+	border-radius: 0.5rem;
+	caret-color: var(--black);
+	display: block;
+	color: var(--black);
+	font-size: 0.875rem;
+	font-weight: 500;
+	height: 4.5rem;
+	padding: 0.25rem 0.5rem;
+	width: 100%;
+
+	&:hover {
+		background-color: rgba(0, 0, 0, 0.1);
+	}
+
+	&:focus,
+	&:active {
+		background-color: transparent;
+		outline: 1px solid var(--black);
+	}
+}
+
+:global(.dark) {
+	.textarea {
+		background-color: rgba(255, 255, 255, 0.1);
+		caret-color: var(--white);
+		color: var(--white);
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.2);
+		}
+
+		&:focus,
+		&:active {
+			outline-color: var(--white);
+		}
+	}
+}

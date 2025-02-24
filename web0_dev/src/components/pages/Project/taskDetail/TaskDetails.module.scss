@@ -398,3 +398,215 @@
 		font-size: calc(13 / 16 * 1rem);
 	}
 }
+
+.taskDetails {
+	.contentSection {
+		margin-top: 2rem;
+
+		h3 {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #1e293b;
+			margin-bottom: 0.5rem;
+		}
+	}
+
+	.editorWrapper {
+		border: 1px solid #e2e8f0;
+		border-radius: 0.5rem;
+		background-color: white;
+		min-height: 300px;
+		position: relative;
+	}
+
+	.editor {
+		padding: 1rem;
+		min-height: 200px;
+	}
+
+	/* Global styles for ProseMirror */
+	.editor [class*='ProseMirror'] {
+		min-height: 300px;
+		padding: 1rem;
+		outline: none;
+	}
+
+	.editor [class*='ProseMirror'] > * + * {
+		margin-top: 0.75em;
+	}
+
+	.editor [class*='ProseMirror'] p {
+		margin: 0;
+	}
+
+	.editor [class*='ProseMirror'] h1 {
+		font-size: 2em;
+		font-weight: bold;
+	}
+
+	.editor [class*='ProseMirror'] h2 {
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+
+	.editor [class*='ProseMirror'] h3 {
+		font-size: 1.17em;
+		font-weight: bold;
+	}
+
+	.editor [class*='ProseMirror'] ul,
+	.editor [class*='ProseMirror'] ol {
+		padding: 0 1rem;
+	}
+
+	.editor [class*='ProseMirror'] code {
+		background-color: #f1f5f9;
+		color: #475569;
+		padding: 0.2em 0.4em;
+		border-radius: 0.25em;
+		font-family: monospace;
+	}
+
+	.editor [class*='ProseMirror'] pre {
+		background: #0d0d0d;
+		color: #fff;
+		padding: 0.75rem 1rem;
+		border-radius: 0.5rem;
+	}
+
+	.editor [class*='ProseMirror'] pre code {
+		color: inherit;
+		padding: 0;
+		background: none;
+		font-size: 0.8rem;
+	}
+
+	.editor [class*='ProseMirror'] blockquote {
+		padding-left: 1rem;
+		border-left: 2px solid #e2e8f0;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.editor [class*='ProseMirror'] hr {
+		border: none;
+		border-top: 2px solid #e2e8f0;
+		margin: 2rem 0;
+	}
+
+	.editor [class*='ProseMirror'] a {
+		color: #2563eb;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+
+	.editor [class*='ProseMirror'] mark {
+		background-color: #fef9c3;
+	}
+
+	.editor [class*='ProseMirror'] img {
+		max-width: 100%;
+		height: auto;
+	}
+
+	.editor [class*='ProseMirror'] [data-type='taskList'] {
+		list-style: none;
+		padding: 0;
+	}
+
+	.editor [class*='ProseMirror'] [data-type='taskList'] li {
+		display: flex;
+		align-items: flex-start;
+		margin-bottom: 0.5em;
+	}
+
+	.editor [class*='ProseMirror'] [data-type='taskList'] li > label {
+		margin-right: 0.5em;
+		user-select: none;
+	}
+
+	.editor [class*='ProseMirror'] [data-type='taskList'] li > div {
+		flex: 1;
+		margin-bottom: 0.5em;
+	}
+
+	.editor [class*='ProseMirror'] [data-type='taskList'] li > div > p {
+		margin: 0;
+	}
+
+	.editor [class*='ProseMirror'].is-empty::before {
+		content: attr(data-placeholder);
+		float: left;
+		color: #94a3b8;
+		pointer-events: none;
+		height: 0;
+	}
+
+	/* Bubble Menu and Floating Menu styles */
+	.editor :global(.bubble-menu),
+	.editor :global(.floating-menu) {
+		display: flex;
+		background-color: white;
+		padding: 0.25rem;
+		border-radius: 0.5rem;
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+			0 2px 4px -2px rgba(0, 0, 0, 0.1);
+		border: 1px solid #e2e8f0;
+		z-index: 50;
+	}
+
+	.editor :global(.bubble-menu) {
+		gap: 0.25rem;
+	}
+
+	.editor :global(.floating-menu) {
+		flex-direction: column;
+		gap: 0.5rem;
+		min-width: 150px;
+	}
+
+	.editor :global(.bubble-menu button),
+	.editor :global(.floating-menu button) {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		background: transparent;
+		border: 1px solid transparent;
+		border-radius: 0.25rem;
+		color: #475569;
+		font-size: 0.875rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition: all 0.2s ease-in-out;
+	}
+
+	.editor :global(.bubble-menu button:hover),
+	.editor :global(.floating-menu button:hover) {
+		background-color: #f1f5f9;
+		border-color: #e2e8f0;
+	}
+
+	.editor :global(.bubble-menu button.active),
+	.editor :global(.floating-menu button.active) {
+		background-color: #e2e8f0;
+		border-color: #cbd5e1;
+		color: #1e293b;
+	}
+
+	.editor :global(.floating-menu button) {
+		width: 100%;
+		height: auto;
+		padding: 0.5rem;
+		justify-content: flex-start;
+		gap: 0.5rem;
+		text-align: left;
+	}
+
+	.editor :global(.floating-menu button svg) {
+		width: 1.25rem;
+		height: 1.25rem;
+	}
+}

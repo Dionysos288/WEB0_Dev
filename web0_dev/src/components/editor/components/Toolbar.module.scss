@@ -1,0 +1,65 @@
+.toolbar {
+	display: inline-flex;
+	height: 100%;
+	line-height: 1;
+	gap: 0.125rem;
+	color: var(--black);
+
+	&.vertical {
+		flex-direction: column;
+		padding: 0.5rem;
+	}
+
+	&.horizontal {
+		flex-direction: row;
+		padding: 0.25rem;
+		align-items: center;
+	}
+}
+
+.divider {
+	background-color: var(--neutral-200);
+
+	&.horizontal {
+		width: 100%;
+		min-width: 1.5rem;
+		height: 1px;
+		margin: 0.25rem 0;
+
+		&:first-child {
+			margin-top: 0;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	&.vertical {
+		height: 100%;
+		min-height: 1.5rem;
+		width: 1px;
+		margin: 0 0.25rem;
+
+		&:first-child {
+			margin-left: 0;
+		}
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+}
+
+.button {
+	gap: 0.25rem;
+	min-width: 2rem;
+	padding: 0 0.5rem;
+	width: auto;
+}
+
+:global(.dark) {
+	.divider {
+		background-color: var(--neutral-800);
+	}
+}
