@@ -9,8 +9,10 @@ import {
 	ExtendedLibrary,
 	LibraryData,
 	SortOptions,
+	fileType,
 } from '@/components/types/types';
 import BigButton from './BigButtons';
+import { Phase, Task } from '@prisma/client';
 
 const LibraryPage = ({
 	homePage = false,
@@ -78,7 +80,13 @@ const LibraryPage = ({
 			<FilterBar
 				options={['date', 'title']}
 				data={galleryData}
-				setData={setGalleryData}
+				setData={
+					setGalleryData as React.Dispatch<
+						React.SetStateAction<
+							ExtendedLibrary[] | fileType[] | (Task & { phase?: Phase })[]
+						>
+					>
+				}
 				model={'library'}
 				setIsFilterOpenLibrary={setIsFilterOpen}
 				isFilterOpenLibrary={isFilterOpen}
@@ -90,6 +98,11 @@ const LibraryPage = ({
 				sortType={sortType}
 				setSortType={setSortType}
 				orgId={orgId}
+				categories={
+					Array.isArray(libraryData)
+						? libraryData.flatMap((lib) => lib.categories || [])
+						: libraryData.categories || []
+				}
 			/>
 			<Spacing space={28} />
 			<Gallery data={galleryData} slug={slug} />

@@ -5,7 +5,7 @@ import { Session } from '@/lib/auth';
 const ServerClientGallery = async ({ session }: { session: Session }) => {
 	const clients = await prisma.client.findMany({
 		where: {
-			organizationId: session?.session.organizationId,
+			organizationId: session?.session.activeOrganizationId,
 		},
 	});
 	return <ClientGallery TasksData={clients} />;

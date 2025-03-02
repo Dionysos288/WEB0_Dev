@@ -12,7 +12,7 @@ const ServerTableData = async ({
 }) => {
 	const clients = await prisma.client.findMany({
 		where: {
-			organizationId: session?.session.organizationId,
+			organizationId: session?.session.activeOrganizationId,
 		},
 	});
 	return (

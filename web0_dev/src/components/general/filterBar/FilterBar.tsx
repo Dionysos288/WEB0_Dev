@@ -9,6 +9,7 @@ import {
 	fileType,
 	ModelNames,
 	SortOptions,
+	ExtendedCategory,
 } from '@/components/types/types';
 import { updateFilterLibrary } from '@/actions/CRUDLibrary';
 import { updateFilterFiles } from '@/actions/CRUDFile';
@@ -20,10 +21,10 @@ import FunnelSimple from '@/svgs/FunnelSimple';
 import SortArrowsDownUp from '@/svgs/SortArrowsDownUp';
 import Search from '@/svgs/Search';
 import CloseCircleFilled from '@/svgs/Close-Circle-Filled';
+import AddLibraryPopup from '@/components/pages/library/AddLibraryPopup';
 
 interface FilterBarProps {
 	title?: string;
-	views?: boolean;
 	search?: boolean;
 	setIsFilterOpenLibrary?: React.Dispatch<React.SetStateAction<boolean>>;
 	isFilterOpenLibrary?: boolean;
@@ -45,10 +46,10 @@ interface FilterBarProps {
 	setQuery: React.Dispatch<React.SetStateAction<string>>;
 	model: ModelNames;
 	orgId?: string;
+	categories?: ExtendedCategory[];
 }
 const FilterBar: React.FC<FilterBarProps> = ({
 	title,
-	views = false,
 	search = true,
 	options,
 	setSortType,
@@ -66,10 +67,12 @@ const FilterBar: React.FC<FilterBarProps> = ({
 	model,
 	ExtraFilters,
 	orgId = '',
+	categories = [],
 }) => {
 	const [isOpenSort, setIsOpenSort] = useState<boolean>(false);
 	const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 	const [debouncedQuery, setDebouncedQuery] = useState<string>(query);
+	const [isAddLibraryOpen, setIsAddLibraryOpen] = useState<boolean>(false);
 
 	const getQuery = (e: ChangeEvent<HTMLInputElement>) => {
 		setQuery(e.target.value);
@@ -138,9 +141,16 @@ const FilterBar: React.FC<FilterBarProps> = ({
 			{title && <h2 className={styles.title}>{title}</h2>}
 			<div className={styles.filterContainer}>
 				<div className={styles.leftSide}>
-					<SVG>
-						<PlusStroke fill="var(--main)" width="20" height="20" />
-					</SVG>
+					{model === 'library' && (
+						<SVG onClick={() => setIsAddLibraryOpen(true)}>
+							<PlusStroke fill="var(--main)" width="20" height="20" />
+						</SVG>
+					)}
+					{model !== 'library' && (
+						<SVG>
+							<PlusStroke fill="var(--main)" width="20" height="20" />
+						</SVG>
+					)}
 					{ExtraFilters &&
 						ExtraFilters.map((filter, index) => (
 							<button key={index} className={styles.buttons}>
@@ -213,6 +223,16 @@ const FilterBar: React.FC<FilterBarProps> = ({
 					</div>
 				)}
 			</div>
+
+			{model === 'library' && (
+				<AddLibraryPopup
+					isOpen={isAddLibraryOpen}
+					onClose={() => setIsAddLibraryOpen(false)}
+					libraryTypeId={id}
+					categories={categories}
+					organizationId={orgId}
+				/>
+			)}
 		</>
 	);
 };
