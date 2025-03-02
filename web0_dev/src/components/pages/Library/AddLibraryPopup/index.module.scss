@@ -1,0 +1,181 @@
+.popupWrapper {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: var(--backdrop);
+	backdrop-filter: blur(4px);
+	z-index: 1000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+
+	.popup {
+		position: relative;
+		min-width: 550px;
+		max-width: 650px;
+		max-height: 90vh;
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		row-gap: 28px;
+		background-color: var(--white);
+		border-radius: 16px;
+		padding: 16px 28px;
+		border: 1px solid var(--main-10);
+		box-shadow: var(--boxShadow-md);
+		overflow: hidden;
+
+		.dismissButton {
+			position: absolute;
+			top: 16px;
+			right: 20px;
+			color: var(--main-65);
+			transition: color 0.2s ease;
+
+			&:hover {
+				color: var(--main-75);
+			}
+		}
+
+		h2 {
+			margin: 0 auto;
+			width: fit-content;
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 400;
+			line-height: calc(20 / 16 * 1rem);
+			color: var(--main-60);
+		}
+
+		.inputWrapper {
+			display: flex;
+			gap: 12px;
+			flex-direction: column;
+			input,
+			textarea {
+				border: 0px solid;
+				background-color: transparent;
+
+				&:focus {
+					outline: none;
+				}
+
+				&::placeholder {
+					color: var(--main-40);
+				}
+			}
+			textarea {
+				resize: none;
+			}
+			.header {
+				font-size: calc(22 / 16 * 1rem);
+				font-weight: 600;
+				line-height: calc(20 / 16 * 1rem);
+				color: var(--main-90);
+				&:-webkit-autofill {
+					-webkit-box-shadow: 0 0 0 30px var(--white) inset !important;
+					-webkit-text-fill-color: var(--main-90) !important;
+				}
+			}
+			.description {
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(20 / 16 * 1rem);
+				color: var(--main-80);
+				&:-webkit-autofill {
+					-webkit-box-shadow: 0 0 0 30px var(--white) inset !important;
+					-webkit-text-fill-color: var(--main-80) !important;
+				}
+			}
+			.optionWrapper {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				.option {
+					width: min-content;
+					height: fit-content;
+					position: relative;
+					cursor: default;
+					border: 1px solid var(--main-10);
+					box-shadow: var(--boxShadow-xs);
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					padding: 4px 8px;
+					border-radius: 6px;
+					background-color: var(--main-5);
+					span {
+						margin-left: 4px;
+						font-size: calc(12 / 16 * 1rem);
+						font-weight: 400;
+						line-height: calc(18 / 16 * 1rem);
+						width: max-content;
+					}
+					.selectedTags {
+						display: flex;
+						align-items: center;
+						gap: 4px;
+
+						.tagPills {
+							display: flex;
+							align-items: center;
+
+							.tagPill {
+								width: 10px;
+								height: 10px;
+								border-radius: 50%;
+
+								&:not(:first-child) {
+									margin-left: -5px;
+								}
+							}
+						}
+
+						span {
+							margin-left: 0;
+						}
+					}
+				}
+			}
+		}
+		.actions {
+			margin: 0 -28px;
+			width: calc(100% + 56px);
+			display: flex;
+			justify-content: flex-end;
+			border-top: 1px solid var(--main-10);
+			padding: 16px 28px 0;
+
+			.rightActions {
+				display: flex;
+				gap: 16px;
+			}
+
+			button {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				padding: 8px 16px;
+				border-radius: 8px;
+				box-shadow: var(--boxShadow-xs);
+				border: 1px solid var(--main-5);
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(20 / 16 * 1rem);
+			}
+			.cancelButton {
+				background-color: var(--lightBlue);
+			}
+			.createButton {
+				background-color: var(--orange);
+				color: var(--whiteSpecial);
+
+				&:disabled {
+					opacity: 0.7;
+					cursor: not-allowed;
+				}
+			}
+		}
+	}
+}

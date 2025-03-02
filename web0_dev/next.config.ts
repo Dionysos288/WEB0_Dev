@@ -14,6 +14,12 @@ const nextConfig: NextConfig = {
 				port: '',
 				pathname: '/**',
 			},
+			{
+				protocol: 'https',
+				hostname: 'pub-fd01615382d74cf9899aac2d87560049.r2.dev',
+				port: '',
+				pathname: '/**',
+			},
 		],
 		dangerouslyAllowSVG: true,
 		contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

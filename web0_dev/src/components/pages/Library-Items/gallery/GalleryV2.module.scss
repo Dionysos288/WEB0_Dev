@@ -3,15 +3,26 @@
 	align-items: center;
 	grid-template-columns: 1fr 0.1fr;
 	gap: 30px;
+	position: relative;
+
 	.imgWrapper {
 		position: relative;
-
 		width: 100%;
+		height: 80vh;
 		aspect-ratio: 15/10;
 		border-radius: 16px;
 		overflow: hidden;
 		border: 1px solid var(--main-5);
 		box-shadow: var(--boxShadow-sm);
+		cursor: pointer;
+
+		&.portrait {
+			aspect-ratio: 10/15;
+			width: 100%;
+			height: 80vh;
+			margin: 0 auto;
+		}
+
 		.abs {
 			padding: 0 12px;
 			width: 100%;
@@ -24,12 +35,15 @@
 			transform: translateY(-50%);
 			.click {
 				padding: 4px;
+				z-index: 110;
 			}
 		}
+
 		img {
-			object-fit: cover;
+			object-fit: contain;
 		}
 	}
+
 	.gallery {
 		display: flex;
 		flex-direction: column;
@@ -47,8 +61,72 @@
 				object-fit: cover;
 			}
 		}
+
 		.active {
 			border: 2px solid rgba(200, 90, 20, 0.6);
+		}
+	}
+
+	.fullViewOverlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.8);
+		z-index: 1000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.fullViewContent {
+			position: relative;
+			width: 90vw;
+			height: 90vh;
+
+			.closeButton {
+				position: absolute;
+				top: 20px;
+				right: 20px;
+				z-index: 1010;
+
+				width: 40px;
+				height: 40px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+			}
+
+			.fullViewImageContainer {
+				position: relative;
+				width: 100%;
+				height: 100%;
+			}
+
+			.fullViewNavigation {
+				position: absolute;
+				bottom: 20px;
+				left: 50%;
+				transform: translateX(-50%);
+				display: flex;
+				gap: 20px;
+
+				button {
+					background-color: rgba(255, 255, 255, 0.3);
+					border-radius: 50%;
+					width: 50px;
+					height: 50px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					cursor: pointer;
+
+					&:hover {
+						background-color: rgba(255, 255, 255, 0.5);
+					}
+				}
+			}
 		}
 	}
 }

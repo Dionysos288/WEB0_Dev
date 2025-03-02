@@ -22,7 +22,6 @@ import SortArrowsDownUp from '@/svgs/SortArrowsDownUp';
 import Search from '@/svgs/Search';
 import CloseCircleFilled from '@/svgs/Close-Circle-Filled';
 import AddLibraryPopup from '@/components/pages/library/AddLibraryPopup';
-
 interface FilterBarProps {
 	title?: string;
 	search?: boolean;

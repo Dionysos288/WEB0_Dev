@@ -25,9 +25,9 @@ const page = async ({ params }: { params: { item: string } }) => {
 	});
 	if (libraryItem) {
 		if (libraryItem.component === 'imageV1') {
-			return <ImageV1Page />;
+			return <ImageV1Page item={libraryItem} />;
 		} else if (libraryItem.component === 'imageV2') {
-			return <ImageV2Page />;
+			return <ImageV2Page item={libraryItem} />;
 		} else if (libraryItem.component === 'color') {
 			return <ColorPage />;
 		} else if (libraryItem.component === 'codefull') {

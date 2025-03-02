@@ -2,7 +2,7 @@
 
 import { ExtendedLibrary, SortOptions } from '@/components/types/types';
 import prisma from '@/lib/db';
-import { Prisma } from '@prisma/client';
+import { libraryComponent, Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 async function updateFilterLibrary({
@@ -217,30 +217,56 @@ const getCategories = async (libraryTypeId: string, organizationId: string) => {
 const createLibrary = async ({
 	title,
 	description,
-	url,
+
 	libraryTypeId,
 	categoryId,
 	component = 'codeSplit',
 	tags = [],
 	projectId,
 	organizationId,
+	imageUrls = [],
+	colors = [],
+	codeFiles = {},
 }: {
 	title: string;
 	description?: string;
-	url?: string;
 	libraryTypeId: string;
 	categoryId: string;
-	component?: 'imageV1' | 'imageV2' | 'color' | 'codefull' | 'codeSplit';
+	component?: libraryComponent;
 	tags?: string[];
 	projectId?: string;
 	organizationId: string;
+	imageUrls?: string[];
+	colors?: Array<[string, string]>;
+	codeFiles?: Record<string, string>;
 }) => {
 	try {
+		// Prepare metadata based on component type
+		const metadata: Record<string, unknown> = {};
+
+		// Handle code files for code components
+		if (
+			['codefull', 'codeSplit', 'codeCompiler'].includes(component) &&
+			Object.keys(codeFiles).length > 0
+		) {
+			metadata.codeFiles = codeFiles;
+		}
+
+		// Handle image URLs for image components
+		if (['imageV1', 'imageV2'].includes(component) && imageUrls.length > 0) {
+			metadata.images = imageUrls;
+		}
+
+		// Handle color data for color palette component
+		if (component === 'color' && colors.length > 0) {
+			metadata.colors = colors;
+		}
+
 		const newLibrary = await prisma.library.create({
 			data: {
 				title,
 				description: description || '',
-				url: url || '',
+
 				libraryTypeId,
 				categoryId,
 				component,
@@ -248,12 +274,11 @@ const createLibrary = async ({
 				projectId,
 				organizationId,
 				favorite: false,
-			},
-			include: {
-				Category: true,
+				metadata: metadata,
 			},
 		});
 
+		revalidatePath('/library');
 		return { success: true, library: newLibrary };
 	} catch (error) {
 		console.error('Create library error:', error);

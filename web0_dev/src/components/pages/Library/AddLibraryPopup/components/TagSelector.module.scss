@@ -1,0 +1,141 @@
+.inputs {
+	z-index: 1001;
+	top: calc(100% + 6px);
+	left: 0;
+	width: max-content;
+	min-width: 240px;
+	background-color: var(--white);
+	border-radius: 6px;
+	padding: 6px 4px;
+	position: absolute;
+	border: 1px solid var(--main-10);
+	box-shadow: var(--boxShadow-sm);
+	input {
+		border: 0px solid;
+		background-color: transparent;
+		padding: 0 8px;
+		&:focus {
+			outline: none;
+		}
+
+		&::placeholder {
+			color: var(--main-40);
+		}
+		font-size: calc(14 / 16 * 1rem);
+		font-weight: 400;
+		line-height: calc(20 / 16 * 1rem);
+		color: var(--main-80);
+		&:-webkit-autofill {
+			-webkit-box-shadow: 0 0 0 30px var(--white) inset !important;
+			-webkit-text-fill-color: var(--main-80) !important;
+		}
+	}
+	.line {
+		height: 1px;
+		background-color: var(--main-10);
+		margin: 0 -4px;
+		width: calc(100% + 8px);
+	}
+	.options {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		max-height: 250px;
+		overflow-y: auto;
+
+		&::-webkit-scrollbar {
+			width: 6px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: var(--main-20);
+			border-radius: 3px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		.optionItem {
+			display: flex;
+			justify-content: space-between;
+			gap: 50px;
+			align-items: center;
+			border-radius: 4px;
+			padding: 6px 8px;
+			text-align: left;
+			background: none;
+			border: none;
+			cursor: pointer;
+
+			&:focus {
+				outline: none;
+				background-color: var(--main-10);
+			}
+
+			.leftSide {
+				display: flex;
+				align-items: center;
+				.iconCombo {
+					margin-right: 4px;
+				}
+				.iconNoCombo {
+					margin-right: 4px;
+				}
+				span {
+					font-size: calc(14 / 16 * 1rem);
+					font-weight: 400;
+					line-height: calc(18 / 16 * 1rem);
+				}
+				.checkbox {
+					width: 14px;
+					height: 14px;
+					cursor: pointer;
+					margin-right: 8px;
+					appearance: none;
+					border: 1px solid var(--main-20);
+					border-radius: 4px;
+					padding: 0;
+					position: relative;
+
+					&:checked {
+						background-color: var(--orange-90);
+						border-color: var(--orange-90);
+					}
+
+					&:checked::after {
+						content: '';
+						position: absolute;
+						left: 4px;
+						top: 1px;
+						width: 4px;
+						height: 7px;
+						border: solid white;
+						border-width: 0 1.5px 1.5px 0;
+						transform: rotate(45deg);
+					}
+				}
+			}
+		}
+		.active {
+			background-color: var(--main-10);
+		}
+
+		.noResults {
+			padding: 12px;
+			text-align: center;
+			color: var(--main-60);
+			font-size: calc(14 / 16 * 1rem);
+		}
+
+		.createNewTag {
+			width: 100%;
+			text-align: left;
+
+			strong {
+				color: var(--orange-90);
+				font-weight: 500;
+			}
+		}
+	}
+}

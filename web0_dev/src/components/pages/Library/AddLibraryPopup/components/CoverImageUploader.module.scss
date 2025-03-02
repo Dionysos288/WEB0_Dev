@@ -1,0 +1,74 @@
+.coverImageUploader {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin: 16px 0;
+	padding: 16px;
+	border-radius: 8px;
+	background-color: var(--main-5);
+	border: 1px solid var(--main-10);
+
+	.previewContainer {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		.imagePreview {
+			position: relative;
+			width: 100%;
+			height: 200px;
+			border-radius: 8px;
+			overflow: hidden;
+			border: 1px solid var(--main-10);
+		}
+
+		.removeButton {
+			align-self: flex-end;
+			padding: 6px 12px;
+			border-radius: 4px;
+			background-color: var(--main-10);
+			color: var(--main-80);
+			font-size: calc(12 / 16 * 1rem);
+			transition: all 0.2s ease;
+
+			&:hover {
+				background-color: var(--main-20);
+			}
+		}
+	}
+
+	.uploadContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		padding: 16px;
+		background-color: var(--white);
+		border-radius: 8px;
+		border: 1px dashed var(--main-20);
+
+		.uploadButton {
+			padding: 8px 16px;
+			border-radius: 6px;
+			background-color: var(--orange-90);
+			color: var(--whiteSpecial);
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 500;
+			transition: all 0.2s ease;
+
+			&:hover {
+				background-color: var(--orange);
+			}
+		}
+
+		.uploadHint {
+			margin: 0;
+			font-size: calc(12 / 16 * 1rem);
+			color: var(--main-60);
+		}
+	}
+
+	.fileInput {
+		display: none;
+	}
+}

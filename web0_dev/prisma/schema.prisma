@@ -62,6 +62,7 @@ enum libraryComponent {
   color
   codefull
   codeSplit
+  codeCompiler
 }
 
 model LibraryType {
@@ -78,21 +79,23 @@ model Library {
   id            String  @id @default(cuid())
   title         String
   description   String?
-  url           String?
   libraryTypeId String
 
-  component      libraryComponent
-  type           LibraryType      @relation(fields: [libraryTypeId], references: [id])
-  favorite       Boolean          @default(false)
-  tags           String[]
+  component libraryComponent
+  type      LibraryType      @relation(fields: [libraryTypeId], references: [id])
+  favorite  Boolean          @default(false)
+  tags      String[]
+  metadata  Json?            @default("{}")
+  content   String?          @db.Text
+
   organizationId String
-  organization   Organization     @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
   projectId      String?
-  Project        Project?         @relation(fields: [projectId], references: [id])
+  Project        Project?     @relation(fields: [projectId], references: [id])
   categoryId     String?
-  Category       Category?        @relation(fields: [categoryId], references: [id])
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  Category       Category?    @relation(fields: [categoryId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
 model Category {
@@ -118,14 +121,16 @@ model Task {
 
   title          String
   description    String?
-  projectId      String
-  project        Project          @relation(fields: [projectId], references: [id])
+  memberId       String?
+  member         Member?          @relation(fields: [memberId], references: [id])
+  projectId      String?
+  project        Project?         @relation(fields: [projectId], references: [id])
   priority       projectPriority?
   status         TaskStatus
   Organization   Organization?    @relation(fields: [organizationId], references: [id])
   organizationId String?
   dueDate        DateTime?
-  estimatedTime  Int              @default(0)
+  estimatedTime  Int?
 
   timeLogs  TimeLog[]
   labels    Label[]
@@ -330,6 +335,7 @@ model Organization {
   TimeLog     TimeLog[]
   Cycle       Cycle[]
   taskCounter Int          @default(0)
+  libraryTags String[]     @default([])
   Comment     Comment[]
   Activity    Activity[]
 
@@ -350,6 +356,7 @@ model Member {
   activities       Activity[]
   comments         Comment[]
   timeLogs         TimeLog[]
+  Task             Task[]
 
   @@map("member")
 }

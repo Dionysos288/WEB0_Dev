@@ -1,0 +1,135 @@
+.componentSelector {
+	--spacing: 8px;
+	--spacingNeg: -8px;
+
+	border-radius: 8px;
+	display: grid;
+	background-color: var(--lightBlue);
+	padding: 12px 8px 8px 12px;
+	border: 1px solid var(--main-10);
+	box-shadow: var(--boxShadow-sm);
+	margin-bottom: 20px;
+
+	.topPart {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-bottom: 10px;
+
+		&:after {
+			position: absolute;
+			bottom: 0;
+			left: var(--spacingNeg);
+			content: '';
+			height: 1px;
+			width: calc(100% + (var(--spacing) * 2));
+			background-color: var(--main-10);
+		}
+
+		h3 {
+			transform: translateY(1px);
+			height: fit-content;
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 500;
+			line-height: calc(20 / 16 * 1rem);
+		}
+
+		.categoryTabs {
+			display: flex;
+			gap: 8px;
+
+			.categoryTab {
+				padding: 4px 12px;
+				border-radius: 4px;
+				font-size: calc(12 / 16 * 1rem);
+				font-weight: 500;
+				background-color: var(--main-10);
+				color: var(--main-75);
+				transition: all 0.2s ease;
+
+				&:hover {
+					background-color: var(--main-15);
+				}
+
+				&.active {
+					background-color: var(--orange-90);
+					color: var(--whiteSpecial);
+				}
+			}
+		}
+	}
+
+	.componentOptions {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding-top: 8px;
+		max-height: 300px;
+		overflow-y: auto;
+
+		&::-webkit-scrollbar {
+			width: 6px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: var(--main-20);
+			border-radius: 3px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		.componentOption {
+			display: flex;
+			align-items: flex-start;
+			gap: 12px;
+			padding: 12px;
+			border-radius: 8px;
+			background-color: var(--white);
+			border: 1px solid var(--main-10);
+			cursor: pointer;
+			transition: all 0.2s ease;
+
+			&:hover {
+				border-color: var(--main-20);
+				box-shadow: var(--boxShadow-xs);
+			}
+
+			&.selected {
+				border-color: var(--orange-90);
+				background-color: var(--orange-5);
+			}
+
+			.optionIcon {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 40px;
+				height: 40px;
+				border-radius: 8px;
+				background-color: var(--main-5);
+				border: 1px solid var(--main-10);
+			}
+
+			.optionContent {
+				flex: 1;
+
+				h4 {
+					margin: 0 0 4px 0;
+					font-size: calc(14 / 16 * 1rem);
+					font-weight: 500;
+					color: var(--main-90);
+				}
+
+				p {
+					margin: 0;
+					font-size: calc(12 / 16 * 1rem);
+					line-height: 1.4;
+					color: var(--main-65);
+				}
+			}
+		}
+	}
+}

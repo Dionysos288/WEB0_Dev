@@ -1,31 +1,120 @@
 .galleryWrapper {
+	.loading {
+		text-align: center;
+		padding: 2rem;
+		font-size: 1.2rem;
+		color: var(--main-7);
+	}
+
 	.imgWrapper {
 		position: relative;
-
 		width: 100%;
-		aspect-ratio: 15/10;
+		aspect-ratio: 16/10;
 		border-radius: 16px;
 		overflow: hidden;
 		border: 1px solid var(--main-5);
 		box-shadow: var(--boxShadow-sm);
+		cursor: pointer;
+
 		img {
 			object-fit: cover;
 		}
 	}
+
 	.gallery {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 28px;
+
+		@media (max-width: 768px) {
+			grid-template-columns: 1fr;
+		}
+
 		.galleryItem {
 			position: relative;
-			height: 230px;
+			height: 50vh;
 			border-radius: 16px;
 			overflow: hidden;
 			border: 1px solid var(--main-5);
 			box-shadow: var(--boxShadow-sm);
+			cursor: pointer;
+
 			img {
 				object-fit: cover;
 			}
 		}
+	}
+
+	// Landscape-optimized layout
+	.landscapeGallery {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(700px, 1fr));
+		gap: 28px;
+
+		@media (max-width: 768px) {
+			grid-template-columns: 1fr;
+		}
+
+		.landscapeItem {
+			position: relative;
+			aspect-ratio: 16/10;
+			border-radius: 16px;
+			overflow: hidden;
+			border: 1px solid var(--main-5);
+			box-shadow: var(--boxShadow-sm);
+			cursor: pointer;
+
+			img {
+				object-fit: cover;
+			}
+		}
+	}
+
+	.portraitGallery {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+		gap: 28px;
+
+		@media (max-width: 768px) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@media (max-width: 480px) {
+			grid-template-columns: 1fr;
+		}
+
+		.portraitItem {
+			position: relative;
+			aspect-ratio: 3/4;
+			border-radius: 16px;
+			overflow: hidden;
+			border: 1px solid var(--main-5);
+			box-shadow: var(--boxShadow-sm);
+			cursor: pointer;
+
+			img {
+				object-fit: cover;
+			}
+		}
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes zoomIn {
+	from {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
 	}
 }
