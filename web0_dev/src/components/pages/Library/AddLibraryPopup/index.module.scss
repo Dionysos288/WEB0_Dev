@@ -14,18 +14,13 @@
 
 	.popup {
 		position: relative;
-		min-width: 550px;
-		max-width: 650px;
-		max-height: 90vh;
-		display: grid;
-		grid-template-rows: auto 1fr auto;
-		row-gap: 28px;
+		min-width: 60vw;
+
 		background-color: var(--white);
 		border-radius: 16px;
 		padding: 16px 28px;
 		border: 1px solid var(--main-10);
 		box-shadow: var(--boxShadow-md);
-		overflow: hidden;
 
 		.dismissButton {
 			position: absolute;
@@ -46,6 +41,26 @@
 			font-weight: 400;
 			line-height: calc(20 / 16 * 1rem);
 			color: var(--main-60);
+		}
+
+		.formWrapper {
+			margin: 0 -24px;
+			padding: 14px 24px 0;
+			max-height: 80vh;
+			overflow-y: auto;
+
+			&::-webkit-scrollbar {
+				width: 8px;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background-color: var(--main-20);
+				border-radius: 16px;
+			}
+
+			&::-webkit-scrollbar-track {
+				background: transparent;
+			}
 		}
 
 		.inputWrapper {
@@ -136,9 +151,77 @@
 							margin-left: 0;
 						}
 					}
+					.coverImageOption {
+						position: relative;
+						width: 100%;
+
+						.coverImageButton {
+							display: flex;
+							align-items: center;
+							gap: 4px;
+							background: none;
+							border: none;
+							padding: 0;
+
+							span {
+								margin-left: 4px;
+								font-size: calc(12 / 16 * 1rem);
+								font-weight: 400;
+								line-height: calc(18 / 16 * 1rem);
+								width: max-content;
+							}
+						}
+
+						.coverImageModal {
+							position: absolute;
+							top: calc(100% + 8px);
+							left: -12px;
+							z-index: 1001;
+							width: 320px;
+							background-color: var(--white);
+							border-radius: 8px;
+							border: 1px solid var(--main-10);
+							box-shadow: var(--boxShadow-md);
+							padding: 8px;
+						}
+					}
 				}
 			}
 		}
+		.line {
+			width: 100%;
+			height: 1px;
+			background-color: var(--main-10);
+		}
+		.content {
+			border: 0px solid;
+			background-color: transparent;
+			width: 100%;
+			min-height: 18vh;
+			overflow: hidden;
+			margin-bottom: 16px;
+
+			&:focus {
+				outline: none;
+			}
+
+			&::placeholder {
+				color: var(--main-40);
+			}
+
+			resize: none;
+
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 400;
+			line-height: calc(20 / 16 * 1rem);
+			color: var(--main-80);
+
+			&:-webkit-autofill {
+				-webkit-box-shadow: 0 0 0 30px var(--white) inset !important;
+				-webkit-text-fill-color: var(--main-80) !important;
+			}
+		}
+
 		.actions {
 			margin: 0 -28px;
 			width: calc(100% + 56px);
@@ -146,6 +229,7 @@
 			justify-content: flex-end;
 			border-top: 1px solid var(--main-10);
 			padding: 16px 28px 0;
+			flex-shrink: 0;
 
 			.rightActions {
 				display: flex;

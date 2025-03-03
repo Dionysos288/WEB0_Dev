@@ -5,6 +5,7 @@ export interface AddLibraryPopupProps {
 	onClose: () => void;
 	categories: ExtendedCategory[];
 	organizationId: string;
+	libraryTypeId: string;
 	projectId?: string;
 	libraryTags?: string[];
 }

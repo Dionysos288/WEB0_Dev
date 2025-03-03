@@ -7,7 +7,7 @@ interface ImageProps {
 	style?: React.CSSProperties;
 }
 
-const Image: React.FC<ImageProps> = ({
+const ImageIcon: React.FC<ImageProps> = ({
 	width = '24',
 	height = '24',
 	fill = 'currentColor',
@@ -30,4 +30,4 @@ const Image: React.FC<ImageProps> = ({
 	);
 };
 
-export default Image;
+export default ImageIcon;

@@ -1,108 +1,148 @@
-.inputs {
-	z-index: 1001;
-	top: calc(100% + 6px);
-	left: 0;
-	width: max-content;
-	min-width: 240px;
-	background-color: var(--white);
-	border-radius: 6px;
-	padding: 6px 4px;
-	position: absolute;
+.categorySelector {
+	--spacing: 8px;
+	--spacingNeg: -8px;
+
+	border-radius: 8px;
+	display: flex;
+	flex-direction: column;
+	background-color: var(--lightBlue);
+	padding: 12px 8px 8px 12px;
 	border: 1px solid var(--main-10);
 	box-shadow: var(--boxShadow-sm);
-	input {
-		border: 0px solid;
-		background-color: transparent;
-		padding: 0 8px;
-		&:focus {
-			outline: none;
-		}
+	margin: 16px 0;
+	position: relative;
+	transition: opacity 0.15s ease, max-height 0.3s ease;
+	flex-shrink: 0;
 
-		&::placeholder {
-			color: var(--main-40);
-		}
-		font-size: calc(14 / 16 * 1rem);
-		font-weight: 400;
-		line-height: calc(20 / 16 * 1rem);
-		color: var(--main-80);
-		&:-webkit-autofill {
-			-webkit-box-shadow: 0 0 0 30px var(--white) inset !important;
-			-webkit-text-fill-color: var(--main-80) !important;
-		}
-	}
-	.line {
-		height: 1px;
-		background-color: var(--main-10);
-		margin: 0 -4px;
-		width: calc(100% + 8px);
-	}
-	.options {
+	.topPart {
 		display: flex;
-		flex-direction: column;
-		gap: 2px;
-		max-height: 250px;
-		overflow-y: auto;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 12px;
 
-		&::-webkit-scrollbar {
-			width: 6px;
+		h3 {
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 500;
+			color: var(--main-90);
+			margin: 0;
 		}
 
-		&::-webkit-scrollbar-thumb {
-			background-color: var(--main-20);
-			border-radius: 3px;
-		}
+		.closeButton {
+			color: var(--main-65);
+			transition: color 0.2s ease;
 
-		&::-webkit-scrollbar-track {
-			background: transparent;
+			&:hover {
+				color: var(--main-75);
+			}
 		}
+	}
 
-		.optionItem {
-			display: flex;
-			justify-content: space-between;
-			gap: 50px;
-			align-items: center;
-			border-radius: 4px;
-			padding: 6px 8px;
-			text-align: left;
-			background: none;
+	.searchWrapper {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 12px;
+		background-color: var(--white);
+		border: 1px solid var(--main-10);
+		border-radius: 6px;
+		margin-bottom: 12px;
+
+		.searchInput {
 			border: none;
-			cursor: pointer;
+			background: none;
+			width: 100%;
+			font-size: calc(14 / 16 * 1rem);
+			color: var(--main-90);
 
 			&:focus {
 				outline: none;
-				background-color: var(--main-10);
 			}
 
-			.leftSide {
-				display: flex;
-				align-items: center;
-
-				.colorBadge {
-					width: 12px;
-					height: 12px;
-					border-radius: 3px;
-					flex-shrink: 0;
-					margin-right: 8px;
-				}
-
-				span {
-					font-size: calc(14 / 16 * 1rem);
-					font-weight: 400;
-					line-height: calc(18 / 16 * 1rem);
-				}
-			}
-
-			.rightSide {
-				display: flex;
-				align-items: center;
+			&::placeholder {
+				color: var(--main-40);
 			}
 		}
-		.active {
-			background-color: var(--main-10);
+	}
+
+	.categoryList {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding-right: 4px;
+
+		.categoryTreeItem {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+
+			.categoryItem {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 8px 12px;
+				border-radius: 6px;
+				background-color: var(--white);
+				border: 1px solid var(--main-10);
+				transition: all 0.2s ease;
+				cursor: pointer;
+				width: 100%;
+				text-align: left;
+
+				&:hover {
+					background-color: var(--main-5);
+					border-color: var(--main-20);
+				}
+
+				&.selected {
+					background-color: var(--orange-5);
+					border-color: var(--orange-20);
+
+					.leftSide span {
+						color: var(--orange-90);
+					}
+				}
+
+				.leftSide {
+					display: flex;
+					align-items: center;
+					gap: 8px;
+
+					.expandButton {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						padding: 2px;
+						border-radius: 4px;
+						background: none;
+						border: none;
+						cursor: pointer;
+
+						&:hover {
+							background-color: var(--main-10);
+						}
+					}
+
+					.indent {
+						width: 20px;
+					}
+
+					span {
+						font-size: calc(14 / 16 * 1rem);
+						color: var(--main-90);
+					}
+				}
+			}
+
+			.children {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				margin-left: 0;
+			}
 		}
 
 		.noResults {
-			padding: 12px;
+			padding: 16px;
 			text-align: center;
 			color: var(--main-60);
 			font-size: calc(14 / 16 * 1rem);

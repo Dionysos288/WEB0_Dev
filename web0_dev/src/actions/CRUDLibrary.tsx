@@ -213,14 +213,14 @@ const getCategories = async (libraryTypeId: string, organizationId: string) => {
 	}
 };
 
-// Create a new library item
 const createLibrary = async ({
 	title,
 	description,
-
+	content,
+	coverImageUrl,
 	libraryTypeId,
 	categoryId,
-	component = 'codeSplit',
+	component,
 	tags = [],
 	projectId,
 	organizationId,
@@ -230,9 +230,11 @@ const createLibrary = async ({
 }: {
 	title: string;
 	description?: string;
+	content?: string;
+	coverImageUrl: string;
 	libraryTypeId: string;
 	categoryId: string;
-	component?: libraryComponent;
+	component: libraryComponent;
 	tags?: string[];
 	projectId?: string;
 	organizationId: string;
@@ -241,10 +243,8 @@ const createLibrary = async ({
 	codeFiles?: Record<string, string>;
 }) => {
 	try {
-		// Prepare metadata based on component type
 		const metadata: Record<string, unknown> = {};
 
-		// Handle code files for code components
 		if (
 			['codefull', 'codeSplit', 'codeCompiler'].includes(component) &&
 			Object.keys(codeFiles).length > 0
@@ -252,21 +252,22 @@ const createLibrary = async ({
 			metadata.codeFiles = codeFiles;
 		}
 
-		// Handle image URLs for image components
-		if (['imageV1', 'imageV2'].includes(component) && imageUrls.length > 0) {
+		if (
+			['imageV1', 'imageV2', 'color'].includes(component) &&
+			imageUrls.length > 0
+		) {
 			metadata.images = imageUrls;
 		}
 
-		// Handle color data for color palette component
 		if (component === 'color' && colors.length > 0) {
 			metadata.colors = colors;
 		}
+		metadata.coverImageUrl = coverImageUrl;
 
 		const newLibrary = await prisma.library.create({
 			data: {
 				title,
-				description: description || '',
-
+				description: description,
 				libraryTypeId,
 				categoryId,
 				component,
@@ -275,8 +276,31 @@ const createLibrary = async ({
 				organizationId,
 				favorite: false,
 				metadata: metadata,
+				content: content,
 			},
 		});
+		if (tags && tags.length > 0) {
+			const organization = await prisma.organization.findUnique({
+				where: { id: organizationId },
+				select: { libraryTags: true },
+			});
+
+			if (organization) {
+				const existingTags = organization.libraryTags || [];
+				const newTags = tags.filter((tag) => !existingTags.includes(tag));
+
+				if (newTags.length > 0) {
+					await prisma.organization.update({
+						where: { id: organizationId },
+						data: {
+							libraryTags: {
+								set: [...existingTags, ...newTags],
+							},
+						},
+					});
+				}
+			}
+		}
 
 		revalidatePath('/library');
 		return { success: true, library: newLibrary };

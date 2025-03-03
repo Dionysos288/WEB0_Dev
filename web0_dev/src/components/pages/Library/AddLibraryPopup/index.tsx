@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './index.module.scss';
 import ClickOutsideWrapper from '@/components/general/CllickOutsideWrapper';
 import { createLibrary } from '@/actions/CRUDLibrary';
@@ -8,8 +8,6 @@ import Dismiss from '@/svgs/Dismiss';
 import { AddLibraryPopupProps, LibraryTypeOption } from './types';
 import { DEFAULT_FILE_TEMPLATES } from './constants';
 import { uploadMultipleToR2 } from '@/utils/cloudflareR2';
-
-// Import SVG icons
 import CodeSplit from '@/svgs/CodeSplit';
 import CodeFull from '@/svgs/CodeFull';
 import CodeCompiler from '@/svgs/CodeCompiler';
@@ -19,28 +17,32 @@ import ColorPalette from '@/svgs/ColorPalette';
 import Label from '@/svgs/Label';
 import Project from '@/svgs/Project';
 import Category from '@/svgs/Category';
-import Image from '@/svgs/Image';
+import ImageIcon from '@/svgs/Image';
 import LibraryComponentSelector from './components/LibraryComponentSelector';
 import CategorySelector from './components/CategorySelector';
 import CoverImageUploader from './components/CoverImageUploader';
 import TagSelector from './components/TagSelector';
-
-const AddLibraryPopup: React.FC<AddLibraryPopupProps> = ({
+import { libraryComponent } from '@prisma/client';
+import Spacing from '@/components/general/Spacing';
+import { toast } from 'sonner';
+const AddLibraryPopup = ({
 	isOpen,
 	onClose,
 	categories,
 	organizationId,
+	libraryTypeId,
 	projectId,
 	libraryTags = [],
-}) => {
+}: AddLibraryPopupProps) => {
 	const router = useRouter();
 
 	// Form data
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
+	const [content, setContent] = useState('');
 	const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
 	const [selectedComponentType, setSelectedComponentType] =
-		useState<LibraryTypeOption['id']>('codeSplit');
+		useState<LibraryTypeOption['id']>('');
 	const [activeCategory, setActiveCategory] = useState<'code' | 'design'>(
 		'code'
 	);
@@ -60,15 +62,34 @@ const AddLibraryPopup: React.FC<AddLibraryPopupProps> = ({
 	// Add a loading state
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	// Add upload progress state
-	const [uploadProgress, setUploadProgress] = useState(0);
-
 	// Tags state
 	const [selectedTags, setSelectedTags] = useState<string[]>([]);
 	const [isTagOpen, setIsTagOpen] = useState(false);
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 	const [isComponentTypeOpen, setIsComponentTypeOpen] = useState(false);
 	const [availableTags, setAvailableTags] = useState<string[]>(libraryTags);
+
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+	const adjustTextareaHeight = () => {
+		if (textareaRef.current) {
+			textareaRef.current.style.height = 'auto';
+
+			if (
+				!isComponentTypeOpen &&
+				!isCoverImageUploaderVisible &&
+				textareaRef.current.scrollHeight < 300
+			) {
+				textareaRef.current.style.height = '300px';
+			} else {
+				textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+			}
+		}
+	};
+
+	useEffect(() => {
+		adjustTextareaHeight();
+	}, [content, isComponentTypeOpen, isCoverImageUploaderVisible]);
 
 	// Library component type options
 	const libraryTypeOptions: LibraryTypeOption[] = [
@@ -127,8 +148,10 @@ const AddLibraryPopup: React.FC<AddLibraryPopupProps> = ({
 		if (!isOpen) {
 			setTitle('');
 			setDescription('');
+			setContent('');
 			setSelectedCategoryId('');
-			setSelectedComponentType('codeSplit');
+			setSelectedComponentType('');
+			setIsComponentTypeOpen(false);
 			setActiveCategory('code');
 			setSelectedImages([]);
 			setExtractedColors([]);
@@ -171,12 +194,6 @@ const AddLibraryPopup: React.FC<AddLibraryPopupProps> = ({
 		} else {
 			return (
 				<>
-					<div className={styles.tagPills}>
-						<div
-							className={styles.tagPill}
-							style={{ backgroundColor: 'var(--orange-90)' }}
-						/>
-					</div>
 					<span style={{ color: 'var(--main)' }}>
 						{selectedTags.length === 1
 							? selectedTags[0]
@@ -210,136 +227,133 @@ const AddLibraryPopup: React.FC<AddLibraryPopupProps> = ({
 
 	const getCoverImageDisplay = () => {
 		return (
-			<>
-				<span style={{ color: coverImage ? 'var(--main)' : 'var(--main-65)' }}>
-					Cover Image
-				</span>
-			</>
+			<div className={styles.coverImageOption}>
+				<button
+					className={styles.coverImageButton}
+					onClick={() =>
+						setIsCoverImageUploaderVisible(!isCoverImageUploaderVisible)
+					}
+				>
+					<ImageIcon
+						width="16"
+						height="16"
+						fill={coverImage ? 'var(--main)' : 'var(--main-65)'}
+					/>
+					<span
+						style={{ color: coverImage ? 'var(--main)' : 'var(--main-65)' }}
+					>
+						Cover Image
+					</span>
+				</button>
+				{isCoverImageUploaderVisible && (
+					<ClickOutsideWrapper
+						onClose={() => setIsCoverImageUploaderVisible(false)}
+					>
+						<div className={styles.coverImageModal}>
+							<CoverImageUploader
+								setCoverImage={setCoverImage}
+								coverImage={coverImage}
+							/>
+						</div>
+					</ClickOutsideWrapper>
+				)}
+			</div>
 		);
 	};
 
 	const getComponentTypeColor = () => {
-		return 'var(--main)';
+		if (selectedComponentType) {
+			return 'var(--main)';
+		} else {
+			return 'var(--main-65)';
+		}
 	};
 
 	const getComponentTypeText = () => {
 		const option = libraryTypeOptions.find(
 			(opt) => opt.id === selectedComponentType
 		);
-		return option ? option.name : 'Select Component Type';
+		return option ? option.name : 'Type';
 	};
 
 	const handleAddNewTag = (tag: string) => {
-		// First, add the tag client-side
 		if (!availableTags.includes(tag)) {
 			setAvailableTags([...availableTags, tag]);
 		}
-		// The server-side update will happen when the form is submitted via createLibrary action
 	};
 
 	const handleSubmit = async () => {
-		if (!organizationId || !title || !selectedComponentType) return;
+		if (
+			!organizationId ||
+			!title ||
+			!selectedComponentType ||
+			!coverImage ||
+			!selectedCategoryId
+		) {
+			toast.error('Missing required fields');
+			console.error('Missing required fields');
+			return;
+		}
 
 		setIsSubmitting(true);
-		setUploadProgress(0);
 
 		try {
-			let imageUrls: string[] = [];
-			let colorData: { name: string; hex: string }[] = [];
-			let coverImageUrl: string | undefined;
+			let coverImageUrl = '';
 
-			// Handle cover image upload
 			if (coverImage) {
-				try {
-					const uploadResult = await uploadMultipleToR2(
-						[coverImage],
-						'library',
-						(progress) => {
-							setUploadProgress(progress * 0.3); // 30% of progress for cover image
-						}
-					);
+				const coverImageResult = await uploadMultipleToR2(
+					[coverImage],
+					'library'
+				);
 
-					// Handle the upload result safely
-					if (
-						uploadResult &&
-						typeof uploadResult === 'object' &&
-						'urls' in uploadResult &&
-						Array.isArray(uploadResult.urls)
-					) {
-						coverImageUrl = uploadResult.urls[0];
-					}
-				} catch (error) {
-					console.error('Error uploading cover image:', error);
+				if (
+					coverImageResult &&
+					Array.isArray(coverImageResult) &&
+					coverImageResult.length > 0
+				) {
+					coverImageUrl = coverImageResult[0];
 				}
 			}
 
-			// Handle image uploads for image-based components
-			if (
-				(selectedComponentType === 'imageV1' ||
-					selectedComponentType === 'imageV2') &&
-				selectedImages.length > 0
-			) {
-				try {
-					const uploadResult = await uploadMultipleToR2(
-						selectedImages,
-						'library',
-						(progress) => {
-							setUploadProgress(30 + progress * 0.7); // Remaining 70% of progress
-						}
-					);
+			let imageUrls: string[] = [];
 
-					// Handle the upload result safely
-					if (
-						uploadResult &&
-						typeof uploadResult === 'object' &&
-						'urls' in uploadResult &&
-						Array.isArray(uploadResult.urls)
-					) {
-						imageUrls = uploadResult.urls;
-					}
-				} catch (error) {
-					console.error('Error uploading images:', error);
-				}
+			if (selectedImages.length > 0) {
+				const imagesToUpload = selectedImages.slice(0, 15);
+
+				const imageUploadPromises = imagesToUpload.map((image) =>
+					uploadMultipleToR2([image], 'library')
+				);
+
+				const imageResults = await Promise.all(imageUploadPromises);
+				imageUrls = imageResults
+					.filter((result) => Array.isArray(result) && result.length > 0)
+					.map((result) => result[0]);
 			}
 
-			// Handle color palette data
-			if (selectedComponentType === 'color' && extractedColors.length > 0) {
-				colorData = extractedColors.map(([name, hex]) => ({ name, hex }));
-			}
-
-			// Create the library item with safe type handling
-			// This will also update the organization's libraryTags on the server side
 			const result = await createLibrary({
+				organizationId,
 				title,
 				description,
-				categoryId: selectedCategoryId || undefined,
-				componentType: selectedComponentType,
-				organizationId,
-				projectId: projectId || '',
-				codeFiles: Object.keys(codeFiles).length > 0 ? codeFiles : undefined,
-				imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
-				colorPalette: colorData.length > 0 ? colorData : undefined,
-				tags: selectedTags.length > 0 ? selectedTags : undefined,
+				content,
+				libraryTypeId,
+				component: selectedComponentType as libraryComponent,
 				coverImageUrl,
+				imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+				codeFiles: Object.keys(codeFiles).length > 0 ? codeFiles : undefined,
+				colors: extractedColors,
+				tags: selectedTags.length > 0 ? selectedTags : undefined,
+				categoryId: selectedCategoryId || '',
+				projectId: projectId,
 			});
 
-			if (result.error) {
-				console.error('Error creating library item:', result.error);
+			if (!result.success) {
+				console.error('Failed to create library item:', result.error);
 			} else {
-				// If we added new tags, update the organization's libraryTags
-				if (selectedTags.some((tag) => !libraryTags.includes(tag))) {
-					// This would be handled by the server action that updates the organization
-					console.log(
-						'New tags added:',
-						selectedTags.filter((tag) => !libraryTags.includes(tag))
-					);
-				}
-
 				router.refresh();
 				onClose();
 			}
 		} catch (error) {
-			console.error('Error in handleSubmit:', error);
+			console.error('Error creating library item:', error);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -357,116 +371,117 @@ const AddLibraryPopup: React.FC<AddLibraryPopupProps> = ({
 					<div>
 						<h2>New Library Item</h2>
 					</div>
-					<div className={styles.inputWrapper}>
-						<input
-							type="text"
-							placeholder="Library Title"
-							value={title}
-							onChange={(e) => setTitle(e.target.value)}
-							className={styles.header}
-						/>
-						<textarea
-							placeholder="Library Description"
-							value={description}
-							onChange={(e) => setDescription(e.target.value)}
-							className={styles.description}
-						/>
+					<Spacing space={14} />
+					<div className={styles.formWrapper}>
+						<div className={styles.inputWrapper}>
+							<input
+								type="text"
+								placeholder="Library Title"
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+								className={styles.header}
+							/>
+							<textarea
+								placeholder="Library Description"
+								value={description}
+								onChange={(e) => setDescription(e.target.value)}
+								className={styles.description}
+							/>
 
-						<div className={styles.optionWrapper}>
-							<div
-								className={styles.option}
-								onClick={() => setIsComponentTypeOpen(!isComponentTypeOpen)}
-							>
-								<Project
-									fill={getComponentTypeColor()}
-									width="16"
-									height="16"
-								/>
-								<span style={{ color: getComponentTypeColor() }}>
-									{getComponentTypeText()}
-								</span>
-							</div>
-
-							<div
-								className={styles.option}
-								onClick={() =>
-									setIsCoverImageUploaderVisible(!isCoverImageUploaderVisible)
-								}
-							>
-								<Image
-									fill={coverImage ? 'var(--main)' : 'var(--main-65)'}
-									width="16"
-									height="16"
-								/>
-								{getCoverImageDisplay()}
-							</div>
-
-							<div
-								className={styles.option}
-								onClick={() => setIsTagOpen(!isTagOpen)}
-							>
-								<Label
-									fill={
-										selectedTags.length > 0 ? 'var(--main)' : 'var(--main-65)'
-									}
-									width="16"
-									height="16"
-								/>
-								<div className={styles.selectedTags}>{getTagsDisplay()}</div>
-
-								{isTagOpen && (
-									<TagSelector
-										existingTags={availableTags}
-										selectedTags={selectedTags}
-										setSelectedTags={setSelectedTags}
-										onAddNewTag={handleAddNewTag}
-										isOpen={isTagOpen}
-										setIsOpen={setIsTagOpen}
+							<div className={styles.optionWrapper}>
+								<div
+									className={styles.option}
+									onClick={() => setIsComponentTypeOpen(!isComponentTypeOpen)}
+								>
+									<Project
+										fill={getComponentTypeColor()}
+										width="16"
+										height="16"
 									/>
-								)}
-							</div>
+									<span style={{ color: getComponentTypeColor() }}>
+										{getComponentTypeText()}
+									</span>
+								</div>
 
-							<div
-								className={styles.option}
-								onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-							>
-								<Category
-									fill={selectedCategoryId ? 'var(--main)' : 'var(--main-65)'}
-									width="16"
-									height="16"
-								/>
-								{getCategoryDisplay()}
+								<div className={styles.option}>{getCoverImageDisplay()}</div>
 
-								{isCategoryOpen && (
-									<CategorySelector
-										categories={categories}
-										selectedCategoryId={selectedCategoryId}
-										setSelectedCategoryId={setSelectedCategoryId}
-										setIsCategoryOpen={setIsCategoryOpen}
+								<div
+									className={styles.option}
+									onClick={() => setIsTagOpen(!isTagOpen)}
+								>
+									<Label
+										fill={
+											selectedTags.length > 0 ? 'var(--main)' : 'var(--main-65)'
+										}
+										width="16"
+										height="16"
 									/>
-								)}
+									<div className={styles.selectedTags}>{getTagsDisplay()}</div>
+
+									{isTagOpen && (
+										<TagSelector
+											existingTags={availableTags}
+											selectedTags={selectedTags}
+											setSelectedTags={setSelectedTags}
+											onAddNewTag={handleAddNewTag}
+											isOpen={isTagOpen}
+											setIsOpen={setIsTagOpen}
+										/>
+									)}
+								</div>
+
+								<div
+									className={styles.option}
+									onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+								>
+									<Category
+										fill={selectedCategoryId ? 'var(--main)' : 'var(--main-65)'}
+										width="16"
+										height="16"
+									/>
+									{getCategoryDisplay()}
+								</div>
 							</div>
 						</div>
+						<Spacing space={18} />
+						<div className={styles.line} />
+						<Spacing space={18} />
+
+						<textarea
+							ref={textareaRef}
+							className={styles.content}
+							value={content}
+							placeholder="Write a description, instructions, or notes for this library item."
+							onChange={(e) => {
+								setContent(e.target.value);
+								adjustTextareaHeight();
+							}}
+						/>
+						{isComponentTypeOpen && (
+							<LibraryComponentSelector
+								libraryTypeOptions={libraryTypeOptions}
+								selectedComponentType={selectedComponentType}
+								setSelectedComponentType={setSelectedComponentType}
+								activeCategory={activeCategory}
+								setActiveCategory={setActiveCategory}
+								setIsComponentTypeOpen={setIsComponentTypeOpen}
+								selectedImages={selectedImages}
+								setSelectedImages={setSelectedImages}
+								coverImage={coverImage}
+								setCoverImage={setCoverImage}
+								extractedColors={extractedColors}
+								setExtractedColors={setExtractedColors}
+							/>
+						)}
+						{isCategoryOpen && (
+							<CategorySelector
+								categories={categories}
+								selectedCategoryId={selectedCategoryId}
+								setSelectedCategoryId={setSelectedCategoryId}
+								setIsCategoryOpen={setIsCategoryOpen}
+							/>
+						)}
 					</div>
-
-					{isComponentTypeOpen && (
-						<LibraryComponentSelector
-							libraryTypeOptions={libraryTypeOptions}
-							selectedComponentType={selectedComponentType}
-							setSelectedComponentType={setSelectedComponentType}
-							activeCategory={activeCategory}
-							setActiveCategory={setActiveCategory}
-							setIsComponentTypeOpen={setIsComponentTypeOpen}
-						/>
-					)}
-
-					{isCoverImageUploaderVisible && (
-						<CoverImageUploader
-							setCoverImage={setCoverImage}
-							coverImage={coverImage}
-						/>
-					)}
-
 					<div className={styles.actions}>
 						<div className={styles.rightActions}>
 							<button
@@ -483,13 +498,7 @@ const AddLibraryPopup: React.FC<AddLibraryPopupProps> = ({
 								disabled={isSubmitting}
 							>
 								<span>
-									{isSubmitting
-										? `Creating... ${
-												uploadProgress > 0
-													? `(${Math.round(uploadProgress)}%)`
-													: ''
-										  }`
-										: 'Create Library Item'}
+									{isSubmitting ? 'Creating...' : 'Create Library Item'}
 								</span>
 							</button>
 						</div>

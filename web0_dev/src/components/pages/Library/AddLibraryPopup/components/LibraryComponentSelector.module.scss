@@ -3,12 +3,24 @@
 	--spacingNeg: -8px;
 
 	border-radius: 8px;
-	display: grid;
+	display: flex;
+	flex-direction: column;
 	background-color: var(--lightBlue);
 	padding: 12px 8px 8px 12px;
 	border: 1px solid var(--main-10);
 	box-shadow: var(--boxShadow-sm);
-	margin-bottom: 20px;
+	margin: 16px 0;
+	position: relative;
+	transition: opacity 0.15s ease, max-height 0.3s ease;
+
+	&.transitioning {
+		opacity: 0.5;
+	}
+
+	.contentWrapper {
+		flex: 1;
+		transition: transform 0.15s ease;
+	}
 
 	.topPart {
 		position: relative;
@@ -33,6 +45,14 @@
 			font-size: calc(14 / 16 * 1rem);
 			font-weight: 500;
 			line-height: calc(20 / 16 * 1rem);
+		}
+
+		.imageCounter {
+			font-size: calc(12 / 16 * 1rem);
+			color: var(--main-65);
+			background-color: var(--main-10);
+			padding: 2px 8px;
+			border-radius: 12px;
 		}
 
 		.categoryTabs {
@@ -65,21 +85,7 @@
 		flex-direction: column;
 		gap: 8px;
 		padding-top: 8px;
-		max-height: 300px;
-		overflow-y: auto;
-
-		&::-webkit-scrollbar {
-			width: 6px;
-		}
-
-		&::-webkit-scrollbar-thumb {
-			background-color: var(--main-20);
-			border-radius: 3px;
-		}
-
-		&::-webkit-scrollbar-track {
-			background: transparent;
-		}
+		max-height: 400px;
 
 		.componentOption {
 			display: flex;
@@ -131,5 +137,490 @@
 				}
 			}
 		}
+	}
+
+	.uploadArea {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 16px;
+		margin-top: 8px;
+		background-color: var(--white);
+		border: 2px dashed var(--main-20);
+		border-radius: 8px;
+		min-height: 200px;
+		transition: all 0.2s ease;
+
+		&.dragging {
+			border-color: var(--orange-90);
+			background-color: var(--orange-5);
+		}
+
+		.emptyUpload {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 12px;
+			text-align: center;
+
+			p {
+				margin: 0;
+				font-size: calc(14 / 16 * 1rem);
+				color: var(--main-65);
+			}
+
+			.colorHint {
+				font-size: calc(12 / 16 * 1rem);
+				color: var(--main-50);
+				font-style: italic;
+				margin-top: -8px;
+			}
+
+			.uploadButton {
+				padding: 8px 16px;
+				border-radius: 6px;
+				background-color: var(--orange-90);
+				color: var(--whiteSpecial);
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 500;
+				transition: all 0.2s ease;
+
+				&:hover {
+					background-color: var(--orange);
+				}
+			}
+		}
+
+		.imageGrid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+			gap: 16px;
+			width: 100%;
+
+			.imageItem {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				border-radius: 8px;
+				border: 1px solid var(--main-10);
+				overflow: hidden;
+				transition: all 0.2s ease;
+
+				&.coverImage {
+					border-color: var(--orange-90);
+					box-shadow: 0 0 0 2px var(--orange-90);
+				}
+
+				.imagePreview {
+					position: relative;
+					width: 100%;
+					height: 100px;
+					overflow: hidden;
+
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+					}
+
+					.coverBadge {
+						position: absolute;
+						top: 8px;
+						right: 8px;
+						padding: 2px 6px;
+						background-color: var(--orange-90);
+						color: var(--whiteSpecial);
+						font-size: calc(10 / 16 * 1rem);
+						font-weight: 500;
+						border-radius: 4px;
+						z-index: 1;
+					}
+				}
+
+				.imageActions {
+					display: flex;
+					flex-direction: column;
+					gap: 4px;
+					padding: 8px;
+
+					button {
+						padding: 4px 8px;
+						border-radius: 4px;
+						font-size: calc(12 / 16 * 1rem);
+						transition: all 0.2s ease;
+					}
+
+					.setCoverButton {
+						background-color: var(--main-10);
+						color: var(--main-80);
+
+						&:hover:not(:disabled) {
+							background-color: var(--orange-90);
+							color: var(--whiteSpecial);
+						}
+
+						&:disabled {
+							background-color: var(--orange-90);
+							color: var(--whiteSpecial);
+							cursor: default;
+						}
+					}
+
+					.removeButton {
+						background-color: var(--main-10);
+						color: var(--main-80);
+
+						&:hover {
+							background-color: var(--main-20);
+						}
+					}
+				}
+			}
+
+			.addMoreItem {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				height: 100%;
+				min-height: 150px;
+				border: 1px dashed var(--main-20);
+				border-radius: 8px;
+				cursor: pointer;
+				transition: all 0.2s ease;
+
+				&:hover {
+					border-color: var(--orange-90);
+					background-color: var(--orange-5);
+				}
+
+				.addMoreIcon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					width: 40px;
+					height: 40px;
+					border-radius: 50%;
+					background-color: var(--main-10);
+
+					span {
+						font-size: 24px;
+						color: var(--main-65);
+					}
+				}
+
+				p {
+					margin: 0;
+					font-size: calc(12 / 16 * 1rem);
+					color: var(--main-65);
+				}
+			}
+		}
+	}
+
+	.colorPaletteSection {
+		margin-top: 20px;
+		background-color: var(--white);
+		border-radius: 8px;
+		border: 1px solid var(--main-10);
+		padding: 16px;
+
+		.colorPaletteHeader {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 16px;
+
+			h3 {
+				font-size: calc(16 / 16 * 1rem);
+				font-weight: 500;
+				color: var(--main-90);
+				margin: 0;
+			}
+
+			.addColorButton {
+				padding: 4px 12px;
+				border-radius: 4px;
+				background-color: var(--main-10);
+				color: var(--main-80);
+				font-size: calc(12 / 16 * 1rem);
+				transition: all 0.2s ease;
+
+				&:hover {
+					background-color: var(--main-20);
+				}
+			}
+		}
+
+		.colorGrid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+			gap: 12px;
+
+			.colorItem {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				padding: 10px;
+				border-radius: 6px;
+				background-color: var(--main-5);
+				border: 1px solid var(--main-10);
+				cursor: pointer;
+				position: relative;
+				transition: all 0.2s ease;
+
+				&:hover {
+					background-color: var(--main-10);
+					border-color: var(--main-20);
+				}
+
+				.colorSwatch {
+					width: 36px;
+					height: 36px;
+					border-radius: 6px;
+					border: 1px solid var(--main-10);
+					flex-shrink: 0;
+				}
+
+				.colorInfo {
+					display: flex;
+					flex-direction: column;
+					flex: 1;
+
+					.colorName {
+						font-size: calc(14 / 16 * 1rem);
+						font-weight: 500;
+						color: var(--main-90);
+					}
+
+					.colorHex {
+						font-size: calc(12 / 16 * 1rem);
+						color: var(--main-65);
+					}
+				}
+
+				.removeColorButton {
+					position: absolute;
+					top: 4px;
+					right: 4px;
+					width: 20px;
+					height: 20px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					border-radius: 50%;
+					background-color: var(--main-20);
+					color: var(--main-80);
+					font-size: calc(14 / 16 * 1rem);
+					line-height: 1;
+					opacity: 0;
+					transition: all 0.2s ease;
+
+					&:hover {
+						background-color: var(--main-30);
+					}
+				}
+
+				&:hover .removeColorButton {
+					opacity: 1;
+				}
+			}
+		}
+
+		.emptyColors {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 12px;
+			padding: 24px;
+			text-align: center;
+
+			p {
+				margin: 0;
+				font-size: calc(14 / 16 * 1rem);
+				color: var(--main-65);
+			}
+
+			.addColorButton {
+				padding: 6px 16px;
+				border-radius: 6px;
+				background-color: var(--orange-90);
+				color: var(--whiteSpecial);
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 500;
+				transition: all 0.2s ease;
+
+				&:hover {
+					background-color: var(--orange);
+				}
+			}
+		}
+
+		.colorEditor {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 300px;
+			background-color: var(--white);
+			border-radius: 8px;
+			border: 1px solid var(--main-20);
+			box-shadow: var(--boxShadow-lg);
+			z-index: 1000;
+			padding: 16px;
+
+			.colorEditorHeader {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 16px;
+
+				h4 {
+					font-size: calc(16 / 16 * 1rem);
+					font-weight: 500;
+					color: var(--main-90);
+					margin: 0;
+				}
+
+				.closeEditorButton {
+					width: 24px;
+					height: 24px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					border-radius: 50%;
+					background-color: var(--main-10);
+					color: var(--main-80);
+					font-size: calc(16 / 16 * 1rem);
+					line-height: 1;
+					transition: all 0.2s ease;
+
+					&:hover {
+						background-color: var(--main-20);
+					}
+				}
+			}
+
+			.colorEditorForm {
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+
+				.formGroup {
+					display: flex;
+					flex-direction: column;
+					gap: 4px;
+
+					label {
+						font-size: calc(12 / 16 * 1rem);
+						color: var(--main-65);
+					}
+
+					input[type='text'] {
+						padding: 8px;
+						border-radius: 4px;
+						border: 1px solid var(--main-20);
+						font-size: calc(14 / 16 * 1rem);
+						color: var(--main-90);
+
+						&:focus {
+							outline: none;
+							border-color: var(--orange-90);
+						}
+					}
+
+					.colorPickerWrapper {
+						display: flex;
+						gap: 8px;
+
+						input[type='color'] {
+							width: 40px;
+							height: 40px;
+							padding: 0;
+							border: 1px solid var(--main-20);
+							border-radius: 4px;
+							cursor: pointer;
+						}
+
+						input[type='text'] {
+							flex: 1;
+						}
+					}
+				}
+
+				.saveColorButton {
+					padding: 8px 16px;
+					border-radius: 6px;
+					background-color: var(--orange-90);
+					color: var(--whiteSpecial);
+					font-size: calc(14 / 16 * 1rem);
+					font-weight: 500;
+					transition: all 0.2s ease;
+					align-self: flex-end;
+					margin-top: 8px;
+
+					&:hover {
+						background-color: var(--orange);
+					}
+				}
+			}
+		}
+	}
+
+	.fileInput {
+		display: none;
+	}
+
+	.selectorFooter {
+		display: flex;
+		justify-content: flex-end;
+		gap: 12px;
+		margin-top: 16px;
+		padding-top: 12px;
+		border-top: 1px solid var(--main-10);
+
+		button {
+			padding: 6px 16px;
+			border-radius: 6px;
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 500;
+			transition: all 0.2s ease;
+		}
+
+		.backButton {
+			background-color: var(--main-10);
+			color: var(--main-80);
+
+			&:hover {
+				background-color: var(--main-20);
+			}
+		}
+
+		.nextButton {
+			background-color: var(--orange-90);
+			color: var(--whiteSpecial);
+
+			&:hover:not(:disabled) {
+				background-color: var(--orange);
+			}
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+
+	.warningMessage {
+		margin-top: 8px;
+		padding: 8px;
+		background-color: var(--orange-10);
+		border: 1px solid var(--orange-90);
+		border-radius: 4px;
+		color: var(--orange-90);
+		font-size: calc(12 / 16 * 1rem);
+		text-align: center;
 	}
 }
