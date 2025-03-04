@@ -76,26 +76,23 @@ model LibraryType {
 }
 
 model Library {
-  id            String  @id @default(cuid())
-  title         String
-  description   String?
-  libraryTypeId String
-
-  component libraryComponent
-  type      LibraryType      @relation(fields: [libraryTypeId], references: [id])
-  favorite  Boolean          @default(false)
-  tags      String[]
-  metadata  Json?            @default("{}")
-  content   String?          @db.Text
-
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  projectId      String?
-  Project        Project?     @relation(fields: [projectId], references: [id])
+  id             String           @id @default(cuid())
+  title          String
+  description    String?
+  content        String?
+  metadata       Json?
+  favorite       Boolean          @default(false)
+  component      libraryComponent
+  type           LibraryType      @relation(fields: [libraryTypeId], references: [id])
+  tags           String[]
   categoryId     String?
-  Category       Category?    @relation(fields: [categoryId], references: [id])
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  category       Category?        @relation(fields: [categoryId], references: [id])
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  organizationId String
+  libraryTypeId  String
+  projects       Project[]        @relation("LibraryToProject")
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 model Category {
@@ -121,8 +118,7 @@ model Task {
 
   title          String
   description    String?
-  memberId       String?
-  member         Member?          @relation(fields: [memberId], references: [id])
+  assignees      Member[]         @relation("TaskAssignees")
   projectId      String?
   project        Project?         @relation(fields: [projectId], references: [id])
   priority       projectPriority?
@@ -143,34 +139,33 @@ model Task {
 
   Comment  Comment[]
   Activity Activity[]
-
-  @@unique([organizationId, customId])
 }
 
 model Project {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  start       DateTime
-  due         DateTime
-  team        String[]
-  cycles      Cycle[]
-
+  id             String           @id @default(cuid())
+  title          String
+  description    String?
+  start          DateTime
+  due            DateTime
+  team           String[]
   status         ProjectStatus
   priority       projectPriority?
+  organization   Organization     @relation(fields: [organizationId], references: [id])
   organizationId String
-  Organization   Organization     @relation(fields: [organizationId], references: [id])
-  budget         Decimal
+  budget         Float
   leadId         String?
   lead           Member?          @relation("ProjectLead", fields: [leadId], references: [id])
   members        Member[]         @relation("ProjectMembers")
   tasks          Task[]
   completed      Int
   phases         Phase[]
-  Files          File[]
-  Library        Library[]
+  files          File[]
+  notes          Note[]
+  folders        Folder[]
+  libraries      Library[]        @relation("LibraryToProject")
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+  Cycle          Cycle[]
 }
 
 model Phase {
@@ -196,7 +191,7 @@ model File {
   name           String
   url            String
   description    String
-  size           Decimal
+  size           Float
   uploader       String
   projectId      String
   project        Project       @relation(fields: [projectId], references: [id])
@@ -234,6 +229,8 @@ model Note {
   emoji          String       @default("")
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  Project        Project?     @relation(fields: [projectId], references: [id])
+  projectId      String?
 }
 
 model Folder {
@@ -245,6 +242,8 @@ model Folder {
   Organization   Organization @relation(fields: [organizationId], references: [id])
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  Project        Project?     @relation(fields: [projectId], references: [id])
+  projectId      String?
 }
 
 model User {
@@ -356,7 +355,7 @@ model Member {
   activities       Activity[]
   comments         Comment[]
   timeLogs         TimeLog[]
-  Task             Task[]
+  assignedTasks    Task[]       @relation("TaskAssignees")
 
   @@map("member")
 }

@@ -25,7 +25,7 @@ export default async function Page() {
 			},
 			libraries: {
 				include: {
-					Category: true,
+					category: true,
 				},
 
 				orderBy: {
@@ -35,6 +35,11 @@ export default async function Page() {
 					organizationId,
 				},
 			},
+		},
+	});
+	const projects = await prisma.project.findMany({
+		where: {
+			organizationId,
 		},
 	});
 	if (libraryData) {
@@ -63,6 +68,7 @@ export default async function Page() {
 					libraryData={libraryData}
 					slug={organizationSlug}
 					orgId={organizationId}
+					projects={projects}
 				/>
 			</>
 		);

@@ -38,7 +38,8 @@ const page = async ({ params }: { params: { category: string } }) => {
 			},
 			libraries: {
 				include: {
-					Category: true,
+					category: true,
+					projects: true,
 				},
 				orderBy: {
 					createdAt: 'desc',
@@ -47,6 +48,11 @@ const page = async ({ params }: { params: { category: string } }) => {
 					organizationId,
 				},
 			},
+		},
+	});
+	const projects = await prisma.project.findMany({
+		where: {
+			organizationId,
 		},
 	});
 	if (libraryData) {
@@ -69,6 +75,7 @@ const page = async ({ params }: { params: { category: string } }) => {
 		return (
 			<>
 				<LibraryPage
+					projects={projects}
 					menuItems={menuItems}
 					menuLinks={menuLinks}
 					libraryData={libraryData}

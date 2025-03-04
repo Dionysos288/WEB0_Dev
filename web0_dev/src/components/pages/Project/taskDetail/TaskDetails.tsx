@@ -23,7 +23,7 @@ import TiptapEditor from '@/components/editor/TiptapEditor';
 
 interface TaskDetailsProps {
 	task: Task & {
-		Phase?: Phase | null;
+		Phase?: Phase;
 		project: Project;
 	};
 	orgUrl: string;

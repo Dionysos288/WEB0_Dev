@@ -29,19 +29,11 @@ const page = async ({ params }: { params: { project: string } }) => {
 		},
 		include: {
 			tasks: true,
-			Files: true,
+			files: true,
 			phases: true,
 		},
 	});
 	if (project) {
-		const plainProjectData = {
-			...project,
-			budget: project.budget.toNumber(),
-			Files: project.Files.map((file) => ({
-				...file,
-				size: file.size.toNumber(),
-			})),
-		};
 		return (
 			<>
 				<TopMenu
@@ -64,14 +56,14 @@ const page = async ({ params }: { params: { project: string } }) => {
 					AddItem="Add Task"
 					foundLink="client-portal"
 				/>
-				<ClientProjectHeader project={plainProjectData} />
+				<ClientProjectHeader project={project} />
 				<Spacing space={28} />
-				<Phases phases={plainProjectData.phases} />
+				<Phases phases={project.phases} />
 				<Spacing space={28} />
-				<Files files={plainProjectData.Files} />
+				<Files files={project.files} />
 				<Spacing space={28} />
 
-				<Timeline project={plainProjectData} />
+				<Timeline project={project} />
 			</>
 		);
 	}

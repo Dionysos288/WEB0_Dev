@@ -7,8 +7,8 @@ import Files from '@/components/pages/project/client-portal/Files';
 
 import EditHeader from '@/components/general/EditHeader';
 import prisma from '@/lib/db';
-import ServerTasksGallery from '@/components/server/ServerTasksGallery';
 import ClientTasksPage from '@/components/pages/project/tasks/ClientTasksPage';
+import { getUser } from '@/actions/AccountActions';
 export async function generateMetadata({
 	params,
 }: {
@@ -21,6 +21,8 @@ export async function generateMetadata({
 }
 const page = async ({ params }: { params: { phase: string } }) => {
 	const { phase } = await params;
+	const { data: session } = await getUser();
+	const organizationSlug = session?.session.organizationSlug;
 	const phaseData = await prisma.phase.findUnique({
 		where: {
 			id: phase,
@@ -31,27 +33,24 @@ const page = async ({ params }: { params: { phase: string } }) => {
 		},
 	});
 	if (phaseData) {
-		const plainPhases = {
-			...phaseData,
-			files: phaseData.files.map((file) => ({
-				...file,
-				size: file.size.toNumber(),
-			})),
-		};
 		return (
 			<>
 				<EditHeader image={false} admin={true} />
 				<Spacing space={28} />
 
 				<ClientProjectHeader
-					phase={plainPhases}
-					revisions={plainPhases.revisions}
+					phase={phaseData}
+					revisions={phaseData.revisions}
 				/>
 				<Spacing space={28} />
 
-				<Files files={plainPhases.files} />
+				<Files files={phaseData.files} />
 				<Spacing space={28} />
-				<ClientTasksPage tasksData={plainPhases.tasks} phase={true} />
+				<ClientTasksPage
+					tasksData={phaseData.tasks}
+					orgUrl={organizationSlug}
+					projectId={phaseData.projectId}
+				/>
 			</>
 		);
 	}

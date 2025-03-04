@@ -79,7 +79,27 @@
 			}
 			.svgs {
 				display: flex;
+				align-items: center;
 				gap: 12px;
+
+				.projectButton,
+				.favoriteButton {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+
+				.projectSelector {
+					position: relative;
+
+					.selectorWrapper {
+						position: absolute;
+						top: calc(100% + 4px);
+						right: 0;
+						z-index: 1000;
+						min-width: 240px;
+					}
+				}
 			}
 		}
 	}

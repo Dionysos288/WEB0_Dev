@@ -1,0 +1,97 @@
+.toolbar {
+	position: fixed;
+	bottom: 24px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: var(--lightBlue-75);
+	backdrop-filter: blur(8px);
+	border: 1px solid var(--main-10);
+	border-radius: 8px;
+	z-index: 1000;
+	padding: 8px;
+	box-shadow: var(--boxShadow-md);
+	width: auto;
+	animation: slideUp 0.2s ease-out;
+
+	> :first-child:not(.toolbarContent) {
+		position: absolute;
+		top: -375%;
+		left: 50%;
+		transform: translate(-50%, calc(-100% - 8px));
+		min-width: 240px;
+	}
+
+	.toolbarContent {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+
+		.selectedCount {
+			font-size: calc(13 / 16 * 1rem);
+			font-weight: 500;
+			color: var(--main-90);
+			padding: 0 8px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			border-right: 1px solid var(--main-20);
+
+			svg {
+				cursor: pointer;
+				padding: 2px;
+				border-radius: 4px;
+				transition: all 0.2s ease;
+
+				&:hover {
+					background-color: var(--main-10);
+				}
+			}
+		}
+
+		.actions {
+			display: flex;
+			gap: 4px;
+
+			button {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				padding: 6px 12px;
+				border-radius: 6px;
+				background-color: transparent;
+				border: none;
+				transition: all 0.2s ease;
+				color: var(--main-90);
+				font-size: calc(13 / 16 * 1rem);
+				cursor: pointer;
+
+				&:hover {
+					background-color: var(--main-10);
+				}
+
+				span {
+					font-weight: 500;
+				}
+
+				&.dangerButton {
+					color: var(--error-600-90);
+
+					&:hover {
+						background-color: var(--error-600-10);
+					}
+				}
+			}
+		}
+	}
+}
+
+@keyframes slideUp {
+	from {
+		transform: translate(-50%, 100%);
+		opacity: 0;
+	}
+	to {
+		transform: translate(-50%, 0);
+		opacity: 1;
+	}
+}

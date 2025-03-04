@@ -3,26 +3,35 @@ import styles from './Gallery.module.scss';
 import Link from 'next/link';
 import { ExtendedLibrary } from '@/components/types/types';
 import Image from 'next/image';
-import { makeFavorite } from '@/actions/CRUDLibrary';
+import { makeFavorite, updateLibraryProjects } from '@/actions/CRUDLibrary';
 import { useState, useEffect, useRef } from 'react';
 import BookmarkFilled from '@/svgs/Bookmark-Filled';
 import BookmarkOutline from '@/svgs/Bookmark-Outline';
 import PlusRoundStroke from '@/svgs/Plus-Round-Stroke';
 import Trash from '@/svgs/AddDate';
 import Category from '@/svgs/Category';
-import Dismiss from '@/svgs/Dismiss';
-import SVG from '@/components/general/SVG';
+import { Project } from '@prisma/client';
+import ButtonSelector from '@/components/pages/projects/addProject/ButtonSelector';
+import ClickOutsideWrapper from '@/components/general/CllickOutsideWrapper';
+import Toolbar from '@/components/general/Toolbar/Toolbar';
+
 type LibraryMetadata = {
 	coverImageUrl?: string;
 	[key: string]: unknown;
 };
 
+interface ExtendedLibraryWithProjects extends ExtendedLibrary {
+	projects?: Array<{ id: string }>;
+}
+
 const Gallery = ({
 	data,
 	slug,
+	projects = [],
 }: {
-	data: ExtendedLibrary | ExtendedLibrary[];
+	data: ExtendedLibraryWithProjects | ExtendedLibraryWithProjects[];
 	slug: string;
+	projects: Project[];
 }) => {
 	const items = Array.isArray(data) ? data : [data];
 	const [favoriteStatus, setFavoriteStatus] = useState(
@@ -38,6 +47,46 @@ const Gallery = ({
 	const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 	const [isShiftPressed, setIsShiftPressed] = useState(false);
 	const [isCtrlPressed, setIsCtrlPressed] = useState(false);
+	const [openProjectSelector, setOpenProjectSelector] = useState<string | null>(
+		null
+	);
+	const [itemProjectSelections, setItemProjectSelections] = useState<{
+		[key: string]: string[];
+	}>(
+		items.reduce((acc, item) => {
+			acc[item.id] = item.projects?.map((p) => p.id) || [];
+			return acc;
+		}, {} as { [key: string]: string[] })
+	);
+	const [projectQuery, setProjectQuery] = useState('');
+	const [projectOptions, setProjectOptions] = useState<
+		Array<{
+			label: string;
+			value: string;
+			icon?: React.ComponentType<{
+				fill?: string;
+				width?: string;
+				height?: string;
+			}>;
+		}>
+	>(
+		projects.map((project) => ({
+			label: project.title,
+			value: project.id,
+		}))
+	);
+	const projectInputRef = useRef<HTMLInputElement>(null);
+	const [pendingUpdates, setPendingUpdates] = useState<{
+		[itemId: string]: {
+			originalSelections: string[];
+			currentSelections: string[];
+		};
+	}>({});
+	const [showBulkProjectSelector, setShowBulkProjectSelector] = useState(false);
+	const [bulkProjectSelections, setBulkProjectSelections] = useState<string[]>(
+		[]
+	);
+	const bulkProjectInputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -184,8 +233,41 @@ const Gallery = ({
 	};
 
 	const handleAssignToProject = () => {
-		// Implement project assignment functionality
-		console.log('Assigning items to project:', Array.from(selectedItems));
+		setShowBulkProjectSelector(true);
+		// Initialize with projects that are common to all selected items
+		const selectedItemsArray = Array.from(selectedItems);
+		const commonProjects = selectedItemsArray.reduce(
+			(common, itemId, index) => {
+				const itemProjects = itemProjectSelections[itemId] || [];
+				if (index === 0) return itemProjects;
+				return common.filter((projectId) => itemProjects.includes(projectId));
+			},
+			[] as string[]
+		);
+		setBulkProjectSelections(commonProjects);
+	};
+
+	const handleBulkProjectSelect = async (value: string | { value: string }) => {
+		const projectId = typeof value === 'string' ? value : value.value;
+		const selectedItemsArray = Array.from(selectedItems);
+
+		// For each selected item, update if not already assigned
+		const updatePromises = selectedItemsArray.map(async (itemId) => {
+			const currentSelections = itemProjectSelections[itemId] || [];
+			if (!currentSelections.includes(projectId)) {
+				const result = await updateLibraryProjects(itemId, projectId);
+				if (result.success) {
+					setItemProjectSelections((prev) => ({
+						...prev,
+						[itemId]: [...(prev[itemId] || []), projectId],
+					}));
+				}
+			}
+		});
+
+		await Promise.all(updatePromises);
+		setShowBulkProjectSelector(false);
+		setSelectedItems(new Set()); // Clear selection after assignment
 	};
 
 	const handleChangeCategory = () => {
@@ -221,6 +303,132 @@ const Gallery = ({
 
 	const clearSelection = () => {
 		setSelectedItems(new Set());
+	};
+
+	const handleProjectQueryChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		setOptions: React.Dispatch<React.SetStateAction<typeof projectOptions>>,
+		oldData: typeof projectOptions
+	) => {
+		const value = e.target.value;
+		setProjectQuery(value);
+
+		if (value.trim() === '') {
+			setOptions(oldData);
+			return;
+		}
+
+		const filtered = oldData.filter((option) =>
+			option.label.toLowerCase().includes(value.toLowerCase())
+		);
+		setOptions(filtered);
+	};
+
+	const handleProjectSelect = (
+		value: string | (typeof projectOptions)[0],
+		itemId: string
+	) => {
+		const projectId = typeof value === 'string' ? value : value.value;
+		const currentSelections = itemProjectSelections[itemId] || [];
+		const isRemoving = currentSelections.includes(projectId);
+
+		if (!pendingUpdates[itemId]) {
+			setPendingUpdates((prev) => ({
+				...prev,
+				[itemId]: {
+					originalSelections: [...currentSelections],
+					currentSelections: [...currentSelections],
+				},
+			}));
+		}
+
+		const newSelections = isRemoving
+			? currentSelections.filter((id) => id !== projectId)
+			: [...currentSelections, projectId];
+
+		setItemProjectSelections((prev) => ({
+			...prev,
+			[itemId]: newSelections,
+		}));
+
+		setPendingUpdates((prev) => ({
+			...prev,
+			[itemId]: {
+				...prev[itemId],
+				currentSelections: newSelections,
+			},
+		}));
+	};
+
+	const syncProjectUpdates = async (itemId: string) => {
+		const updates = pendingUpdates[itemId];
+		if (!updates) return;
+
+		const { originalSelections, currentSelections } = updates;
+		if (
+			JSON.stringify(originalSelections) === JSON.stringify(currentSelections)
+		) {
+			setPendingUpdates((prev) => {
+				const newUpdates = { ...prev };
+				delete newUpdates[itemId];
+				return newUpdates;
+			});
+			return;
+		}
+
+		const addedProjects = currentSelections.filter(
+			(id) => !originalSelections.includes(id)
+		);
+		const removedProjects = originalSelections.filter(
+			(id) => !currentSelections.includes(id)
+		);
+
+		try {
+			const updatePromises = [
+				...addedProjects.map((projectId) =>
+					updateLibraryProjects(itemId, projectId)
+				),
+				...removedProjects.map((projectId) =>
+					updateLibraryProjects(itemId, projectId)
+				),
+			];
+
+			const results = await Promise.all(updatePromises);
+			const hasError = results.some((result) => !result.success);
+
+			if (hasError) {
+				setItemProjectSelections((prev) => ({
+					...prev,
+					[itemId]: originalSelections,
+				}));
+				console.error('Failed to update some projects');
+			}
+		} catch (error) {
+			setItemProjectSelections((prev) => ({
+				...prev,
+				[itemId]: originalSelections,
+			}));
+			console.error('Failed to update projects:', error);
+		}
+
+		setPendingUpdates((prev) => {
+			const newUpdates = { ...prev };
+			delete newUpdates[itemId];
+			return newUpdates;
+		});
+	};
+
+	const handleProjectButtonClick = (e: React.MouseEvent, itemId: string) => {
+		e.stopPropagation();
+		if (openProjectSelector === itemId) {
+			syncProjectUpdates(itemId);
+		}
+		setOpenProjectSelector(openProjectSelector === itemId ? null : itemId);
+	};
+
+	const handleClickOutside = (itemId: string) => {
+		syncProjectUpdates(itemId);
+		setOpenProjectSelector(null);
 	};
 
 	return (
@@ -277,9 +485,9 @@ const Gallery = ({
 									)}
 								</Link>
 							</div>
-							{item.Category && (
+							{item.category && (
 								<div className={styles.bannerLeft}>
-									<p>{item.Category.name}</p>
+									<p>{item.category.name}</p>
 								</div>
 							)}
 							<div className={styles.bannerRight}>
@@ -288,14 +496,53 @@ const Gallery = ({
 							<div className={styles.under}>
 								<h3>{item.title}</h3>
 								<div className={styles.svgs}>
-									<button>
-										<PlusRoundStroke
-											width="18"
-											height="18"
-											fill="var(--main-90)"
-										/>
-									</button>
+									<div className={styles.projectSelector}>
+										<button
+											className={styles.projectButton}
+											onClick={(e) => handleProjectButtonClick(e, item.id)}
+										>
+											<PlusRoundStroke
+												width="18"
+												height="18"
+												fill="var(--main-90)"
+											/>
+										</button>
+										{openProjectSelector === item.id && (
+											<ClickOutsideWrapper
+												onClose={() => handleClickOutside(item.id)}
+											>
+												<div className={styles.selectorWrapper}>
+													<ButtonSelector
+														query={projectQuery}
+														onQueryChange={handleProjectQueryChange}
+														inputRef={projectInputRef}
+														options={projectOptions}
+														placeholder="Select Projects"
+														oldData={projects.map((project) => ({
+															label: project.title,
+															value: project.id,
+														}))}
+														setOptions={setProjectOptions}
+														setIsChosen={(value) =>
+															handleProjectSelect(value, item.id)
+														}
+														setIsOpenOption={() => {}}
+														isChosen=""
+														isComboBox={true}
+														selectedItems={itemProjectSelections[item.id] || []}
+														onSelectedItemsChange={(items) => {
+															setItemProjectSelections((prev) => ({
+																...prev,
+																[item.id]: items,
+															}));
+														}}
+													/>
+												</div>
+											</ClickOutsideWrapper>
+										)}
+									</div>
 									<button
+										className={styles.favoriteButton}
 										onClick={(e) => {
 											e.stopPropagation();
 											handleFavorite(item.id, favoriteStatus[item.id]);
@@ -322,39 +569,62 @@ const Gallery = ({
 				})}
 			</div>
 
-			{selectedItems.size > 0 && (
-				<div className={styles.toolbar}>
-					<div className={styles.toolbarContent}>
-						<div className={styles.selectedCount}>
-							{selectedItems.size} selected
-							<SVG onClick={clearSelection} style={{ marginLeft: '-4px' }}>
-								<Dismiss width="14" height="14" fill="var(--main-75)" />
-							</SVG>
+			<Toolbar
+				selectedCount={selectedItems.size}
+				onClearSelection={clearSelection}
+				actions={[
+					{
+						label: 'Favorite',
+						icon: BookmarkOutline,
+						onClick: handleBulkFavorite,
+					},
+					{
+						label: 'Move to project',
+						icon: PlusRoundStroke,
+						onClick: handleAssignToProject,
+					},
+					{
+						label: 'Move to category',
+						icon: Category,
+						onClick: handleChangeCategory,
+					},
+					{
+						label: 'Delete',
+						icon: Trash,
+						onClick: handleBulkDelete,
+						variant: 'danger',
+					},
+				]}
+			>
+				{showBulkProjectSelector && (
+					<ClickOutsideWrapper
+						onClose={() => setShowBulkProjectSelector(false)}
+					>
+						<div className={styles.projectSelectorWrapper}>
+							<ButtonSelector
+								query={projectQuery}
+								onQueryChange={handleProjectQueryChange}
+								inputRef={bulkProjectInputRef}
+								options={projectOptions}
+								placeholder="Select Projects"
+								oldData={projects.map((project) => ({
+									label: project.title,
+									value: project.id,
+								}))}
+								setOptions={setProjectOptions}
+								setIsChosen={handleBulkProjectSelect}
+								setIsOpenOption={() => setShowBulkProjectSelector(false)}
+								isChosen=""
+								isComboBox={true}
+								selectedItems={bulkProjectSelections}
+								onSelectedItemsChange={(items) =>
+									setBulkProjectSelections(items)
+								}
+							/>
 						</div>
-						<div className={styles.actions}>
-							<button onClick={handleBulkFavorite}>
-								<BookmarkOutline width="16" height="16" />
-								<span>Favorite</span>
-							</button>
-							<button onClick={handleAssignToProject}>
-								<PlusRoundStroke width="16" height="16" />
-								<span>Move to project</span>
-							</button>
-							<button onClick={handleChangeCategory}>
-								<Category width="16" height="16" />
-								<span>Move to category</span>
-							</button>
-							<button
-								onClick={handleBulkDelete}
-								className={styles.deleteButton}
-							>
-								<Trash width="16" height="16" />
-								<span>Delete</span>
-							</button>
-						</div>
-					</div>
-				</div>
-			)}
+					</ClickOutsideWrapper>
+				)}
+			</Toolbar>
 		</>
 	);
 };

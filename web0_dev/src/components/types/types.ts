@@ -18,7 +18,7 @@ import { ReactNode } from 'react';
 
 type TableHeader = [keyof File, string, (string | ReactNode)?];
 type ModelNames = keyof typeof prisma;
-type ExtendedLibrary = Library & { Category: Category | null };
+type ExtendedLibrary = Library & { category: Category | null };
 type ExtendedCategory = Category & { subcategories: ExtendedCategory[] };
 type fileType = Omit<File, 'size'>;
 type DataType = fileType | Client;

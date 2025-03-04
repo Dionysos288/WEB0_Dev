@@ -12,7 +12,7 @@ import {
 	fileType,
 } from '@/components/types/types';
 import BigButton from './BigButtons';
-import { Phase, Task } from '@prisma/client';
+import { Phase, Project, Task } from '@prisma/client';
 
 const LibraryPage = ({
 	homePage = false,
@@ -21,6 +21,7 @@ const LibraryPage = ({
 	menuLinks,
 	favorite = false,
 	libraryData,
+	projects,
 	slug,
 	orgId,
 }: {
@@ -32,6 +33,7 @@ const LibraryPage = ({
 	slug: string;
 	libraryData: LibraryData | LibraryData[];
 	orgId: string;
+	projects: Project[];
 }) => {
 	const [galleryData, setGalleryData] = useState<ExtendedLibrary[]>(
 		Array.isArray(libraryData)
@@ -105,7 +107,7 @@ const LibraryPage = ({
 				}
 			/>
 			<Spacing space={28} />
-			<Gallery data={galleryData} slug={slug} />
+			<Gallery data={galleryData} slug={slug} projects={projects} />
 		</>
 	);
 };

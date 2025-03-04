@@ -43,7 +43,7 @@ async function updateFilterLibrary({
 		}
 
 		if (selectedCategories?.length > 0) {
-			where.Category = {
+			where.category = {
 				name: {
 					in: selectedCategories,
 				},
@@ -61,7 +61,7 @@ async function updateFilterLibrary({
 			where,
 			orderBy,
 			include: {
-				Category: true,
+				category: true,
 			},
 		});
 
@@ -95,8 +95,6 @@ const makeFavorite = async (id: string, favorite: boolean) => {
 
 	revalidatePath('/library/favorites');
 };
-
-// New category management functions
 
 // Create a new category
 const createCategory = async ({
@@ -272,7 +270,9 @@ const createLibrary = async ({
 				categoryId,
 				component,
 				tags,
-				projectId,
+				projects: {
+					connect: projectId ? [{ id: projectId }] : [],
+				},
 				organizationId,
 				favorite: false,
 				metadata: metadata,
@@ -313,6 +313,37 @@ const createLibrary = async ({
 	}
 };
 
+async function updateLibraryProjects(libraryId: string, projectId: string) {
+	try {
+		const library = await prisma.library.findUnique({
+			where: { id: libraryId },
+			include: { projects: true },
+		});
+
+		if (!library) {
+			throw new Error('Library not found');
+		}
+
+		const hasProject = library.projects.some((p) => p.id === projectId);
+
+		const updatedLibrary = await prisma.library.update({
+			where: { id: libraryId },
+			data: {
+				projects: {
+					[hasProject ? 'disconnect' : 'connect']: {
+						id: projectId,
+					},
+				},
+			},
+			include: { projects: true },
+		});
+
+		return { success: true, data: updatedLibrary };
+	} catch (error) {
+		console.error('Error updating library projects:', error);
+		return { error: 'Failed to update library projects' };
+	}
+}
 export {
 	updateFilterLibrary,
 	makeFavorite,
@@ -320,4 +351,5 @@ export {
 	updateCategoryParent,
 	getCategories,
 	createLibrary,
+	updateLibraryProjects,
 };

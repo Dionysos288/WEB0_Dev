@@ -57,23 +57,18 @@ const page = async ({
 	});
 
 	if (task && member) {
-		const taskData = {
+		if (!task.project) return null;
+
+		const transformedTask = {
 			...task,
-			project: {
-				...task.project,
-				budget: task.project.budget.toNumber(),
-			},
-			Phase: task.Phase
-				? {
-						...task.Phase,
-				  }
-				: null,
+			Phase: task.Phase || undefined,
+			project: task.project,
 		};
 
 		return (
 			<>
 				<TaskDetails
-					task={taskData}
+					task={transformedTask}
 					orgUrl={organizationSlug || ''}
 					memberId={member.id}
 					organizationId={organizationId || ''}

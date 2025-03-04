@@ -42,7 +42,7 @@ const page = async ({ params }: { params: { project: string } }) => {
 		},
 		select: {
 			id: true,
-			Files: {
+			files: {
 				orderBy: {
 					updatedAt: 'desc',
 				},
@@ -50,12 +50,6 @@ const page = async ({ params }: { params: { project: string } }) => {
 		},
 	});
 	if (project) {
-		const plainProjectData = {
-			Files: project.Files.map((file) => ({
-				...file,
-				size: file.size.toNumber(),
-			})),
-		};
 		return (
 			<>
 				<TopMenu
@@ -78,10 +72,7 @@ const page = async ({ params }: { params: { project: string } }) => {
 					AddItem="Add Task"
 					foundLink="files"
 				/>
-				<ClientFilesPage
-					fileData={plainProjectData.Files}
-					tableHeaders={tableHeaders}
-				/>
+				<ClientFilesPage fileData={project.files} tableHeaders={tableHeaders} />
 			</>
 		);
 	}

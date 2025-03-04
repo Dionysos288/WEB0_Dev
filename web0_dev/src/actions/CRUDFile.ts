@@ -39,14 +39,8 @@ const updateFilterFiles = async ({
 			where,
 			orderBy,
 		})) as File[];
-		const plainProjectData = {
-			Files: data.map((file) => ({
-				...file,
-				size: file.size.toNumber(),
-			})),
-		};
 
-		return { data: plainProjectData.Files };
+		return { data: data };
 	} catch (error) {
 		console.error(error);
 		return {

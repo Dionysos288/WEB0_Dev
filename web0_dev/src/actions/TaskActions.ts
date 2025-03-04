@@ -135,20 +135,7 @@ export const updateTask = async (
 		revalidatePath(`/${orgUrl}/projects/${task.projectId}/tasks/${taskId}`);
 		revalidatePath(`/${orgUrl}/projects/${task.projectId}/tasks`);
 
-		const taskData = {
-			...task,
-			project: {
-				...task.project,
-				budget: task.project?.budget ? task.project.budget.toNumber() : null,
-			},
-			Phase: task.Phase
-				? {
-						...task.Phase,
-				  }
-				: null,
-		};
-
-		return { data: { taskData, activity }, error: null };
+		return { data: { task, activity }, error: null };
 	} catch (error) {
 		console.error(
 			'Error updating task - Stack trace:',

@@ -31,7 +31,7 @@ const page = async () => {
 			},
 			libraries: {
 				include: {
-					Category: true,
+					category: true,
 				},
 				where: {
 					favorite: true,
@@ -41,6 +41,11 @@ const page = async () => {
 					createdAt: 'desc',
 				},
 			},
+		},
+	});
+	const projects = await prisma.project.findMany({
+		where: {
+			organizationId,
 		},
 	});
 	if (libraryData) {
@@ -69,6 +74,7 @@ const page = async () => {
 					libraryData={libraryData}
 					slug={organizationSlug}
 					orgId={organizationId}
+					projects={projects}
 				/>
 			</>
 		);

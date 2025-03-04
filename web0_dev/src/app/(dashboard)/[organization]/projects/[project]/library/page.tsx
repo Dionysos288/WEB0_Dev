@@ -20,6 +20,7 @@ const page = async ({ params }: { params: { project: string } }) => {
 	const WaitedProp = await params;
 	const { data: session } = await getUser();
 	const organizationSlug = session?.session.organizationSlug;
+	const organizationId = session?.session.activeOrganizationId;
 	const project = await prisma.project.findFirst({
 		where: {
 			id: WaitedProp.project,
@@ -42,16 +43,25 @@ const page = async ({ params }: { params: { project: string } }) => {
 			},
 			libraries: {
 				include: {
-					Category: true,
+					category: true,
 				},
 				where: {
-					projectId: WaitedProp.project,
+					projects: {
+						some: {
+							id: WaitedProp.project,
+						},
+					},
 				},
 
 				orderBy: {
 					createdAt: 'desc',
 				},
 			},
+		},
+	});
+	const projects = await prisma.project.findMany({
+		where: {
+			organizationId,
 		},
 	});
 	if (project) {
@@ -86,6 +96,8 @@ const page = async ({ params }: { params: { project: string } }) => {
 					projectPage={true}
 					libraryData={libraryData}
 					slug={organizationSlug}
+					orgId={organizationId}
+					projects={projects}
 				/>
 			</>
 		);

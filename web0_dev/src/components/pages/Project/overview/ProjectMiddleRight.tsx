@@ -4,9 +4,8 @@ import GetFileSize from '@/utils/GetFileSize';
 import Spacing from '@/components/general/Spacing';
 import { getTimeAgo } from '@/utils/DateHooks';
 import FilePdf from '@/svgs/FilePdf';
-type projectWithFile = Omit<Project, 'budget'> & {
-	budget: number;
-	Files: (Omit<File, 'size'> & { size: number })[];
+type projectWithFile = Project & {
+	files: File[];
 };
 const ProjectMiddleRight = ({ project }: { project: projectWithFile }) => {
 	return (
@@ -14,9 +13,9 @@ const ProjectMiddleRight = ({ project }: { project: projectWithFile }) => {
 			<div>
 				<h2>Latest Files</h2>
 				<Spacing space={16} />
-				{project.Files.length > 0 ? (
+				{project.files.length > 0 ? (
 					<div className={styles.files}>
-						{project.Files.map((file) => (
+						{project.files.map((file) => (
 							<div className={styles.hor} key={file.id}>
 								<div
 									className={styles.block}
