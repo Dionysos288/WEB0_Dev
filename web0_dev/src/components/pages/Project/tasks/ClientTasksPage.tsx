@@ -42,7 +42,7 @@ const ClientTasksPage = ({
 	projectId: string;
 	phases: Phase[];
 	availableLabels: Label[];
-	availableMembers: Member[];
+	availableMembers: (Member & { user: { email: string } })[];
 }) => {
 	const [tasks, setTasks] = useState<ExtendedTask[]>(tasksData);
 	const [options] = useState<string[]>([]);

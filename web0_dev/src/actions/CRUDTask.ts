@@ -84,4 +84,26 @@ const updateTaskStatus = async (
 	}
 };
 
-export { updateFilterTasks, updateTaskStatus };
+const deleteTask = async (
+	taskId: string,
+	projectId: string,
+	orgUrl: string
+) => {
+	try {
+		await prisma.task.delete({
+			where: { id: taskId },
+		});
+
+		revalidatePath(`/${orgUrl}/projects/${projectId}/tasks`);
+
+		return { success: true, error: null };
+	} catch (error) {
+		console.error('Error deleting task:', error);
+		return {
+			success: false,
+			error: 'Failed to delete task',
+		};
+	}
+};
+
+export { updateFilterTasks, updateTaskStatus, deleteTask };

@@ -4,6 +4,11 @@
 
 	overflow-x: auto;
 	overflow-y: hidden;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+
 	@media (max-width: 430px) {
 		margin-right: -16px;
 		margin-left: -16px;
@@ -101,6 +106,10 @@
 	gap: 0.5rem;
 	border-top: 1px solid var(--border);
 	transition: all 0.2s ease;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 
 	&.isOver {
 		background: var(--bg-hover);
@@ -167,4 +176,8 @@
 			}
 		}
 	}
+}
+
+.selectorPopup {
+	position: relative;
 }

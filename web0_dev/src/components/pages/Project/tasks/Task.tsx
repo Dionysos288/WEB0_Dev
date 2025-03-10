@@ -26,7 +26,7 @@ import { getDateFormat } from '@/utils/DateHooks';
 import DatePicker from '@/svgs/DatePicker';
 import Spacing from '@/components/general/Spacing';
 import SVG from '@/components/general/SVG';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ButtonSelector from '@/components/pages/projects/addProject/ButtonSelector';
 import ClickOutsideWrapper from '@/components/general/CllickOutsideWrapper';
 import SingleDatePicker from '@/components/general/ui/date/SingleDatePicker';
@@ -52,7 +52,9 @@ interface TaskProps {
 	onUpdateDueDate?: (taskId: string, dueDate: Date | null) => Promise<void>;
 	phases?: Phase[];
 	availableLabels?: Label[];
-	availableMembers?: Member[];
+	availableMembers?: (Member & { user: { email: string } })[];
+	isSelected?: boolean;
+	onSelect?: (taskId: string, event: React.MouseEvent) => void;
 }
 
 const Task = ({
@@ -67,6 +69,8 @@ const Task = ({
 	phases = [],
 	availableLabels = [],
 	availableMembers = [],
+	isSelected = false,
+	onSelect,
 }: TaskProps) => {
 	const router = useRouter();
 	const {
@@ -122,8 +126,8 @@ const Task = ({
 
 	// Date picker state
 	const [isDateOpen, setIsDateOpen] = useState(false);
-	const [currentDueDate, setCurrentDueDate] = useState<Date | null>(
-		task.dueDate ? new Date(task.dueDate) : null
+	const [currentDueDate, setCurrentDueDate] = useState<Date | undefined>(
+		task.dueDate ? new Date(task.dueDate) : undefined
 	);
 
 	const priorityOptions = [
@@ -153,7 +157,7 @@ const Task = ({
 	];
 
 	const memberOptions = availableMembers.map((member) => ({
-		label: member.user?.name || member.user?.email || 'Unknown',
+		label: member.user.email || 'Unknown',
 		value: member.id,
 		icon: Team,
 	}));
@@ -170,6 +174,15 @@ const Task = ({
 	const [phaseState, setPhaseOptions] = useState(phaseOptions);
 	const [memberState, setMemberOptions] = useState(memberOptions);
 	const [labelState, setLabelOptions] = useState(labelOptions);
+
+	useEffect(() => {
+		setCurrentPriority(task.priority || 'noPriority');
+		setCurrentStatus(task.status);
+		setCurrentPhase(task.Phase || null);
+		setSelectedAssignees(task.assignees?.map((a) => a.id) || []);
+		setSelectedLabels(task.labels?.map((l) => l.id) || []);
+		setCurrentDueDate(task.dueDate ? new Date(task.dueDate) : undefined);
+	}, [task]);
 
 	const handlePriorityChange = async (value: string | { value: string }) => {
 		const newPriority = (
@@ -258,17 +271,21 @@ const Task = ({
 		}
 	};
 
-	const handleDateChange = async (date: Date | null) => {
-		setCurrentDueDate(date);
-		setIsDateOpen(false);
+	const handleDateChange = async (date: Date | undefined) => {
+		if (date?.toISOString() !== currentDueDate?.toISOString()) {
+			setCurrentDueDate(date);
+			setIsDateOpen(false);
 
-		if (onUpdateDueDate) {
-			try {
-				await onUpdateDueDate(task.id, date);
-			} catch (error) {
-				setCurrentDueDate(task.dueDate ? new Date(task.dueDate) : null);
-				console.error('Failed to update due date:', error);
+			if (onUpdateDueDate) {
+				try {
+					await onUpdateDueDate(task.id, date || null);
+				} catch (error) {
+					setCurrentDueDate(task.dueDate ? new Date(task.dueDate) : undefined);
+					console.error('Failed to update due date:', error);
+				}
 			}
+		} else {
+			setIsDateOpen(false);
 		}
 	};
 
@@ -296,6 +313,11 @@ const Task = ({
 		if (isDragging) return;
 
 		if ((e.target as HTMLElement).closest('[data-selector]')) return;
+
+		if (onSelect && (e.ctrlKey || e.shiftKey)) {
+			onSelect(task.id, e);
+			return;
+		}
 
 		if (orgUrl) {
 			router.push(`/${orgUrl}/projects/${task.projectId}/tasks/${task.id}`);
@@ -342,7 +364,7 @@ const Task = ({
 			{...attributes}
 			{...listeners}
 			style={style}
-			className={styles.task}
+			className={`${styles.task} ${isSelected ? styles.selected : ''}`}
 			onClick={handleClick}
 		>
 			<div className={styles.topRow}>
@@ -456,8 +478,8 @@ const Task = ({
 								return (
 									<div className={styles.imgWrapper} key={assigneeId}>
 										<Image
-											src={member?.user?.image || 'https://placehold.co/24'}
-											alt={`${member?.user?.name || 'User'}'s profile picture`}
+											src={'https://placehold.co/24'}
+											alt={`${member?.user?.email || 'User'}'s profile picture`}
 											width={24}
 											height={24}
 											className={styles.profileImage}
@@ -573,7 +595,7 @@ const Task = ({
 									<SingleDatePicker
 										date={currentDueDate}
 										setDate={handleDateChange}
-										setIsDateOpen={setIsDateOpen}
+										setIsDateOpen={(isOpen) => setIsDateOpen(!!isOpen)}
 									/>
 								</ClickOutsideWrapper>
 							</div>

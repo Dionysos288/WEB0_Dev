@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from './Toolbar.module.scss';
-import SVG from '@/components/general/SVG';
 import Dismiss from '@/svgs/Dismiss';
 import DeleteConfirmPopup from '@/components/general/DeleteConfirmPopup/DeleteConfirmPopup';
 
@@ -13,6 +12,8 @@ export interface ToolbarAction {
 	}>;
 	onClick: () => void;
 	variant?: 'default' | 'danger';
+	dropdown?: React.ReactNode;
+	isOpen?: boolean;
 }
 
 interface ToolbarProps {
@@ -64,20 +65,26 @@ const Toolbar: React.FC<ToolbarProps> = ({
 			<div className={styles.toolbarContent}>
 				<div className={styles.selectedCount}>
 					{selectedCount} selected
-					<SVG onClick={onClearSelection} style={{ marginLeft: '-4px' }}>
+					<div onClick={onClearSelection} style={{ marginLeft: '-4px' }}>
 						<Dismiss width="14" height="14" fill="var(--main-75)" />
-					</SVG>
+					</div>
 				</div>
 				<div className={styles.actions}>
 					{actions.map((action, index) => (
-						<button
-							key={index}
-							onClick={() => handleActionClick(action)}
-							className={action.variant === 'danger' ? styles.dangerButton : ''}
-						>
-							<action.icon width="16" height="16" />
-							<span>{action.label}</span>
-						</button>
+						<div key={index} className={styles.actionWrapper}>
+							<button
+								onClick={() => handleActionClick(action)}
+								className={
+									action.variant === 'danger' ? styles.dangerButton : ''
+								}
+							>
+								<action.icon width="16" height="16" />
+								<span>{action.label}</span>
+							</button>
+							{action.isOpen && action.dropdown && (
+								<div className={styles.dropdown}>{action.dropdown}</div>
+							)}
+						</div>
 					))}
 				</div>
 				{showDeleteConfirm && (

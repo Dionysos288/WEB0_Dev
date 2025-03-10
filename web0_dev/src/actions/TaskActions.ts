@@ -301,3 +301,195 @@ export const updateTaskPriority = async (
 		return { success: false, error: 'Failed to update task priority' };
 	}
 };
+
+export const bulkUpdateTaskPriority = async (
+	taskIds: string[],
+	priority: projectPriority,
+	orgUrl: string,
+	projectId: string
+) => {
+	try {
+		// Use Prisma's updateMany to update all tasks in a single database operation
+		const result = await prisma.task.updateMany({
+			where: {
+				id: { in: taskIds },
+			},
+			data: { priority },
+		});
+
+		revalidatePath(`/${orgUrl}/projects/${projectId}/tasks`);
+		return {
+			success: true,
+			data: { count: result.count },
+		};
+	} catch (error) {
+		console.error('Error bulk updating task priorities:', error);
+		return { success: false, error: 'Failed to update task priorities' };
+	}
+};
+
+export const bulkUpdateTaskStatus = async (
+	taskIds: string[],
+	status: TaskStatus,
+	orgUrl: string,
+	projectId: string
+) => {
+	try {
+		const result = await prisma.task.updateMany({
+			where: {
+				id: { in: taskIds },
+			},
+			data: { status },
+		});
+
+		revalidatePath(`/${orgUrl}/projects/${projectId}/tasks`);
+		return {
+			success: true,
+			data: { count: result.count },
+		};
+	} catch (error) {
+		console.error('Error bulk updating task statuses:', error);
+		return { success: false, error: 'Failed to update task statuses' };
+	}
+};
+
+export const bulkUpdateTaskPhase = async (
+	taskIds: string[],
+	phaseId: string | null,
+	orgUrl: string,
+	projectId: string
+) => {
+	try {
+		const result = await prisma.task.updateMany({
+			where: {
+				id: { in: taskIds },
+			},
+			data: { phaseId },
+		});
+
+		revalidatePath(`/${orgUrl}/projects/${projectId}/tasks`);
+		return {
+			success: true,
+			data: { count: result.count },
+		};
+	} catch (error) {
+		console.error('Error bulk updating task phases:', error);
+		return { success: false, error: 'Failed to update task phases' };
+	}
+};
+
+export const bulkUpdateTaskDueDate = async (
+	taskIds: string[],
+	dueDate: Date | null,
+	orgUrl: string,
+	projectId: string
+) => {
+	try {
+		const result = await prisma.task.updateMany({
+			where: {
+				id: { in: taskIds },
+			},
+			data: { dueDate },
+		});
+
+		revalidatePath(`/${orgUrl}/projects/${projectId}/tasks`);
+		return {
+			success: true,
+			data: { count: result.count },
+		};
+	} catch (error) {
+		console.error('Error bulk updating task due dates:', error);
+		return { success: false, error: 'Failed to update task due dates' };
+	}
+};
+
+export const bulkDeleteTasks = async (
+	taskIds: string[],
+	orgUrl: string,
+	projectId: string
+) => {
+	try {
+		const result = await prisma.task.deleteMany({
+			where: {
+				id: { in: taskIds },
+			},
+		});
+
+		revalidatePath(`/${orgUrl}/projects/${projectId}/tasks`);
+		return {
+			success: true,
+			data: { count: result.count },
+		};
+	} catch (error) {
+		console.error('Error bulk deleting tasks:', error);
+		return { success: false, error: 'Failed to delete tasks' };
+	}
+};
+
+export const bulkUpdateTaskAssignees = async (
+	taskIds: string[],
+	assigneeIds: string[],
+	orgUrl: string,
+	projectId: string
+) => {
+	try {
+		const result = await prisma.$transaction(async (tx) => {
+			const updatePromises = taskIds.map((taskId) =>
+				tx.task.update({
+					where: { id: taskId },
+					data: {
+						assignees: {
+							set: [],
+							connect: assigneeIds.map((assigneeId) => ({ id: assigneeId })),
+						},
+					},
+				})
+			);
+
+			return await Promise.all(updatePromises);
+		});
+
+		revalidatePath(`/${orgUrl}/projects/${projectId}/tasks`);
+		return {
+			success: true,
+			data: { count: result.length },
+		};
+	} catch (error) {
+		console.error('Error bulk updating task assignees:', error);
+		return { success: false, error: 'Failed to update task assignees' };
+	}
+};
+
+export const bulkUpdateTaskLabels = async (
+	taskIds: string[],
+	labelIds: string[],
+	orgUrl: string,
+	projectId: string
+) => {
+	try {
+		const result = await prisma.$transaction(async (tx) => {
+			const updatePromises = taskIds.map((taskId) =>
+				tx.task.update({
+					where: { id: taskId },
+					data: {
+						labels: {
+							set: [],
+							connect: labelIds.map((labelId) => ({ id: labelId })),
+						},
+					},
+				})
+			);
+
+			return await Promise.all(updatePromises);
+		});
+
+		revalidatePath(`/${orgUrl}/projects/${projectId}/tasks`);
+		return {
+			success: true,
+			data: { count: result.length },
+		};
+	} catch (error) {
+		console.error('Error bulk updating task labels:', error);
+		return { success: false, error: 'Failed to update task labels' };
+	}
+};

@@ -8,9 +8,10 @@ export async function generateMetadata({
 }: {
 	params: { project: string };
 }): Promise<Metadata> {
+	const props = await params;
 	return {
-		title: `${params.project} | Web0`,
-		description: `View ${params.project} on Web0`,
+		title: `${props.project} | Web0`,
+		description: `View ${props.project} on Web0`,
 	};
 }
 const page = async ({ params }: { params: { project: string } }) => {
@@ -54,6 +55,13 @@ const page = async ({ params }: { params: { project: string } }) => {
 		where: {
 			organizationId: organizationId,
 		},
+		include: {
+			user: {
+				select: {
+					email: true,
+				},
+			},
+		},
 	});
 
 	if (project) {
@@ -65,7 +73,6 @@ const page = async ({ params }: { params: { project: string } }) => {
 			labels: task.labels || undefined,
 			assignees: task.assignees || undefined,
 		}));
-		console.log(transformedTasks);
 		return (
 			<>
 				<TopMenu

@@ -34,7 +34,7 @@
 			padding: 0 8px;
 			display: flex;
 			align-items: center;
-			gap: 8px;
+			gap: 10px;
 			border-right: 1px solid var(--main-20);
 
 			svg {
@@ -53,33 +53,44 @@
 			display: flex;
 			gap: 4px;
 
-			button {
-				display: flex;
-				align-items: center;
-				gap: 6px;
-				padding: 6px 12px;
-				border-radius: 6px;
-				background-color: transparent;
-				border: none;
-				transition: all 0.2s ease;
-				color: var(--main-90);
-				font-size: calc(13 / 16 * 1rem);
-				cursor: pointer;
+			.actionWrapper {
+				position: relative;
 
-				&:hover {
-					background-color: var(--main-10);
-				}
-
-				span {
-					font-weight: 500;
-				}
-
-				&.dangerButton {
-					color: var(--error-600-90);
+				button {
+					display: flex;
+					align-items: center;
+					gap: 6px;
+					padding: 6px 12px;
+					border-radius: 6px;
+					background-color: transparent;
+					border: none;
+					transition: all 0.2s ease;
+					color: var(--main-90);
+					font-size: calc(13 / 16 * 1rem);
+					cursor: pointer;
 
 					&:hover {
-						background-color: var(--error-600-10);
+						background-color: var(--main-10);
 					}
+
+					span {
+						font-weight: 500;
+					}
+
+					&.dangerButton {
+						color: var(--error-600-90);
+
+						&:hover {
+							background-color: var(--error-600-10);
+						}
+					}
+				}
+
+				.dropdown {
+					position: absolute;
+					top: -250px;
+					left: 0;
+					z-index: 1000;
 				}
 			}
 		}

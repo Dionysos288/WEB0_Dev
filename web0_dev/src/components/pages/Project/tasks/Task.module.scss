@@ -13,6 +13,20 @@
 	border: 1px solid var(--main-5);
 	box-shadow: var(--boxShadow-xs);
 	cursor: pointer;
+	transition: all 0.1s ease;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+
+	&.selected {
+		border: 2px solid var(--orange-90);
+		background-color: var(--orange-5);
+	}
+	&:focus {
+		outline: none;
+	}
+
 	.topRow {
 		display: flex;
 		justify-content: space-between;

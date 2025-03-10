@@ -38,7 +38,9 @@ interface ColumnProps {
 	onUpdateDueDate?: (taskId: string, dueDate: Date | null) => Promise<void>;
 	phases?: Phase[];
 	availableLabels?: Label[];
-	availableMembers?: Member[];
+	availableMembers?: (Member & { user: { email: string } })[];
+	selectedTasks?: Set<string>;
+	onTaskSelect?: (taskId: string, event: React.MouseEvent) => void;
 }
 
 const Column = ({
@@ -55,6 +57,8 @@ const Column = ({
 	phases = [],
 	availableLabels = [],
 	availableMembers = [],
+	selectedTasks = new Set(),
+	onTaskSelect,
 }: ColumnProps) => {
 	const { title, displayTitle, tasks } = column;
 	const allTasks = tasks.length;
@@ -148,6 +152,8 @@ const Column = ({
 								phases={phases}
 								availableLabels={availableLabels}
 								availableMembers={availableMembers}
+								isSelected={selectedTasks.has(task.id)}
+								onSelect={onTaskSelect}
 							/>
 						))}
 					</SortableContext>

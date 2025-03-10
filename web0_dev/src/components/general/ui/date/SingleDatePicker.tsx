@@ -8,19 +8,19 @@ import ArrowLineLeftFilled from '@/svgs/ArrowLineLeftFilled';
 import Back from '@/svgs/Back';
 import ArrowLineRightFilled from '@/svgs/ArrowLineRightFilled';
 
+interface SingleDatePickerProps {
+	setDate: (date: Date | undefined) => void;
+	date: Date | undefined;
+	limitDate?: Date;
+	setIsDateOpen: (isOpen: boolean | string | number) => void;
+}
+
 const SingleDatePicker = ({
 	setDate,
 	limitDate,
 	date,
 	setIsDateOpen,
-}: {
-	setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-	date: Date | undefined;
-	limitDate?: Date;
-	setIsDateOpen: React.Dispatch<
-		React.SetStateAction<boolean | string | number>
-	>;
-}) => {
+}: SingleDatePickerProps) => {
 	const today = new Date();
 
 	const [currentMonth, setCurrentMonth] = useState<Date>(date || today);
