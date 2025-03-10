@@ -309,7 +309,6 @@ export const bulkUpdateTaskPriority = async (
 	projectId: string
 ) => {
 	try {
-		// Use Prisma's updateMany to update all tasks in a single database operation
 		const result = await prisma.task.updateMany({
 			where: {
 				id: { in: taskIds },
@@ -409,6 +408,7 @@ export const bulkDeleteTasks = async (
 	projectId: string
 ) => {
 	try {
+		console.log(taskIds);
 		const result = await prisma.task.deleteMany({
 			where: {
 				id: { in: taskIds },

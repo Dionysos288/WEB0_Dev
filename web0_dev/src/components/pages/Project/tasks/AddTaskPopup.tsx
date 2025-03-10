@@ -38,9 +38,15 @@ interface AddTaskPopupProps {
 	isOpen: boolean;
 	onClose: () => void;
 	projectId?: string;
+	defaultStatus?: TaskStatus;
 }
 
-const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
+const AddTaskPopup = ({
+	isOpen,
+	onClose,
+	projectId,
+	defaultStatus,
+}: AddTaskPopupProps) => {
 	const router = useRouter();
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
@@ -49,7 +55,7 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 	const [organizationId, setOrganizationId] = useState('');
 	const [orgUrl, setOrgUrl] = useState('');
 
-	console.log(isOpen);
+	console.log(defaultStatus);
 
 	// Priority state
 	const [priorityQuery, setPriorityQuery] = useState('');
@@ -104,10 +110,25 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 		{ label: 'Completed', value: 'Completed', icon: Team },
 	];
 	const [chosenStatus, setChosenStatus] = useState<string | OptionItem>(
-		statusOptions[0]
+		defaultStatus
+			? statusOptions.find((opt) => opt.value === defaultStatus) ||
+					statusOptions[0]
+			: statusOptions[0]
 	);
 	const [isStatusOpen, setIsStatusOpen] = useState(false);
 	const statusRef = useRef(null);
+
+	// Add effect to update status when defaultStatus changes
+	useEffect(() => {
+		if (defaultStatus) {
+			const matchingStatus = statusOptions.find(
+				(opt) => opt.value === defaultStatus
+			);
+			if (matchingStatus) {
+				setChosenStatus(matchingStatus);
+			}
+		}
+	}, []);
 
 	// Project state
 	const [projectQuery, setProjectQuery] = useState('');
@@ -159,7 +180,12 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 			setDescription('');
 			setDueDate(undefined);
 			setChosenPriority(priorityOptions[0]);
-			setChosenStatus(statusOptions[0]);
+			setChosenStatus(
+				defaultStatus
+					? statusOptions.find((opt) => opt.value === defaultStatus) ||
+							statusOptions[0]
+					: statusOptions[0]
+			);
 			setSelectedMembers([]);
 			setChosenMember({
 				label: 'Assignee',
@@ -186,7 +212,7 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 			}
 			setCreateAnother(false);
 		}
-	}, [isOpen, projectId, priorityOptions, statusOptions]);
+	}, [isOpen, projectId, priorityOptions, statusOptions, defaultStatus]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -449,7 +475,12 @@ const AddTaskPopup = ({ isOpen, onClose, projectId }: AddTaskPopupProps) => {
 			setDescription('');
 			setDueDate(undefined);
 			setChosenPriority(priorityOptions[0]);
-			setChosenStatus(statusOptions[0]);
+			setChosenStatus(
+				defaultStatus
+					? statusOptions.find((opt) => opt.value === defaultStatus) ||
+							statusOptions[0]
+					: statusOptions[0]
+			);
 			setSelectedMembers([]);
 			setChosenMember({
 				label: 'Assignee',

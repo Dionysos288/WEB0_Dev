@@ -22,6 +22,8 @@ import SortArrowsDownUp from '@/svgs/SortArrowsDownUp';
 import Search from '@/svgs/Search';
 import CloseCircleFilled from '@/svgs/Close-Circle-Filled';
 import AddLibraryPopup from '@/components/pages/library/AddLibraryPopup';
+import AddTaskPopup from '@/components/pages/project/tasks/AddTaskPopup';
+
 interface FilterBarProps {
 	title?: string;
 	search?: boolean;
@@ -46,7 +48,9 @@ interface FilterBarProps {
 	model: ModelNames;
 	orgId?: string;
 	categories?: ExtendedCategory[];
+	projectId?: string;
 }
+
 const FilterBar: React.FC<FilterBarProps> = ({
 	title,
 	search = true,
@@ -67,11 +71,13 @@ const FilterBar: React.FC<FilterBarProps> = ({
 	ExtraFilters,
 	orgId = '',
 	categories = [],
+	projectId = '',
 }) => {
 	const [isOpenSort, setIsOpenSort] = useState<boolean>(false);
 	const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 	const [debouncedQuery, setDebouncedQuery] = useState<string>(query);
 	const [isAddLibraryOpen, setIsAddLibraryOpen] = useState<boolean>(false);
+	const [isAddTaskOpen, setIsAddTaskOpen] = useState<boolean>(false);
 
 	const getQuery = (e: ChangeEvent<HTMLInputElement>) => {
 		setQuery(e.target.value);
@@ -145,7 +151,12 @@ const FilterBar: React.FC<FilterBarProps> = ({
 							<PlusStroke fill="var(--main)" width="20" height="20" />
 						</SVG>
 					)}
-					{model !== 'library' && (
+					{model === 'task' && (
+						<SVG onClick={() => setIsAddTaskOpen(true)}>
+							<PlusStroke fill="var(--main)" width="20" height="20" />
+						</SVG>
+					)}
+					{model !== 'library' && model !== 'task' && (
 						<SVG>
 							<PlusStroke fill="var(--main)" width="20" height="20" />
 						</SVG>
@@ -230,6 +241,14 @@ const FilterBar: React.FC<FilterBarProps> = ({
 					libraryTypeId={id}
 					categories={categories}
 					organizationId={orgId}
+				/>
+			)}
+
+			{model === 'task' && (
+				<AddTaskPopup
+					isOpen={isAddTaskOpen}
+					onClose={() => setIsAddTaskOpen(false)}
+					projectId={projectId}
 				/>
 			)}
 		</>

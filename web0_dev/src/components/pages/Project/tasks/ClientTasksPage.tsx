@@ -279,6 +279,7 @@ const ClientTasksPage = ({
 				filters={options}
 				sortType={sortType}
 				setSortType={setSortType}
+				projectId={projectId}
 			/>
 
 			<Spacing space={28} />

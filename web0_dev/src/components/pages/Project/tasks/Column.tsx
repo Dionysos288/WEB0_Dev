@@ -169,6 +169,7 @@ const Column = ({
 				isOpen={showAddTask}
 				onClose={() => setShowAddTask(!showAddTask)}
 				projectId={projectId}
+				defaultStatus={column.title as TaskStatus}
 			/>
 		</>
 	);
