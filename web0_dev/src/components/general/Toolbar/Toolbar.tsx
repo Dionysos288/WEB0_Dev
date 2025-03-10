@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Toolbar.module.scss';
 import SVG from '@/components/general/SVG';
 import Dismiss from '@/svgs/Dismiss';
+import DeleteConfirmPopup from '@/components/general/DeleteConfirmPopup/DeleteConfirmPopup';
 
 export interface ToolbarAction {
 	label: string;
@@ -27,7 +28,35 @@ const Toolbar: React.FC<ToolbarProps> = ({
 	actions,
 	children,
 }) => {
+	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+	const [actionToConfirm, setActionToConfirm] = useState<ToolbarAction | null>(
+		null
+	);
+
 	if (selectedCount === 0) return null;
+
+	const handleActionClick = (action: ToolbarAction) => {
+		if (action.variant === 'danger') {
+			setActionToConfirm(action);
+			setShowDeleteConfirm(true);
+		} else {
+			action.onClick();
+		}
+	};
+
+	const handleConfirmDelete = () => {
+		if (actionToConfirm) {
+			actionToConfirm.onClick();
+			onClearSelection();
+		}
+		setShowDeleteConfirm(false);
+		setActionToConfirm(null);
+	};
+
+	const handleCancelDelete = () => {
+		setShowDeleteConfirm(false);
+		setActionToConfirm(null);
+	};
 
 	return (
 		<div className={styles.toolbar}>
@@ -43,7 +72,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 					{actions.map((action, index) => (
 						<button
 							key={index}
-							onClick={action.onClick}
+							onClick={() => handleActionClick(action)}
 							className={action.variant === 'danger' ? styles.dangerButton : ''}
 						>
 							<action.icon width="16" height="16" />
@@ -51,6 +80,12 @@ const Toolbar: React.FC<ToolbarProps> = ({
 						</button>
 					))}
 				</div>
+				{showDeleteConfirm && (
+					<DeleteConfirmPopup
+						onConfirm={handleConfirmDelete}
+						onCancel={handleCancelDelete}
+					/>
+				)}
 			</div>
 		</div>
 	);

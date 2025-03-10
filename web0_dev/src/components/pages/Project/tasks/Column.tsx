@@ -14,15 +14,48 @@ import SVG from '@/components/general/SVG';
 import Dots from '@/svgs/Dots';
 import { useOutsideRef } from '@/utils/useOutsideRef';
 import AddTaskPopup from './AddTaskPopup';
+import {
+	projectPriority,
+	TaskStatus,
+	Phase,
+	Label,
+	Member,
+} from '@prisma/client';
 
 interface ColumnProps {
 	column: TaskColumnType;
 	onHideColumn: (columnId: number) => void;
 	orgUrl: string;
 	projectId: string;
+	onUpdatePriority?: (
+		taskId: string,
+		priority: projectPriority
+	) => Promise<void>;
+	onUpdateStatus?: (taskId: string, status: TaskStatus) => Promise<void>;
+	onUpdatePhase?: (taskId: string, phaseId: string | null) => Promise<void>;
+	onUpdateAssignees?: (taskId: string, assigneeIds: string[]) => Promise<void>;
+	onUpdateLabels?: (taskId: string, labelIds: string[]) => Promise<void>;
+	onUpdateDueDate?: (taskId: string, dueDate: Date | null) => Promise<void>;
+	phases?: Phase[];
+	availableLabels?: Label[];
+	availableMembers?: Member[];
 }
 
-const Column = ({ column, onHideColumn, orgUrl, projectId }: ColumnProps) => {
+const Column = ({
+	column,
+	onHideColumn,
+	orgUrl,
+	projectId,
+	onUpdatePriority,
+	onUpdateStatus,
+	onUpdatePhase,
+	onUpdateAssignees,
+	onUpdateLabels,
+	onUpdateDueDate,
+	phases = [],
+	availableLabels = [],
+	availableMembers = [],
+}: ColumnProps) => {
 	const { title, displayTitle, tasks } = column;
 	const allTasks = tasks.length;
 	const [showDropdown, setShowDropdown] = useState(false);
@@ -102,7 +135,20 @@ const Column = ({ column, onHideColumn, orgUrl, projectId }: ColumnProps) => {
 						strategy={verticalListSortingStrategy}
 					>
 						{tasks.map((task) => (
-							<TaskComponent key={task.id} task={task} orgUrl={orgUrl} />
+							<TaskComponent
+								key={task.id}
+								task={task}
+								orgUrl={orgUrl}
+								onUpdatePriority={onUpdatePriority}
+								onUpdateStatus={onUpdateStatus}
+								onUpdatePhase={onUpdatePhase}
+								onUpdateAssignees={onUpdateAssignees}
+								onUpdateLabels={onUpdateLabels}
+								onUpdateDueDate={onUpdateDueDate}
+								phases={phases}
+								availableLabels={availableLabels}
+								availableMembers={availableMembers}
+							/>
 						))}
 					</SortableContext>
 					<button

@@ -344,6 +344,28 @@ async function updateLibraryProjects(libraryId: string, projectId: string) {
 		return { error: 'Failed to update library projects' };
 	}
 }
+
+async function deleteLibraries(libraryIds: string[]) {
+	try {
+		await prisma.library.deleteMany({
+			where: {
+				id: {
+					in: libraryIds,
+				},
+			},
+		});
+
+		revalidatePath('/library');
+		return { success: true };
+	} catch (error) {
+		console.error('Delete libraries error:', error);
+		return {
+			success: false,
+			error: 'An error occurred while deleting the libraries.',
+		};
+	}
+}
+
 export {
 	updateFilterLibrary,
 	makeFavorite,
@@ -352,4 +374,5 @@ export {
 	getCategories,
 	createLibrary,
 	updateLibraryProjects,
+	deleteLibraries,
 };

@@ -14,28 +14,51 @@
 	box-shadow: var(--boxShadow-xs);
 	cursor: pointer;
 	.topRow {
-		margin-bottom: 6px;
-		p {
-			font-size: calc(11.5 / 16 * 1rem);
-			font-weight: 400;
-			color: var(--main-60);
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		.leftSide {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			p {
+				font-size: calc(11.5 / 16 * 1rem);
+				font-weight: 400;
+				color: var(--main-60);
+			}
 		}
 	}
+
+	.selector {
+		position: relative;
+
+		.selectorPopup {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			z-index: 1000;
+		}
+	}
+
 	.row {
 		display: flex;
 		gap: 4px;
 		align-items: center;
-		margin-bottom: 10px;
+
 		h3 {
 			font-size: calc(14 / 16 * 1rem);
 			font-weight: 600;
 			line-height: calc(20 / 16 * 1rem);
 		}
 	}
+
 	.bottom {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 6px;
+		align-items: center;
+
 		.assignees {
 			display: flex;
 
@@ -60,11 +83,13 @@
 			border: 1px solid var(--main-20);
 			background: var(--main-8);
 			min-height: 24px;
+
 			.label {
 				width: 9px;
 				height: 9px;
 				border-radius: 50%;
 			}
+
 			p {
 				font-size: calc(12 / 16 * 1rem);
 				font-weight: 400;

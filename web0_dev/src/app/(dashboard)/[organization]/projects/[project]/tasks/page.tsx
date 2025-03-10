@@ -17,6 +17,7 @@ const page = async ({ params }: { params: { project: string } }) => {
 	const props = await params;
 	const { data: session } = await getUser();
 	const organizationSlug = session?.session.organizationSlug;
+	const organizationId = session?.session.organizationId;
 	const project = await prisma.project.findUnique({
 		where: {
 			id: props.project,
@@ -39,6 +40,22 @@ const page = async ({ params }: { params: { project: string } }) => {
 			},
 		},
 	});
+	const phases = await prisma.phase.findMany({
+		where: {
+			projectId: props.project,
+		},
+	});
+	const availableLabels = await prisma.label.findMany({
+		where: {
+			organizationId: organizationId,
+		},
+	});
+	const availableMembers = await prisma.member.findMany({
+		where: {
+			organizationId: organizationId,
+		},
+	});
+
 	if (project) {
 		const transformedTasks = project.tasks.map((task) => ({
 			...task,
@@ -76,6 +93,9 @@ const page = async ({ params }: { params: { project: string } }) => {
 					tasksData={transformedTasks}
 					orgUrl={organizationSlug}
 					projectId={project.id}
+					phases={phases}
+					availableLabels={availableLabels}
+					availableMembers={availableMembers}
 				/>
 			</>
 		);

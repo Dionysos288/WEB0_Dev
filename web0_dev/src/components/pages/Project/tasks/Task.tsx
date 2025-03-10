@@ -9,6 +9,8 @@ import {
 	Comment,
 	Label,
 	Member,
+	projectPriority,
+	TaskStatus,
 } from '@prisma/client';
 import Clock from '@/svgs/Clock';
 import ChatText from '@/svgs/ChatText';
@@ -22,6 +24,13 @@ import UrgentPriority from '@/svgs/UrgentPriority';
 import LowPriority from '@/svgs/LowPriority';
 import { getDateFormat } from '@/utils/DateHooks';
 import DatePicker from '@/svgs/DatePicker';
+import Spacing from '@/components/general/Spacing';
+import SVG from '@/components/general/SVG';
+import { useState, useRef } from 'react';
+import ButtonSelector from '@/components/pages/projects/addProject/ButtonSelector';
+import ClickOutsideWrapper from '@/components/general/CllickOutsideWrapper';
+import SingleDatePicker from '@/components/general/ui/date/SingleDatePicker';
+import LabelIcon from '@/svgs/Label';
 
 interface TaskProps {
 	task: TaskType & {
@@ -32,9 +41,33 @@ interface TaskProps {
 		assignees?: Member[];
 	};
 	orgUrl?: string;
+	onUpdatePriority?: (
+		taskId: string,
+		priority: projectPriority
+	) => Promise<void>;
+	onUpdateStatus?: (taskId: string, status: TaskStatus) => Promise<void>;
+	onUpdatePhase?: (taskId: string, phaseId: string | null) => Promise<void>;
+	onUpdateAssignees?: (taskId: string, assigneeIds: string[]) => Promise<void>;
+	onUpdateLabels?: (taskId: string, labelIds: string[]) => Promise<void>;
+	onUpdateDueDate?: (taskId: string, dueDate: Date | null) => Promise<void>;
+	phases?: Phase[];
+	availableLabels?: Label[];
+	availableMembers?: Member[];
 }
 
-const Task = ({ task, orgUrl }: TaskProps) => {
+const Task = ({
+	task,
+	orgUrl,
+	onUpdatePriority,
+	onUpdateStatus,
+	onUpdatePhase,
+	onUpdateAssignees,
+	onUpdateLabels,
+	onUpdateDueDate,
+	phases = [],
+	availableLabels = [],
+	availableMembers = [],
+}: TaskProps) => {
 	const router = useRouter();
 	const {
 		attributes,
@@ -49,12 +82,220 @@ const Task = ({ task, orgUrl }: TaskProps) => {
 	});
 	const style = { transition, transform: CSS.Transform.toString(transform) };
 
+	// Priority selector state
+	const [isPriorityOpen, setIsPriorityOpen] = useState(false);
+	const [priorityQuery, setPriorityQuery] = useState('');
+	const [currentPriority, setCurrentPriority] = useState<projectPriority>(
+		task.priority || 'noPriority'
+	);
+	const priorityRef = useRef(null);
+
+	// Status selector state
+	const [isStatusOpen, setIsStatusOpen] = useState(false);
+	const [statusQuery, setStatusQuery] = useState('');
+	const [currentStatus, setCurrentStatus] = useState<TaskStatus>(task.status);
+	const statusRef = useRef(null);
+
+	// Phase selector state
+	const [isPhaseOpen, setIsPhaseOpen] = useState(false);
+	const [phaseQuery, setPhaseQuery] = useState('');
+	const [currentPhase, setCurrentPhase] = useState<Phase | null>(
+		task.Phase || null
+	);
+	const phaseRef = useRef(null);
+
+	// Assignee selector state
+	const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
+	const [assigneeQuery, setAssigneeQuery] = useState('');
+	const [selectedAssignees, setSelectedAssignees] = useState<string[]>(
+		task.assignees?.map((a) => a.id) || []
+	);
+	const assigneeRef = useRef(null);
+
+	// Label selector state
+	const [isLabelOpen, setIsLabelOpen] = useState<string | null>(null);
+	const [labelQuery, setLabelQuery] = useState('');
+	const [selectedLabels, setSelectedLabels] = useState<string[]>(
+		task.labels?.map((l) => l.id) || []
+	);
+	const labelRef = useRef(null);
+
+	// Date picker state
+	const [isDateOpen, setIsDateOpen] = useState(false);
+	const [currentDueDate, setCurrentDueDate] = useState<Date | null>(
+		task.dueDate ? new Date(task.dueDate) : null
+	);
+
+	const priorityOptions = [
+		{ label: 'No Priority', value: 'noPriority', icon: NoPriority },
+		{ label: 'Low', value: 'low', icon: LowPriority },
+		{ label: 'Medium', value: 'medium', icon: MediumPriority },
+		{ label: 'High', value: 'high', icon: HighPriority },
+		{ label: 'Urgent', value: 'urgent', icon: UrgentPriority },
+	];
+
+	const statusOptions = [
+		{ label: 'Backlog', value: 'Backlog', icon: Team },
+		{ label: 'To Do', value: 'todo', icon: Team },
+		{ label: 'In Progress', value: 'inProgress', icon: Team },
+		{ label: 'In Review', value: 'inReview', icon: Team },
+		{ label: 'Completed', value: 'Completed', icon: Team },
+		{ label: 'Canceled', value: 'canceled', icon: Team },
+	];
+
+	const phaseOptions = [
+		{ label: 'No Phase', value: 'none', icon: PhaseIcon },
+		...phases.map((phase) => ({
+			label: phase.title,
+			value: phase.id,
+			icon: PhaseIcon,
+		})),
+	];
+
+	const memberOptions = availableMembers.map((member) => ({
+		label: member.user?.name || member.user?.email || 'Unknown',
+		value: member.id,
+		icon: Team,
+	}));
+
+	const labelOptions = availableLabels.map((label) => ({
+		label: label.name,
+		value: label.id,
+		icon: LabelIcon,
+		color: label.color,
+	}));
+
+	const [priorityState, setPriorityOptions] = useState(priorityOptions);
+	const [statusState, setStatusOptions] = useState(statusOptions);
+	const [phaseState, setPhaseOptions] = useState(phaseOptions);
+	const [memberState, setMemberOptions] = useState(memberOptions);
+	const [labelState, setLabelOptions] = useState(labelOptions);
+
+	const handlePriorityChange = async (value: string | { value: string }) => {
+		const newPriority = (
+			typeof value === 'string' ? value : value.value
+		) as projectPriority;
+		setCurrentPriority(newPriority);
+		setIsPriorityOpen(false);
+
+		if (onUpdatePriority) {
+			try {
+				await onUpdatePriority(task.id, newPriority);
+			} catch (error) {
+				setCurrentPriority(task.priority || 'noPriority');
+				console.error('Failed to update priority:', error);
+			}
+		}
+	};
+
+	const handleStatusChange = async (value: string | { value: string }) => {
+		const newStatus = (
+			typeof value === 'string' ? value : value.value
+		) as TaskStatus;
+		setCurrentStatus(newStatus);
+		setIsStatusOpen(false);
+
+		if (onUpdateStatus) {
+			try {
+				await onUpdateStatus(task.id, newStatus);
+			} catch (error) {
+				setCurrentStatus(task.status);
+				console.error('Failed to update status:', error);
+			}
+		}
+	};
+
+	const handlePhaseChange = async (value: string | { value: string }) => {
+		const phaseId = typeof value === 'string' ? value : value.value;
+		const newPhase =
+			phaseId === 'none' ? null : phases.find((p) => p.id === phaseId) || null;
+		setCurrentPhase(newPhase);
+		setIsPhaseOpen(false);
+
+		if (onUpdatePhase) {
+			try {
+				await onUpdatePhase(task.id, newPhase?.id || null);
+			} catch (error) {
+				setCurrentPhase(task.Phase || null);
+				console.error('Failed to update phase:', error);
+			}
+		}
+	};
+
+	const handleAssigneesChange = async (value: string | { value: string }) => {
+		const memberId = typeof value === 'string' ? value : value.value;
+		const newAssignees = selectedAssignees.includes(memberId)
+			? selectedAssignees.filter((id) => id !== memberId)
+			: [...selectedAssignees, memberId];
+
+		setSelectedAssignees(newAssignees);
+
+		if (onUpdateAssignees) {
+			try {
+				await onUpdateAssignees(task.id, newAssignees);
+			} catch (error) {
+				setSelectedAssignees(task.assignees?.map((a) => a.id) || []);
+				console.error('Failed to update assignees:', error);
+			}
+		}
+	};
+
+	const handleLabelsChange = async (value: string | { value: string }) => {
+		const labelId = typeof value === 'string' ? value : value.value;
+		const newLabels = selectedLabels.includes(labelId)
+			? selectedLabels.filter((id) => id !== labelId)
+			: [...selectedLabels, labelId];
+
+		setSelectedLabels(newLabels);
+
+		if (onUpdateLabels) {
+			try {
+				await onUpdateLabels(task.id, newLabels);
+			} catch (error) {
+				setSelectedLabels(task.labels?.map((l) => l.id) || []);
+				console.error('Failed to update labels:', error);
+			}
+		}
+	};
+
+	const handleDateChange = async (date: Date | null) => {
+		setCurrentDueDate(date);
+		setIsDateOpen(false);
+
+		if (onUpdateDueDate) {
+			try {
+				await onUpdateDueDate(task.id, date);
+			} catch (error) {
+				setCurrentDueDate(task.dueDate ? new Date(task.dueDate) : null);
+				console.error('Failed to update due date:', error);
+			}
+		}
+	};
+
+	const handleQueryChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		setOptions: React.Dispatch<React.SetStateAction<typeof priorityOptions>>,
+		oldData: typeof priorityOptions,
+		setQuery: (value: string) => void
+	) => {
+		const value = e.target.value;
+		setQuery(value);
+
+		if (value.trim() === '') {
+			setOptions(oldData);
+			return;
+		}
+
+		const filtered = oldData.filter((option) =>
+			option.label.toLowerCase().includes(value.toLowerCase())
+		);
+		setOptions(filtered);
+	};
+
 	const handleClick = (e: React.MouseEvent) => {
-		// Prevent click when dragging
 		if (isDragging) return;
 
-		// Don't navigate if we're clicking on a draggable handle
-		if ((e.target as HTMLElement).closest('[data-handle]')) return;
+		if ((e.target as HTMLElement).closest('[data-selector]')) return;
 
 		if (orgUrl) {
 			router.push(`/${orgUrl}/projects/${task.projectId}/tasks/${task.id}`);
@@ -73,6 +314,28 @@ const Task = ({ task, orgUrl }: TaskProps) => {
 		);
 	}
 
+	const PriorityIcon =
+		priorityOptions.find((opt) => opt.value === currentPriority)?.icon ||
+		NoPriority;
+	const StatusIcon =
+		statusOptions.find((opt) => opt.value === currentStatus)?.icon || Team;
+
+	const getDateColor = (date: Date | null) => {
+		if (!date) return 'var(--main-65)';
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		const dueDate = new Date(date);
+		dueDate.setHours(0, 0, 0, 0);
+
+		if (dueDate < today) return 'var(--error-600)';
+
+		const sevenDaysFromNow = new Date(today);
+		sevenDaysFromNow.setDate(today.getDate() + 7);
+
+		if (dueDate <= sevenDaysFromNow) return 'var(--orange-90)';
+		return 'var(--main)';
+	};
+
 	return (
 		<div
 			ref={setNodeRef}
@@ -83,35 +346,127 @@ const Task = ({ task, orgUrl }: TaskProps) => {
 			onClick={handleClick}
 		>
 			<div className={styles.topRow}>
-				<p>{task.customId}</p>
+				<div className={styles.leftSide}>
+					<div
+						className={styles.selector}
+						onClick={(e) => {
+							e.stopPropagation();
+							setIsPriorityOpen(true);
+						}}
+						data-selector="priority"
+					>
+						<SVG>
+							<PriorityIcon
+								fill={
+									currentPriority === 'urgent'
+										? 'var(--orange-90)'
+										: 'var(--main)'
+								}
+								width="14"
+								height="14"
+							/>
+						</SVG>
+						{isPriorityOpen && (
+							<div className={styles.selectorPopup}>
+								<ClickOutsideWrapper onClose={() => setIsPriorityOpen(false)}>
+									<ButtonSelector
+										query={priorityQuery}
+										onQueryChange={(e) =>
+											handleQueryChange(
+												e,
+												setPriorityOptions,
+												priorityOptions,
+												setPriorityQuery
+											)
+										}
+										inputRef={priorityRef}
+										options={priorityState}
+										placeholder="Select Priority"
+										oldData={priorityOptions}
+										setOptions={setPriorityOptions}
+										setIsChosen={handlePriorityChange}
+										setIsOpenOption={setIsPriorityOpen}
+										isChosen={currentPriority}
+									/>
+								</ClickOutsideWrapper>
+							</div>
+						)}
+					</div>
+					<p>{task.customId}</p>
+				</div>
+
+				<div
+					className={styles.selector}
+					onClick={(e) => {
+						e.stopPropagation();
+						setIsStatusOpen(true);
+					}}
+					data-selector="status"
+				>
+					<SVG>
+						<StatusIcon fill={'var(--main-70)'} width="14" height="14" />
+					</SVG>
+					{isStatusOpen && (
+						<div className={styles.selectorPopup}>
+							<ClickOutsideWrapper onClose={() => setIsStatusOpen(false)}>
+								<ButtonSelector
+									query={statusQuery}
+									onQueryChange={(e) =>
+										handleQueryChange(
+											e,
+											setStatusOptions,
+											statusOptions,
+											setStatusQuery
+										)
+									}
+									inputRef={statusRef}
+									options={statusState}
+									placeholder="Select Status"
+									oldData={statusOptions}
+									setOptions={setStatusOptions}
+									setIsChosen={handleStatusChange}
+									setIsOpenOption={setIsStatusOpen}
+									isChosen={currentStatus}
+								/>
+							</ClickOutsideWrapper>
+						</div>
+					)}
+				</div>
 			</div>
-			<div className={styles.row} data-handle>
-				{task.status === 'Backlog' && (
-					<Team fill={'var(--main-70)'} width="14" height="14" />
-				)}
-				{task.status === 'todo' && (
-					<Team fill={'var(--main-70)'} width="14" height="14" />
-				)}
-				{task.status === 'inProgress' && (
-					<Team fill={'var(--main-70)'} width="14" height="14" />
-				)}
-				{task.status === 'inReview' && (
-					<Team fill={'var(--main-70)'} width="14" height="14" />
-				)}
-				{task.status === 'Completed' && (
-					<Team fill={'var(--main-70)'} width="14" height="14" />
-				)}
-				{task.status === 'canceled' && (
-					<Team fill={'var(--main-70)'} width="14" height="14" />
-				)}
+			<Spacing space={4} />
+			<div className={styles.row}>
 				<h3>{task.title}</h3>
 			</div>
-
+			<Spacing space={12} />
 			<div className={styles.bottom}>
-				{task.assignees && task.assignees.length > 0 && (
+				<div
+					className={styles.selector}
+					onClick={(e) => {
+						e.stopPropagation();
+						setIsAssigneeOpen(true);
+					}}
+					data-selector="assignee"
+				>
 					<div className={styles.assignees}>
-						{task.assignees.map((assignee) => (
-							<div className={styles.imgWrapper} key={assignee.id}>
+						{selectedAssignees.length > 0 ? (
+							selectedAssignees.map((assigneeId) => {
+								const member = availableMembers.find(
+									(m) => m.id === assigneeId
+								);
+								return (
+									<div className={styles.imgWrapper} key={assigneeId}>
+										<Image
+											src={member?.user?.image || 'https://placehold.co/24'}
+											alt={`${member?.user?.name || 'User'}'s profile picture`}
+											width={24}
+											height={24}
+											className={styles.profileImage}
+										/>
+									</div>
+								);
+							})
+						) : (
+							<div className={styles.imgWrapper}>
 								<Image
 									src={'https://placehold.co/24'}
 									alt={`User's profile picture`}
@@ -120,41 +475,170 @@ const Task = ({ task, orgUrl }: TaskProps) => {
 									className={styles.profileImage}
 								/>
 							</div>
-						))}
+						)}
 					</div>
-				)}
-				<div className={`${styles.wrapper} `}>
-					{task.priority === 'noPriority' && (
-						<NoPriority fill={'var(--main)'} width="12" height="12" />
-					)}
-					{task.priority === 'low' && (
-						<LowPriority fill={'var(--main)'} width="12" height="12" />
-					)}
-					{task.priority === 'medium' && (
-						<MediumPriority fill={'var(--main)'} width="12" height="12" />
-					)}
-					{task.priority === 'high' && (
-						<HighPriority fill={'var(--main)'} width="12" height="12" />
-					)}
-					{task.priority === 'urgent' && (
-						<UrgentPriority fill={'var(--orange-90)'} width="12" height="12" />
+					{isAssigneeOpen && (
+						<div className={styles.selectorPopup}>
+							<ClickOutsideWrapper onClose={() => setIsAssigneeOpen(false)}>
+								<ButtonSelector
+									query={assigneeQuery}
+									onQueryChange={(e) =>
+										handleQueryChange(
+											e,
+											setMemberOptions,
+											memberOptions,
+											setAssigneeQuery
+										)
+									}
+									inputRef={assigneeRef}
+									options={memberState}
+									placeholder="Select Assignees"
+									oldData={memberOptions}
+									setOptions={setMemberOptions}
+									setIsChosen={handleAssigneesChange}
+									setIsOpenOption={setIsAssigneeOpen}
+									isChosen=""
+									isComboBox={true}
+									selectedItems={selectedAssignees}
+									onSelectedItemsChange={setSelectedAssignees}
+								/>
+							</ClickOutsideWrapper>
+						</div>
 					)}
 				</div>
-				{task.Phase && (
+				{currentPhase && (
+					<div
+						className={styles.selector}
+						onClick={(e) => {
+							e.stopPropagation();
+							setIsPhaseOpen(true);
+						}}
+						data-selector="phase"
+					>
+						<div className={styles.wrapper}>
+							<PhaseIcon fill={'var(--main-70)'} width="12" height="12" />
+							<p>{currentPhase.title}</p>
+						</div>
+
+						{isPhaseOpen && (
+							<div className={styles.selectorPopup}>
+								<ClickOutsideWrapper onClose={() => setIsPhaseOpen(false)}>
+									<ButtonSelector
+										query={phaseQuery}
+										onQueryChange={(e) =>
+											handleQueryChange(
+												e,
+												setPhaseOptions,
+												phaseOptions,
+												setPhaseQuery
+											)
+										}
+										inputRef={phaseRef}
+										options={phaseState}
+										placeholder="Select Phase"
+										oldData={phaseOptions}
+										setOptions={setPhaseOptions}
+										setIsChosen={handlePhaseChange}
+										setIsOpenOption={setIsPhaseOpen}
+										isChosen={currentPhase?.id || 'none'}
+									/>
+								</ClickOutsideWrapper>
+							</div>
+						)}
+					</div>
+				)}
+				{currentDueDate && (
+					<div
+						className={styles.selector}
+						onClick={(e) => {
+							e.stopPropagation();
+							setIsDateOpen(true);
+						}}
+						data-selector="date"
+					>
+						<div className={styles.wrapper}>
+							<DatePicker
+								fill={getDateColor(currentDueDate)}
+								width="12"
+								height="12"
+							/>
+							<p style={{ color: getDateColor(currentDueDate) }}>
+								{getDateFormat(currentDueDate.toString())}
+							</p>
+						</div>
+
+						{isDateOpen && (
+							<div className={styles.selectorPopup}>
+								<ClickOutsideWrapper onClose={() => setIsDateOpen(false)}>
+									<SingleDatePicker
+										date={currentDueDate}
+										setDate={handleDateChange}
+										setIsDateOpen={setIsDateOpen}
+									/>
+								</ClickOutsideWrapper>
+							</div>
+						)}
+					</div>
+				)}
+				{selectedLabels.length > 0 && (
+					<>
+						{selectedLabels.map((labelId) => {
+							const label = availableLabels.find((l) => l.id === labelId);
+							if (!label) return null;
+							return (
+								<div
+									key={labelId}
+									className={styles.selector}
+									onClick={(e) => {
+										e.stopPropagation();
+										setIsLabelOpen(isLabelOpen === labelId ? null : labelId);
+									}}
+									data-selector="label"
+								>
+									<div className={styles.wrapper}>
+										<div
+											className={styles.label}
+											style={{ backgroundColor: label.color }}
+										></div>
+										<p>{label.name}</p>
+									</div>
+									{isLabelOpen === labelId && (
+										<div className={styles.selectorPopup}>
+											<ClickOutsideWrapper onClose={() => setIsLabelOpen(null)}>
+												<ButtonSelector
+													query={labelQuery}
+													onQueryChange={(e) =>
+														handleQueryChange(
+															e,
+															setLabelOptions,
+															labelOptions,
+															setLabelQuery
+														)
+													}
+													inputRef={labelRef}
+													options={labelState}
+													placeholder="Select Labels"
+													oldData={labelOptions}
+													setOptions={setLabelOptions}
+													setIsChosen={handleLabelsChange}
+													setIsOpenOption={() => setIsLabelOpen(null)}
+													isChosen=""
+													isComboBox={true}
+													selectedItems={selectedLabels}
+													onSelectedItemsChange={setSelectedLabels}
+													showColorBadge={true}
+												/>
+											</ClickOutsideWrapper>
+										</div>
+									)}
+								</div>
+							);
+						})}
+					</>
+				)}
+
+				{task.estimatedTime || (task.timeLogs && task.timeLogs.length > 0) ? (
 					<div className={styles.wrapper}>
-						<PhaseIcon fill={'var(--main-70)'} width="12" height="12" />
-						<p>{task.Phase?.title}</p>
-					</div>
-				)}
-				{task.dueDate && (
-					<div className={`${styles.wrapper} `}>
-						<DatePicker fill={'var(--main-90)'} width="12" height="12" />
-						<p>{getDateFormat(String(task.dueDate))}</p>
-					</div>
-				)}
-				{(task.estimatedTime ||
-					(task.timeLogs && task.timeLogs.length > 0)) && (
-					<div className={`${styles.wrapper} `}>
 						<Clock fill={'var(--main)'} width="12" height="12" />
 						<p>{`${
 							task.estimatedTime && task.timeLogs && task.timeLogs.length > 0
@@ -172,20 +656,8 @@ const Task = ({ task, orgUrl }: TaskProps) => {
 								  }h`
 						}`}</p>
 					</div>
-				)}
-				{task.labels && task.labels.length > 0 && (
-					<>
-						{task.labels.map((label) => (
-							<div key={label.id} className={`${styles.wrapper}`}>
-								<div
-									className={styles.label}
-									style={{ backgroundColor: label.color }}
-								></div>
-								<p>{label.name}</p>
-							</div>
-						))}
-					</>
-				)}
+				) : null}
+
 				{task.Comment && task.Comment.length > 0 && (
 					<div className={`${styles.wrapper} ${styles.full}`}>
 						<ChatText fill={'var(--main-70)'} width="12" height="12" />

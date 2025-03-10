@@ -30,6 +30,7 @@ import {
 	Comment,
 	Label,
 	Member,
+	projectPriority,
 } from '@prisma/client';
 import { TaskColumnType } from '@/components/types/types';
 import ArrowLineRight from '@/svgs/ArrowLineRight';
@@ -38,6 +39,7 @@ import Dots from '@/svgs/Dots';
 import { useOutsideRef } from '@/utils/useOutsideRef';
 import { updateTaskStatus } from '@/actions/CRUDTask';
 import { toast } from 'sonner';
+import { Dispatch, SetStateAction } from 'react';
 
 const statusHeaderMap: Record<TaskStatus, string> = {
 	Backlog: 'Backlog',
@@ -99,33 +101,48 @@ const HiddenColumn = ({
 	);
 };
 
+type ExtendedTask = Task & {
+	phase?: Phase;
+	comments?: Comment[];
+	timeLogs?: TimeLog[];
+	labels?: Label[];
+	assignees?: Member[];
+};
+
+interface TaskGalleryProps {
+	tasks: ExtendedTask[];
+	setTasks: Dispatch<SetStateAction<ExtendedTask[]>>;
+	orgUrl: string;
+	projectId: string;
+	onUpdatePriority?: (
+		taskId: string,
+		priority: projectPriority
+	) => Promise<void>;
+	onUpdateStatus?: (taskId: string, status: TaskStatus) => Promise<void>;
+	onUpdatePhase?: (taskId: string, phaseId: string | null) => Promise<void>;
+	onUpdateAssignees?: (taskId: string, assigneeIds: string[]) => Promise<void>;
+	onUpdateLabels?: (taskId: string, labelIds: string[]) => Promise<void>;
+	onUpdateDueDate?: (taskId: string, dueDate: Date | null) => Promise<void>;
+	phases?: Phase[];
+	availableLabels?: Label[];
+	availableMembers?: Member[];
+}
+
 const TaskGallery = ({
 	tasks,
 	setTasks,
-	projectId,
 	orgUrl,
-}: {
-	tasks: (Task & {
-		Phase?: Phase;
-		Comment?: Comment[];
-		timeLogs?: TimeLog[];
-		labels?: Label[];
-		assignees?: Member[];
-	})[];
-	setTasks: React.Dispatch<
-		React.SetStateAction<
-			(Task & {
-				Phase?: Phase;
-				Comment?: Comment[];
-				timeLogs?: TimeLog[];
-				labels?: Label[];
-				assignees?: Member[];
-			})[]
-		>
-	>;
-	projectId: string;
-	orgUrl: string;
-}) => {
+	projectId,
+	onUpdatePriority,
+	onUpdateStatus,
+	onUpdatePhase,
+	onUpdateAssignees,
+	onUpdateLabels,
+	onUpdateDueDate,
+	phases = [],
+	availableLabels = [],
+	availableMembers = [],
+}: TaskGalleryProps) => {
 	const [, startTransition] = useTransition();
 	const statuses = useMemo<TaskStatus[]>(
 		() => [
@@ -371,6 +388,15 @@ const TaskGallery = ({
 								onHideColumn={handleHideColumn}
 								orgUrl={orgUrl}
 								projectId={projectId}
+								onUpdatePriority={onUpdatePriority}
+								onUpdateStatus={onUpdateStatus}
+								onUpdatePhase={onUpdatePhase}
+								onUpdateAssignees={onUpdateAssignees}
+								onUpdateLabels={onUpdateLabels}
+								onUpdateDueDate={onUpdateDueDate}
+								phases={phases}
+								availableLabels={availableLabels}
+								availableMembers={availableMembers}
 							/>
 						))}
 					</div>
@@ -407,7 +433,15 @@ const TaskGallery = ({
 				</div>
 				{createPortal(
 					<DragOverlay>
-						{activeTask && <TaskComponent task={activeTask} orgUrl={orgUrl} />}
+						{activeTask && (
+							<TaskComponent
+								task={activeTask}
+								orgUrl={orgUrl}
+								phases={phases}
+								availableLabels={availableLabels}
+								availableMembers={availableMembers}
+							/>
+						)}
 					</DragOverlay>,
 					document.body
 				)}

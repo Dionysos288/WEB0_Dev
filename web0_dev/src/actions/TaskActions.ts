@@ -281,3 +281,23 @@ const createActivity = async ({
 		return { data: null, error: 'Failed to create activity' };
 	}
 };
+
+export const updateTaskPriority = async (
+	taskId: string,
+	priority: projectPriority,
+	orgUrl: string,
+	projectId: string
+) => {
+	try {
+		const updatedTask = await prisma.task.update({
+			where: { id: taskId },
+			data: { priority },
+		});
+
+		revalidatePath(`/${orgUrl}/projects/${projectId}/tasks`);
+		return { success: true, data: updatedTask };
+	} catch (error) {
+		console.error('Error updating task priority:', error);
+		return { success: false, error: 'Failed to update task priority' };
+	}
+};

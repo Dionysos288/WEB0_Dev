@@ -1,0 +1,76 @@
+.deleteConfirmWrapper {
+	position: absolute;
+	bottom: calc(100% + 16px);
+	right: calc(0px - 8px);
+	z-index: 1001;
+
+	.deleteConfirm {
+		background-color: var(--white);
+		border-radius: 8px;
+		border: 1px solid var(--main-10);
+		box-shadow: var(--boxShadow-md);
+		padding: 16px;
+		min-width: 280px;
+
+		h3 {
+			margin: 0;
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 500;
+			color: var(--main-90);
+			margin-bottom: 4px;
+		}
+
+		p {
+			margin: 0;
+			font-size: calc(13 / 16 * 1rem);
+			color: var(--main-65);
+			margin-bottom: 16px;
+		}
+
+		.deleteActions {
+			display: flex;
+			justify-content: flex-end;
+			gap: 8px;
+
+			button {
+				padding: 6px 12px;
+				border-radius: 6px;
+				font-size: calc(13 / 16 * 1rem);
+				font-weight: 500;
+				transition: all 0.2s ease;
+				border: 1px solid var(--main-10);
+				cursor: pointer;
+
+				&.cancelButton {
+					background-color: var(--main-5);
+					color: var(--main-90);
+
+					&:hover {
+						background-color: var(--main-10);
+					}
+				}
+
+				&.confirmButton {
+					background-color: var(--error-600-90);
+					color: var(--white);
+					border-color: var(--error-600-90);
+
+					&:hover {
+						background-color: var(--error-600);
+					}
+				}
+			}
+		}
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}

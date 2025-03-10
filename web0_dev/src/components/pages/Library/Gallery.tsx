@@ -3,7 +3,11 @@ import styles from './Gallery.module.scss';
 import Link from 'next/link';
 import { ExtendedLibrary } from '@/components/types/types';
 import Image from 'next/image';
-import { makeFavorite, updateLibraryProjects } from '@/actions/CRUDLibrary';
+import {
+	makeFavorite,
+	updateLibraryProjects,
+	deleteLibraries,
+} from '@/actions/CRUDLibrary';
 import { useState, useEffect, useRef } from 'react';
 import BookmarkFilled from '@/svgs/Bookmark-Filled';
 import BookmarkOutline from '@/svgs/Bookmark-Outline';
@@ -33,9 +37,11 @@ const Gallery = ({
 	slug: string;
 	projects: Project[];
 }) => {
-	const items = Array.isArray(data) ? data : [data];
+	const [displayedItems, setDisplayedItems] = useState(
+		Array.isArray(data) ? data : [data]
+	);
 	const [favoriteStatus, setFavoriteStatus] = useState(
-		items.reduce((acc, item) => {
+		displayedItems.reduce((acc, item) => {
 			acc[item.id] = item.favorite;
 			return acc;
 		}, {} as { [key: string]: boolean })
@@ -53,7 +59,7 @@ const Gallery = ({
 	const [itemProjectSelections, setItemProjectSelections] = useState<{
 		[key: string]: string[];
 	}>(
-		items.reduce((acc, item) => {
+		displayedItems.reduce((acc, item) => {
 			acc[item.id] = item.projects?.map((p) => p.id) || [];
 			return acc;
 		}, {} as { [key: string]: string[] })
@@ -149,7 +155,6 @@ const Gallery = ({
 		e.preventDefault();
 
 		if (!isShiftPressed && !isCtrlPressed) {
-			// Clear selection on normal click
 			setSelectedItems(new Set());
 			setAnchorItem(null);
 			setLastSelectedItem(null);
@@ -179,7 +184,7 @@ const Gallery = ({
 				return;
 			}
 
-			const itemIds = items.map((item) => item.id);
+			const itemIds = displayedItems.map((item) => item.id);
 			const anchorIndex = itemIds.indexOf(anchorItem);
 			const currentIndex = itemIds.indexOf(id);
 			const lastIndex = lastSelectedItem
@@ -228,13 +233,41 @@ const Gallery = ({
 	};
 
 	const handleBulkDelete = async () => {
-		// Implement bulk delete functionality
-		console.log('Deleting items:', Array.from(selectedItems));
+		const itemsToDelete = Array.from(selectedItems);
+
+		setDisplayedItems((prev) =>
+			prev.filter((item) => !itemsToDelete.includes(item.id))
+		);
+		setSelectedItems(new Set());
+
+		try {
+			const result = await deleteLibraries(itemsToDelete);
+			if (!result.success) {
+				setDisplayedItems((prev) => {
+					const itemsToRestore = Array.isArray(data) ? data : [data];
+					return [
+						...prev,
+						...itemsToRestore.filter((item) => itemsToDelete.includes(item.id)),
+					];
+				});
+				setSelectedItems(new Set(itemsToDelete));
+				console.error('Failed to delete items:', result.error);
+			}
+		} catch (error) {
+			setDisplayedItems((prev) => {
+				const itemsToRestore = Array.isArray(data) ? data : [data];
+				return [
+					...prev,
+					...itemsToRestore.filter((item) => itemsToDelete.includes(item.id)),
+				];
+			});
+			setSelectedItems(new Set(itemsToDelete));
+			console.error('Error deleting items:', error);
+		}
 	};
 
 	const handleAssignToProject = () => {
 		setShowBulkProjectSelector(true);
-		// Initialize with projects that are common to all selected items
 		const selectedItemsArray = Array.from(selectedItems);
 		const commonProjects = selectedItemsArray.reduce(
 			(common, itemId, index) => {
@@ -251,7 +284,6 @@ const Gallery = ({
 		const projectId = typeof value === 'string' ? value : value.value;
 		const selectedItemsArray = Array.from(selectedItems);
 
-		// For each selected item, update if not already assigned
 		const updatePromises = selectedItemsArray.map(async (itemId) => {
 			const currentSelections = itemProjectSelections[itemId] || [];
 			if (!currentSelections.includes(projectId)) {
@@ -267,11 +299,10 @@ const Gallery = ({
 
 		await Promise.all(updatePromises);
 		setShowBulkProjectSelector(false);
-		setSelectedItems(new Set()); // Clear selection after assignment
+		setSelectedItems(new Set());
 	};
 
 	const handleChangeCategory = () => {
-		// Implement category change functionality
 		console.log('Changing category for items:', Array.from(selectedItems));
 	};
 
@@ -434,7 +465,7 @@ const Gallery = ({
 	return (
 		<>
 			<div className={styles.GalleryContainer}>
-				{items.map((item) => {
+				{displayedItems.map((item) => {
 					const coverUrl = getCoverImageUrl(item.metadata as LibraryMetadata);
 					const isVideo = isVideoUrl(coverUrl);
 					const isSelected = selectedItems.has(item.id);
