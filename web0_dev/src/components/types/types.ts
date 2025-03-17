@@ -1,4 +1,3 @@
-import prisma from '@/lib/db';
 import {
 	Category,
 	Client,
@@ -13,11 +12,12 @@ import {
 	Comment,
 	Label,
 	Member,
+	PrismaClient,
 } from '@prisma/client';
 import { ReactNode } from 'react';
 
 type TableHeader = [keyof File, string, (string | ReactNode)?];
-type ModelNames = keyof typeof prisma;
+type ModelNames = keyof PrismaClient;
 type ExtendedLibrary = Library & { category: Category | null };
 type ExtendedCategory = Category & { subcategories: ExtendedCategory[] };
 type fileType = Omit<File, 'size'>;

@@ -5,6 +5,16 @@ import { v4 as uuidv4 } from 'uuid';
  */
 const R2_BASE_URL = 'https://pub-fd01615382d74cf9899aac2d87560049.r2.dev';
 
+// Get the base URL for API calls
+const getApiBaseUrl = () => {
+	// In browser environment
+	if (typeof window !== 'undefined') {
+		return window.location.origin;
+	}
+	// In server environment (fallback to a default or environment variable)
+	return process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+};
+
 /**
  * Generates a unique file path for storing in R2
  *
@@ -49,7 +59,7 @@ export const uploadToR2 = async (
 		formData.append('path', filePath);
 
 		// Send the file to your API endpoint that handles R2 uploads
-		const response = await fetch('/api/upload', {
+		const response = await fetch(`${getApiBaseUrl()}/api/upload`, {
 			method: 'POST',
 			body: formData,
 		});
@@ -141,7 +151,7 @@ export const deleteFromR2 = async (url: string): Promise<boolean> => {
 		const filePath = url.replace(`${R2_BASE_URL}/`, '');
 
 		// Send the delete request to your API endpoint
-		const response = await fetch('/api/upload', {
+		const response = await fetch(`${getApiBaseUrl()}/api/upload`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',

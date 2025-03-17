@@ -1,13 +1,22 @@
+'use client';
+
 import styles from './ProjectMiddleRight.module.scss';
 import { File, Project } from '@prisma/client';
 import GetFileSize from '@/utils/GetFileSize';
 import Spacing from '@/components/general/Spacing';
 import { getTimeAgo } from '@/utils/DateHooks';
 import FilePdf from '@/svgs/FilePdf';
+import { downloadFile } from '@/utils/fileUtils';
+
 type projectWithFile = Project & {
 	files: File[];
 };
+
 const ProjectMiddleRight = ({ project }: { project: projectWithFile }) => {
+	const handleFileClick = (file: File) => {
+		downloadFile(file.url, file.name);
+	};
+
 	return (
 		<div className={styles.FilesWrapper}>
 			<div>
@@ -16,7 +25,12 @@ const ProjectMiddleRight = ({ project }: { project: projectWithFile }) => {
 				{project.files.length > 0 ? (
 					<div className={styles.files}>
 						{project.files.map((file) => (
-							<div className={styles.hor} key={file.id}>
+							<div
+								className={styles.hor}
+								key={file.id}
+								onClick={() => handleFileClick(file)}
+								style={{ cursor: 'pointer' }}
+							>
 								<div
 									className={styles.block}
 									style={{ backgroundColor: '#e8b594' }}

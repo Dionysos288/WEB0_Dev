@@ -2,7 +2,13 @@
 import FilterBar from '@/components/general/filterBar/FilterBar';
 import Spacing from '@/components/general/Spacing';
 import TableData from '@/components/general/ui/TableData';
-import { fileType, SortOptions, TableHeader } from '@/components/types/types';
+import {
+	fileType,
+	SortOptions,
+	TableHeader,
+	ExtendedLibrary,
+} from '@/components/types/types';
+import { Task, Phase } from '@prisma/client';
 import { useState } from 'react';
 
 const ClientFilesPage = ({
@@ -13,25 +19,30 @@ const ClientFilesPage = ({
 	tableHeaders: TableHeader[];
 }) => {
 	const [filesData, setFilesData] = useState<fileType[]>(fileData);
-	const [options, setOptions] = useState<string[]>([]);
+	const [options] = useState<SortOptions[]>(['date', 'name', 'size']);
 	const [query, setQuery] = useState('');
 	const [sortType, setSortType] = useState<[SortOptions, boolean]>([
 		'date',
 		false,
 	]);
-	console.log('fileData', fileData);
-	console.log('tableHeaders', filesData);
+
 	return (
 		<>
 			<FilterBar
-				options={['date', 'name', 'size']}
+				options={options}
 				data={filesData}
-				setData={setFilesData}
+				setData={
+					setFilesData as React.Dispatch<
+						React.SetStateAction<
+							fileType[] | ExtendedLibrary[] | (Task & { phase?: Phase })[]
+						>
+					>
+				}
 				model={'file'}
-				id={fileData[0].projectId}
+				id={fileData[0]?.projectId || ''}
 				setQuery={setQuery}
 				query={query}
-				filters={options}
+				filters={[]}
 				sortType={sortType}
 				setSortType={setSortType}
 			/>

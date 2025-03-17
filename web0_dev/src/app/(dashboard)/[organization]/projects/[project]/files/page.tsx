@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { getUser } from '@/actions/AccountActions';
-import { TableHeader } from '@/components/types/types';
-import TopMenu from '@/components/general/TopMenu';
 import prisma from '@/lib/db';
+import TopMenu from '@/components/general/TopMenu';
 import ClientFilesPage from '@/components/pages/project/files/ClientFilesPage';
+import { TableHeader } from '@/components/types/types';
 import DatePickerV2 from '@/svgs/DatePickerV2';
 
 export async function generateMetadata({
@@ -11,9 +11,13 @@ export async function generateMetadata({
 }: {
 	params: { project: string };
 }): Promise<Metadata> {
+	const project = await prisma.project.findUnique({
+		where: { id: params.project },
+	});
+
 	return {
-		title: `${params} | Web0`,
-		description: `View ${params} on Web0`,
+		title: `${project?.title || 'Project'} Files | Web0`,
+		description: 'Manage project files on Web0',
 	};
 }
 
@@ -28,14 +32,16 @@ const tableHeaders: TableHeader[] = [
 			fill="var(--main)"
 			width="16"
 			height="16"
-			key={Math.random().toString(36).substr(2, 9)}
+			key="date-picker"
 		/>,
 	],
 ];
+
 const page = async ({ params }: { params: { project: string } }) => {
 	const props = await params;
 	const { data: session } = await getUser();
 	const organizationSlug = session?.session.organizationSlug;
+
 	const project = await prisma.project.findUnique({
 		where: {
 			id: props.project,
@@ -49,6 +55,7 @@ const page = async ({ params }: { params: { project: string } }) => {
 			},
 		},
 	});
+
 	if (project) {
 		return (
 			<>
@@ -76,6 +83,8 @@ const page = async ({ params }: { params: { project: string } }) => {
 			</>
 		);
 	}
+
+	return null;
 };
 
 export default page;

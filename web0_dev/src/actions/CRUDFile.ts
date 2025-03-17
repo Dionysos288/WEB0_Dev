@@ -16,7 +16,6 @@ const updateFilterFiles = async ({
 	type: SortOptions;
 }) => {
 	try {
-		console.log('id', type);
 		const orderBy: Prisma.FileOrderByWithRelationInput =
 			type === 'date'
 				? { updatedAt: isAscending ? 'asc' : 'desc' }
@@ -25,7 +24,7 @@ const updateFilterFiles = async ({
 				: type === 'size'
 				? { size: isAscending ? 'asc' : 'desc' }
 				: { updatedAt: 'desc' };
-		console.log('orderBy', orderBy);
+
 		const where: Prisma.FileWhereInput = {};
 		if (id) {
 			where.projectId = id;

@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import { icons } from 'lucide-react';
 import { Icon } from '@/components/editor/components/Icon';
-import styles from './CommandButton.module.css';
+import styles from './CommandButton.module.scss';
 
 export type CommandButtonProps = {
 	active?: boolean;

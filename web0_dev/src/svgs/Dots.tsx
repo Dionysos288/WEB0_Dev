@@ -5,6 +5,7 @@ function Dots(props: {
 	width?: string;
 	height?: string;
 	style?: React.CSSProperties;
+	onClick?: (e: React.MouseEvent) => void;
 }) {
 	const fill = props.fill || 'currentColor';
 	const width = props.width || '1em';

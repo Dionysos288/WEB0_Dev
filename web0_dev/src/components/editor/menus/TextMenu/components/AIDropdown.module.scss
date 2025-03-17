@@ -1,0 +1,48 @@
+.trigger {
+	&.purple {
+		color: #a855f7;
+		&:hover {
+			color: #9333ea;
+		}
+		&:active {
+			color: #9333ea;
+		}
+		@media (prefers-color-scheme: dark) {
+			color: #c084fc;
+			&:hover {
+				color: #a855f7;
+			}
+			&:active {
+				color: #c084fc;
+			}
+		}
+		&.active {
+			color: #9333ea;
+			&:hover {
+				color: #9333ea;
+			}
+			@media (prefers-color-scheme: dark) {
+				color: #c084fc;
+				&:hover {
+					color: #e9d5ff;
+				}
+			}
+		}
+	}
+}
+
+.icon {
+	&.right {
+		width: 1rem;
+		height: 1rem;
+		margin-left: auto;
+	}
+	&.small {
+		width: 0.5rem;
+		height: 0.5rem;
+		margin-left: 0.25rem;
+	}
+	&.left {
+		margin-right: 0.25rem;
+	}
+}

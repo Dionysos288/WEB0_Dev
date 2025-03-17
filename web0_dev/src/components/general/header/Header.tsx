@@ -1,6 +1,6 @@
 'use client';
 import SVG from '@components/general/SVG';
-import { CSSProperties, useState } from 'react';
+import { CSSProperties } from 'react';
 import BreadCrumbs from '@components/general/header/BreadCrumbs';
 import styles from './Header.module.scss';
 import Sidebar from '@/svgs/Sidebar';
@@ -10,73 +10,84 @@ import ClockCounterClockwise from '@/svgs/ClockCounterClockwise';
 import Bell from '@/svgs/Bell';
 import ThemeToggle from '@/components/general/header/ThemeToggle';
 
-const Header = ({
-	isOpenLeftBar,
-	isOpenRightBar,
-	widthLeftbar,
-	widthRightbar,
-}: {
+interface HeaderProps {
 	isOpenLeftBar: boolean;
-	isOpenRightBar: boolean;
+	isOpenRightBarNotifications: boolean;
+	isOpenRightBarComments: boolean;
+	isTaskDetailPage: boolean;
 	widthLeftbar: string;
 	widthRightbar: string;
-}) => {
-	const [isOpenLeftBarNew, setIsOpenLeftBar] = useState(isOpenLeftBar);
-	const [isOpenRightBarNew, setIsOpenRightBar] = useState(isOpenRightBar);
+	onToggleNotifications: (value: boolean) => void;
+	onToggleComments: (value: boolean) => void;
+	onToggleLeftBar: (value: boolean) => void;
+}
+
+const Header = ({
+	isOpenLeftBar,
+	isOpenRightBarNotifications,
+	isOpenRightBarComments,
+	isTaskDetailPage,
+	widthLeftbar,
+	widthRightbar,
+	onToggleNotifications,
+	onToggleComments,
+	onToggleLeftBar,
+}: HeaderProps) => {
 	const headerStyle: CSSProperties = {
 		'--widthLeftBar': `${widthLeftbar}`,
 		'--widthRightBar': `${widthRightbar}`,
 	} as CSSProperties;
+
 	let headerClass = styles.header;
-	if (!isOpenLeftBar && !isOpenRightBar) {
+	if (!isOpenLeftBar && !isOpenRightBarComments) {
 		headerClass += ` ${styles.bothOpen}`;
 	} else if (!isOpenLeftBar) {
 		headerClass += ` ${styles.leftOpen}`;
-	} else if (!isOpenRightBar) {
+	} else if (!isOpenRightBarComments) {
 		headerClass += ` ${styles.rightOpen}`;
 	}
+
 	return (
 		<>
 			<header className={headerClass} style={headerStyle}>
 				<div className={styles.leftSide}>
-					<div
-						style={{ display: 'contents' }}
-						onClick={() => setIsOpenLeftBar(!isOpenLeftBarNew)}
-					>
-						<SVG>
-							<Sidebar fill="var(--main)" width="20" height="20" />
-						</SVG>
-					</div>
-
-					<SVG>
+					<SVG isButton onClick={() => onToggleLeftBar(!isOpenLeftBar)}>
+						<Sidebar fill="var(--main)" width="20" height="20" />
+					</SVG>
+					<SVG isButton>
 						<Star fill="var(--main)" width="20" height="20" />
 					</SVG>
 					<BreadCrumbs />
 				</div>
 				<div className={styles.rightSide}>
-					<span>
+					<SVG isButton>
 						<Search fill="var(--main)" width="20" height="20" />
-					</span>
+					</SVG>
 					<div className={styles.emojis}>
 						<ThemeToggle />
-						<SVG>
+						<SVG isButton>
 							<ClockCounterClockwise
 								fill="var(--main)"
 								width="20"
 								height="20"
 							/>
 						</SVG>
-						<SVG>
+						<SVG
+							isButton
+							onClick={() =>
+								onToggleNotifications(!isOpenRightBarNotifications)
+							}
+						>
 							<Bell fill="var(--main)" width="20" height="20" />
 						</SVG>
-						<div
-							style={{ display: 'contents' }}
-							onClick={() => setIsOpenRightBar(!isOpenRightBarNew)}
-						>
-							<SVG>
+						{isTaskDetailPage && (
+							<SVG
+								isButton
+								onClick={() => onToggleComments(!isOpenRightBarComments)}
+							>
 								<Sidebar fill="var(--main)" width="20" height="20" />
 							</SVG>
-						</div>
+						)}
 					</div>
 				</div>
 			</header>
