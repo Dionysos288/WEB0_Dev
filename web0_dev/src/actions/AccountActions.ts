@@ -2,7 +2,7 @@
 
 import { auth } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { Member, User } from '@prisma/client';
+import { Member, Session, User } from '@prisma/client';
 import { headers } from 'next/headers';
 
 export async function getOrganization(
@@ -54,6 +54,31 @@ export async function getUser(): Promise<{
 	} catch (error) {
 		console.error('Failed to get user:', error);
 		return { data: null, error: 'Failed to get user' };
+	}
+}
+
+export async function updateUser(
+	user: User,
+	firstName: string,
+	lastName: string,
+	email: string,
+	image: string
+): Promise<{
+	error: string | null;
+}> {
+	try {
+		await prisma.user.update({
+			where: { id: user.id },
+			data: {
+				name: firstName + ' ' + lastName,
+				email: email,
+				image: image,
+			},
+		});
+		return { error: null };
+	} catch (error) {
+		console.error('Failed to update user:', error);
+		return { error: 'Failed to update user' };
 	}
 }
 

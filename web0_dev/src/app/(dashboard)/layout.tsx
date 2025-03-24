@@ -1,4 +1,4 @@
-import LayoutClient from '@/components/general/LayoutClient';
+import LayoutClient from '@/components/general/header/layout/LayoutClient';
 import { getUser } from '@/actions/AccountActions';
 import { getLibraryItems } from '@/actions/LibraryActions';
 import type { Metadata } from 'next';

@@ -1,0 +1,126 @@
+.userMenu {
+	position: absolute;
+	top: 54px;
+	left: 16px;
+	width: 280px;
+	background: var(--white);
+	z-index: 1000;
+	border-radius: 12px;
+	box-shadow: var(--boxShadow-lg);
+	border: 1px solid var(--main-10);
+	.userMenuHeader {
+		padding: 16px 8px 8px 8px;
+		border-bottom: 1px solid var(--main-10);
+		.userHeader {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			padding-inline: 4px;
+
+			.userProfile {
+				display: flex;
+				gap: 12px;
+				align-items: center;
+
+				.profileImage {
+					border-radius: 50%;
+				}
+
+				.userDetails {
+					h3 {
+						font-size: calc(14 / 16 * 1rem);
+						font-weight: 500;
+						color: var(--main-90);
+						margin: 0;
+					}
+
+					p {
+						font-size: calc(13 / 16 * 1rem);
+						color: var(--main-65);
+						margin: 0;
+					}
+				}
+			}
+
+			.userStatus {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				padding: 2px 6px;
+				border-radius: 4px;
+				background-color: var(--completed-25);
+				border: 1px solid var(--completed-50);
+
+				.statusDot {
+					width: 8px;
+					height: 8px;
+					border-radius: 50%;
+					background-color: var(--completed);
+				}
+
+				span {
+					font-size: calc(13 / 16 * 1rem);
+					color: var(--completedText);
+				}
+			}
+		}
+	}
+	.menuItems {
+		padding: 8px 8px 16px 8px;
+	}
+	.menuItemSeparator {
+		height: 1px;
+		background-color: var(--main-10);
+		margin: 8px -8px;
+	}
+	.menuItem {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px 8px;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+		border: none;
+		background: none;
+
+		&:hover {
+			background-color: var(--main-5);
+		}
+		.menuItemIcon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 4px;
+			span {
+				font-size: calc(13 / 16 * 1rem);
+				color: var(--main-90);
+			}
+		}
+
+		.deal {
+			font-size: calc(12 / 16 * 1rem);
+			color: var(--orange-90);
+			padding: 1px 6px;
+			background-color: var(--orange-20);
+			border: 1px solid var(--orange-5);
+			border-radius: 4px;
+		}
+	}
+
+	.switchAccount {
+		position: relative;
+	}
+	.switchOptions {
+		position: absolute;
+		z-index: -1;
+		top: calc(100% - 20px);
+		left: 0;
+		width: 100%;
+		border-top: 20px solid var(--white);
+		padding: 8px;
+		background-color: var(--white);
+		border-radius: 8px;
+	}
+}

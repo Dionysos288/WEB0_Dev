@@ -449,6 +449,7 @@ const TaskDetails = ({
 			);
 
 			if (error) {
+				console.error('Failed to update assignees:', error);
 				setActivities((prev) =>
 					prev.filter((a) => a.id !== optimisticActivity.id)
 				);
@@ -463,7 +464,8 @@ const TaskDetails = ({
 					)
 				);
 			}
-		} catch (err) {
+		} catch (error) {
+			console.error('Failed to update assignees:', error);
 			setActivities((prev) =>
 				prev.filter((a) => a.id !== optimisticActivity.id)
 			);
@@ -498,6 +500,7 @@ const TaskDetails = ({
 			);
 
 			if (error) {
+				console.error('Failed to update labels:', error);
 				setActivities((prev) =>
 					prev.filter((a) => a.id !== optimisticActivity.id)
 				);
@@ -512,7 +515,8 @@ const TaskDetails = ({
 					)
 				);
 			}
-		} catch (err) {
+		} catch (error) {
+			console.error('Failed to update labels:', error);
 			setActivities((prev) =>
 				prev.filter((a) => a.id !== optimisticActivity.id)
 			);
@@ -562,6 +566,20 @@ const TaskDetails = ({
 			if (contentTimer.current) clearTimeout(contentTimer.current);
 		};
 	}, []);
+
+	useEffect(() => {
+		if (task) {
+			const pageInfoEvent = new CustomEvent('pageinfo', {
+				detail: {
+					id: task.id,
+					title: `${task.project.title}: ${task.title}`,
+					type: 'task',
+					pathname: window.location.pathname,
+				},
+			});
+			window.dispatchEvent(pageInfoEvent);
+		}
+	}, [task]);
 
 	return (
 		<div className={styles.container}>

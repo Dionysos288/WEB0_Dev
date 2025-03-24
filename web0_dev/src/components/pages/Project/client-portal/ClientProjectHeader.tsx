@@ -1,8 +1,11 @@
+'use client';
 import styles from './ClientProjectHeader.module.scss';
 import Spacing from '@/components/general/Spacing';
 import Team from '@/components/general/ui/Team';
 import Image from 'next/image';
 import { Phase, PhaseStatus, Project, Task } from '@prisma/client';
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 type ProjectAndTasks = Omit<Project, 'budget'> & {
 	budget: number;
@@ -17,6 +20,32 @@ const ClientProjectHeader = ({
 	phase?: Phase;
 	revisions?: number | null;
 }) => {
+	const pathname = usePathname();
+
+	useEffect(() => {
+		if (project) {
+			const pageInfoEvent = new CustomEvent('pageinfo', {
+				detail: {
+					id: project.id,
+					title: `Client Portal: ${project.title}`,
+					type: 'project',
+					pathname: pathname,
+				},
+			});
+			window.dispatchEvent(pageInfoEvent);
+		} else if (phase) {
+			const pageInfoEvent = new CustomEvent('pageinfo', {
+				detail: {
+					id: phase.id,
+					title: `Phase: ${phase.title}`,
+					type: 'phase',
+					pathname: pathname,
+				},
+			});
+			window.dispatchEvent(pageInfoEvent);
+		}
+	}, [project, phase, pathname]);
+
 	let startDate;
 	let endDate;
 	let allTasks = 0;
@@ -136,7 +165,7 @@ const ClientProjectHeader = ({
 										</p>
 									</>
 								)}
-								{project.status === 'rejected' && (
+								{project.status === 'canceled' && (
 									<>
 										<div
 											style={{
@@ -148,7 +177,7 @@ const ClientProjectHeader = ({
 											className={styles.rejected}
 										/>
 										<p>
-											Rejected <span>/</span>{' '}
+											Canceled <span>/</span>{' '}
 											{(
 												(Number(project.completed) / Number(allTasks)) *
 												100
@@ -157,7 +186,8 @@ const ClientProjectHeader = ({
 										</p>
 									</>
 								)}
-								{project.status === 'pending' && (
+								{(project.status === 'backlog' ||
+									project.status === 'planned') && (
 									<>
 										<div
 											style={{
@@ -169,7 +199,8 @@ const ClientProjectHeader = ({
 											className={styles.pending}
 										/>
 										<p>
-											Pending <span>/</span>{' '}
+											{project.status === 'backlog' ? 'Backlog' : 'Planned'}{' '}
+											<span>/</span>{' '}
 											{(
 												(Number(project.completed) / Number(allTasks)) *
 												100

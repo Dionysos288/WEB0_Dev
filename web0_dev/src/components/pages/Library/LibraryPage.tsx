@@ -4,7 +4,7 @@ import Spacing from '@/components/general/Spacing';
 import TopMenu from '@/components/general/TopMenu';
 import Gallery from './Gallery';
 import FilterSideBar from './FilterSideBar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
 	ExtendedLibrary,
 	LibraryData,
@@ -13,6 +13,7 @@ import {
 } from '@/components/types/types';
 import BigButton from './BigButtons';
 import { Phase, Project, Task } from '@prisma/client';
+import { usePathname } from 'next/navigation';
 
 const LibraryPage = ({
 	homePage = false,
@@ -35,6 +36,32 @@ const LibraryPage = ({
 	orgId: string;
 	projects: Project[];
 }) => {
+	const pathname = usePathname();
+
+	useEffect(() => {
+		if (projectPage && projects.length > 0) {
+			const pageInfoEvent = new CustomEvent('pageinfo', {
+				detail: {
+					id: pathname.split('/').pop() || '',
+					title: `Library: ${projects[0].title || 'Project Library'}`,
+					type: 'library',
+					pathname: pathname,
+				},
+			});
+			window.dispatchEvent(pageInfoEvent);
+		} else {
+			const pageInfoEvent = new CustomEvent('pageinfo', {
+				detail: {
+					id: 'library',
+					title: 'Library',
+					type: 'library',
+					pathname: pathname,
+				},
+			});
+			window.dispatchEvent(pageInfoEvent);
+		}
+	}, [pathname, projectPage, projects]);
+
 	const [galleryData, setGalleryData] = useState<ExtendedLibrary[]>(
 		Array.isArray(libraryData)
 			? libraryData.flatMap((data) => data.libraries)

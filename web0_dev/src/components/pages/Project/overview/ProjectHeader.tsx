@@ -1,13 +1,34 @@
+'use client';
+
 import Spacing from '@/components/general/Spacing';
 import styles from './ProjectHeader.module.scss';
 import Team from '@/components/general/ui/Team';
 import Image from 'next/image';
 import { Project, Task } from '@prisma/client';
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+
 type projectAndTasks = Omit<Project, 'budget'> & {
 	budget: number;
 	tasks: Task[];
 };
 const ProjectHeader = ({ project }: { project: projectAndTasks }) => {
+	const pathname = usePathname();
+
+	useEffect(() => {
+		if (project) {
+			const pageInfoEvent = new CustomEvent('pageinfo', {
+				detail: {
+					id: project.id,
+					title: project.title,
+					type: 'project',
+					pathname: pathname,
+				},
+			});
+			window.dispatchEvent(pageInfoEvent);
+		}
+	}, [project, pathname]);
+
 	const endDate = new Date(project.due).toLocaleDateString('en-US', {
 		month: 'short',
 		day: 'numeric',
@@ -67,7 +88,7 @@ const ProjectHeader = ({ project }: { project: projectAndTasks }) => {
 									</p>
 								</>
 							)}
-							{project.status === 'rejected' && (
+							{project.status === 'canceled' && (
 								<>
 									<div
 										style={{
@@ -87,7 +108,7 @@ const ProjectHeader = ({ project }: { project: projectAndTasks }) => {
 									</p>
 								</>
 							)}
-							{project.status === 'pending' && (
+							{project.status === 'progress' && (
 								<>
 									<div
 										style={{

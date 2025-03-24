@@ -111,3 +111,15 @@
 		}
 	}
 }
+
+.upsideDown {
+	display: flex;
+	flex-direction: column-reverse;
+	bottom: calc(0% + 6px);
+	top: initial;
+}
+.upsideDownInput {
+	display: flex;
+
+	flex-direction: column-reverse;
+}

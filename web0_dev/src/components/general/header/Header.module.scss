@@ -47,3 +47,17 @@
 .rightOpen {
 	width: calc(100% - var(--widthLeftBar));
 }
+
+.active {
+	animation: scale-up 0.3s ease-in-out;
+}
+
+@keyframes scale-up {
+	0%,
+	100% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.05);
+	}
+}

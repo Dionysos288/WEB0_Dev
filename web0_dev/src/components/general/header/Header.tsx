@@ -20,6 +20,8 @@ interface HeaderProps {
 	onToggleNotifications: (value: boolean) => void;
 	onToggleComments: (value: boolean) => void;
 	onToggleLeftBar: (value: boolean) => void;
+	onToggleFavorite?: (value: boolean) => void;
+	isFavorite?: boolean;
 }
 
 const Header = ({
@@ -32,12 +34,14 @@ const Header = ({
 	onToggleNotifications,
 	onToggleComments,
 	onToggleLeftBar,
+	onToggleFavorite,
+	isFavorite = false,
 }: HeaderProps) => {
 	const headerStyle: CSSProperties = {
 		'--widthLeftBar': `${widthLeftbar}`,
 		'--widthRightBar': `${widthRightbar}`,
 	} as CSSProperties;
-
+	console.log(isTaskDetailPage);
 	let headerClass = styles.header;
 	if (!isOpenLeftBar && !isOpenRightBarComments) {
 		headerClass += ` ${styles.bothOpen}`;
@@ -47,6 +51,12 @@ const Header = ({
 		headerClass += ` ${styles.rightOpen}`;
 	}
 
+	const handleToggleFavorite = () => {
+		if (onToggleFavorite) {
+			onToggleFavorite(!isFavorite);
+		}
+	};
+
 	return (
 		<>
 			<header className={headerClass} style={headerStyle}>
@@ -54,8 +64,17 @@ const Header = ({
 					<SVG isButton onClick={() => onToggleLeftBar(!isOpenLeftBar)}>
 						<Sidebar fill="var(--main)" width="20" height="20" />
 					</SVG>
-					<SVG isButton>
-						<Star fill="var(--main)" width="20" height="20" />
+					<SVG
+						isButton
+						onClick={handleToggleFavorite}
+						className={isFavorite ? styles.active : ''}
+					>
+						<Star
+							fill={isFavorite ? 'var(--orange)' : 'transparent'}
+							border={isFavorite ? 'var(--orange)' : 'var(--main)'}
+							width="20"
+							height="20"
+						/>
 					</SVG>
 					<BreadCrumbs />
 				</div>

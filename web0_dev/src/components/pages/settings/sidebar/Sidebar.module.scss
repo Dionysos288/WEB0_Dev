@@ -1,0 +1,112 @@
+.SideBar {
+	position: sticky;
+	top: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	padding: 20px 16px 14px 16px;
+	border-right: 1px solid var(--main-10);
+	width: 212px;
+	min-height: 100vh;
+	min-height: 100svh;
+	.sideBarContent {
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+
+		.backToApp {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			p {
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(20 / 16 * 1rem);
+			}
+		}
+
+		.dashboards {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+			h2 {
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(20 / 16 * 1rem);
+				padding: 0 12px;
+				margin-bottom: 4px;
+				color: var(--main-60);
+			}
+			.hor {
+				position: relative;
+				display: flex;
+				align-items: center;
+				gap: 4px;
+				padding: 4px 8px;
+				border-radius: 8px;
+				transition: background-color 0.2s ease;
+				.svg {
+					transition: transform 0.2s var(--ease-out-quad);
+				}
+
+				.svg.rotate {
+					transform: rotate(90deg);
+				}
+				p {
+					font-size: calc(14 / 16 * 1rem);
+					font-weight: 400;
+					line-height: calc(20 / 16 * 1rem);
+				}
+				&:hover {
+					background-color: var(--main-5);
+				}
+			}
+			.active {
+				background-color: var(--main-5);
+
+				&::before {
+					content: '';
+					position: absolute;
+					top: 50%;
+					left: 0;
+					width: 4px;
+					height: 60%;
+					background-color: var(--orange);
+					border-radius: 3px;
+					transform: translateY(-50%);
+				}
+			}
+			.items {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				li {
+					display: contents;
+					a {
+						width: 100%;
+						font-size: calc(14 / 16 * 1rem);
+						font-weight: 400;
+						line-height: calc(20 / 16 * 1rem);
+						padding: 3px 8px 2px 52px;
+
+						&:last-of-type {
+							padding-bottom: 3px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.sideBarFooter {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	.footerRight {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+}

@@ -9,7 +9,8 @@ import {
 	ExtendedLibrary,
 } from '@/components/types/types';
 import { Task, Phase } from '@prisma/client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 const ClientFilesPage = ({
 	fileData,
@@ -18,6 +19,7 @@ const ClientFilesPage = ({
 	fileData: fileType[];
 	tableHeaders: TableHeader[];
 }) => {
+	const pathname = usePathname();
 	const [filesData, setFilesData] = useState<fileType[]>(fileData);
 	const [options] = useState<SortOptions[]>(['date', 'name', 'size']);
 	const [query, setQuery] = useState('');
@@ -25,6 +27,19 @@ const ClientFilesPage = ({
 		'date',
 		false,
 	]);
+
+	useEffect(() => {
+		const projectId = pathname.split('/').slice(-2)[0];
+		const pageInfoEvent = new CustomEvent('pageinfo', {
+			detail: {
+				id: projectId,
+				title: `Project Files`,
+				type: 'files',
+				pathname: pathname,
+			},
+		});
+		window.dispatchEvent(pageInfoEvent);
+	}, [pathname]);
 
 	return (
 		<>

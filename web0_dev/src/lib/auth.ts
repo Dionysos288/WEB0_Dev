@@ -17,6 +17,7 @@ type BaseSession = {
 	userAgent?: string | null;
 	activeOrganizationId?: string;
 	organizationSlug?: string;
+	organizationName?: string;
 };
 
 const options = {
@@ -31,13 +32,14 @@ const options = {
 		customSession(async ({ user, session }) => {
 			const typedSession = session as BaseSession;
 			let organizationSlug = null;
-
+			let organizationName = null;
 			if (typedSession.activeOrganizationId) {
 				const org = await prisma.organization.findUnique({
 					where: { id: typedSession.activeOrganizationId },
-					select: { slug: true },
+					select: { slug: true, name: true },
 				});
 				organizationSlug = org?.slug;
+				organizationName = org?.name;
 			}
 
 			return {
@@ -45,6 +47,7 @@ const options = {
 				session: {
 					...session,
 					organizationSlug,
+					organizationName,
 				},
 			};
 		}),
@@ -62,7 +65,7 @@ export type Session = {
 		name: string;
 		createdAt: Date;
 		updatedAt: Date;
-		image?: string | null;
+		image: string;
 	};
 	session: BaseSession;
 };

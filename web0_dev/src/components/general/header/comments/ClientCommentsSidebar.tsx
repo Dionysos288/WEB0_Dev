@@ -9,14 +9,12 @@ interface ClientCommentsSidebarProps {
 }
 
 export default function ClientCommentsSidebar({
-	isOpen,
 	onClose,
 }: ClientCommentsSidebarProps) {
 	const { comments, activities, addComment } = useComments();
 
 	return (
 		<CommentsSidebar
-			isOpen={isOpen}
 			onClose={onClose}
 			comments={comments}
 			activities={activities}

@@ -19,10 +19,14 @@ export default function LayoutClient({
 	const isTaskDetailPage = !!pathname?.match(
 		/\/projects\/[^/]+\/tasks\/[^/]+$/
 	);
+	const slug = initialSession.session.organizationSlug;
+	const isSettingsPage = !!pathname?.match(
+		new RegExp(`^/${slug}/settings/[^/]+/[^/]+$`)
+	);
 
 	const [isOpenLeftBar, setIsOpenLeftBar] = useState(true);
 	const widthLeftbar = '212px';
-	const widthRightbar = '280px';
+	const widthRightbar = '400px';
 
 	const [isOpenRightBarNotifications, setIsOpenRightBarNotifications] =
 		useState(false);
@@ -31,6 +35,7 @@ export default function LayoutClient({
 
 	return (
 		<Layout
+			isSettingsPage={isSettingsPage}
 			isTaskDetailPage={isTaskDetailPage}
 			isOpenLeftBar={isOpenLeftBar}
 			setIsOpenLeftBar={setIsOpenLeftBar}

@@ -34,6 +34,7 @@ interface ButtonSelectorProps<T> {
 	selectedItems?: string[];
 	onSelectedItemsChange?: (items: string[]) => void;
 	showColorBadge?: boolean;
+	isUpsideDown?: boolean;
 }
 
 function ButtonSelector<T extends OptionItem>({
@@ -51,9 +52,10 @@ function ButtonSelector<T extends OptionItem>({
 	selectedItems = [],
 	onSelectedItemsChange = () => {},
 	showColorBadge = false,
+	isUpsideDown = false,
 }: ButtonSelectorProps<T>) {
 	const [activeIndex, setActiveIndex] = useState<number>(-1);
-	console.log(oldData);
+
 	useEffect(() => {
 		if (inputRef.current) {
 			inputRef.current.focus();
@@ -123,28 +125,31 @@ function ButtonSelector<T extends OptionItem>({
 		console.log(value);
 		if (value === '') {
 			console.log('reset');
-			console.log(oldData);
 			setOptions(oldData);
 		}
 	};
 
 	return (
 		<div
-			className={styles.inputs}
+			className={`${styles.inputs} ${isUpsideDown ? styles.upsideDown : ''}`}
 			onClick={(e) => e.stopPropagation()}
 			onKeyDown={handleKeyDown}
 			tabIndex={0}
 		>
-			<input
-				type="text"
-				placeholder={placeholder}
-				value={query}
-				onChange={handleInputChange}
-				ref={inputRef}
-			/>
-			<Spacing space={6} />
-			<div className={styles.line} />
-			<Spacing space={6} />
+			<div className={`${isUpsideDown ? styles.upsideDownInput : ''}`}>
+				<input
+					type="text"
+					placeholder={placeholder}
+					value={query}
+					onChange={handleInputChange}
+					ref={inputRef}
+				/>
+				<div>
+					<Spacing space={6} />
+					<div className={styles.line} />
+					<Spacing space={6} />
+				</div>
+			</div>
 
 			<div className={styles.options}>
 				{Array.isArray(options) &&
@@ -159,6 +164,7 @@ function ButtonSelector<T extends OptionItem>({
 								onMouseEnter={() => setActiveIndex(index)}
 								onClick={() => handleItemClick(option)}
 								tabIndex={-1}
+								data-value={option.value}
 							>
 								<div className={styles.leftSide}>
 									{isComboBox ? (
