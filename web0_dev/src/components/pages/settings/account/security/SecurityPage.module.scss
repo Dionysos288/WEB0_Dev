@@ -1,0 +1,108 @@
+.profilePageWrapper {
+	display: flex;
+	margin-inline: auto;
+	flex-direction: column;
+	padding: 24px;
+	width: 950px;
+	border-radius: 16px;
+	background-color: var(--lightBlue);
+	border: 1px solid var(--main-5);
+	box-shadow: var(--boxShadow-sm);
+
+	h2 {
+		font-size: calc(18 / 16 * 1rem);
+		font-weight: 600;
+		line-height: calc(28 / 16 * 1rem);
+	}
+	.subInfo {
+		font-size: calc(13 / 16 * 1rem);
+		font-weight: 400;
+		line-height: calc(20 / 16 * 1rem);
+		color: var(--main-60);
+	}
+	.subHeader {
+		font-size: calc(16 / 16 * 1rem);
+		font-weight: 600;
+		line-height: calc(20 / 16 * 1rem);
+		color: var(--main-90);
+	}
+	.noInfo {
+		margin-top: -6px;
+		font-size: calc(14 / 16 * 1rem);
+		font-weight: 500;
+		line-height: calc(20 / 16 * 1rem);
+		color: var(--main-80);
+	}
+
+	.channelItemSeparator {
+		height: 1px;
+		background-color: var(--main-10);
+		margin: 8px 0;
+	}
+	.channelItem {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
+		&:hover {
+			.rightSide {
+				button {
+					color: var(--main-80);
+				}
+			}
+		}
+
+		.leftSide {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			.channelIcon {
+				svg {
+					width: 32px;
+					height: 32px;
+				}
+			}
+			h3 {
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 600;
+				line-height: calc(20 / 14 * 1rem);
+			}
+			.status {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+				.statusIcon {
+					width: 8px;
+					height: 8px;
+					border-radius: 50%;
+					background-color: var(--main-10);
+				}
+				.enabled {
+					background-color: var(--completed);
+				}
+
+				p {
+					font-size: calc(12 / 16 * 1rem);
+					font-weight: 400;
+					line-height: calc(18 / 16 * 1rem);
+					color: var(--main-50);
+				}
+			}
+		}
+		.rightSide {
+			button {
+				border: none;
+				border-radius: 8px;
+				padding: 8px 12px;
+				color: transparent;
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(18 / 16 * 1rem);
+				transition: all 0.2s ease;
+				&:hover {
+					background-color: var(--main-8);
+				}
+			}
+		}
+	}
+}

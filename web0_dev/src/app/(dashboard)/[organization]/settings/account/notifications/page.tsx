@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-
+import NotificationsPage from '@/components/pages/settings/account/notifications/NotificationsPage';
 export async function generateMetadata(): Promise<Metadata> {
 	return {
 		title: `Notifications `,
@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
 	};
 }
 const page = () => {
-	return <></>;
+	return <NotificationsPage />;
 };
 
 export default page;

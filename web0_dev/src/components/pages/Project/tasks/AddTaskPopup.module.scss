@@ -149,34 +149,6 @@
 					gap: 6px;
 					cursor: pointer;
 
-					.toggle {
-						width: 28px;
-						height: 16px;
-						background-color: var(--main-20);
-						border-radius: 360px;
-						position: relative;
-						transition: background-color 0.2s ease;
-
-						.circle {
-							width: 12px;
-							height: 12px;
-							background-color: var(--white);
-							border-radius: 50%;
-							position: absolute;
-							top: 2px;
-							left: 2px;
-							transition: transform 0.2s ease;
-						}
-
-						&.active {
-							background-color: var(--orange-90);
-
-							.circle {
-								transform: translateX(100%);
-							}
-						}
-					}
-
 					span {
 						font-size: calc(13 / 16 * 1rem);
 						font-weight: 400;

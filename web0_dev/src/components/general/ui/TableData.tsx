@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styles from './TableData.module.scss';
-import { fileType, TableHeader } from '@/components/types/types';
+import { fileType, TableHeader, TeamData } from '@/components/types/types';
 import {
 	getFileType,
 	getImagePerson,
@@ -27,14 +27,16 @@ type CSSPropertiesWithVars = React.CSSProperties & {
 
 interface TableDataProps {
 	type: string;
-	tableData: fileType[] | Client[];
+	tableData: fileType[] | Client[] | TeamData[];
 	tableHeaders: TableHeader[];
+	isCheckboxes?: boolean;
 }
 
 const TableData: React.FC<TableDataProps> = ({
 	type,
 	tableData,
 	tableHeaders,
+	isCheckboxes = true,
 }) => {
 	const [data, setData] = useState<(fileType | Client)[]>(tableData);
 	const [selected, setSelected] = useState<string[]>([]);
@@ -286,8 +288,12 @@ const TableData: React.FC<TableDataProps> = ({
 
 			<div
 				className={`${styles.table} ${
-					type === 'files' ? styles.files : styles.default
-				}`}
+					type === 'files'
+						? styles.files
+						: type === 'teams'
+						? styles.teams
+						: styles.default
+				} ${!isCheckboxes ? styles['no-checkboxes'] : ''}`}
 				style={
 					{
 						'--amount': tableHeaders.length,
@@ -296,7 +302,7 @@ const TableData: React.FC<TableDataProps> = ({
 			>
 				{tableHeaders.map((header, index) => (
 					<React.Fragment key={header[0] || index}>
-						{index === 0 && (
+						{index === 0 && isCheckboxes && (
 							<div className={` ${styles.border}`}>
 								<div
 									className={`${styles.square} ${styles.headerCheckbox}`}
@@ -354,7 +360,7 @@ const TableData: React.FC<TableDataProps> = ({
 
 							return (
 								<React.Fragment key={`${item.id}-${header[0]}`}>
-									{index === 0 && (
+									{index === 0 && isCheckboxes && (
 										<div className={` ${styles.borderS}`}>
 											<div
 												className={`${styles.square}`}
@@ -425,7 +431,6 @@ const TableData: React.FC<TableDataProps> = ({
 				))}
 			</div>
 
-			{/* Context Menu */}
 			{contextMenu && contextMenu.visible && (
 				<div
 					className={styles.contextMenu}

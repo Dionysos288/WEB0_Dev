@@ -19,6 +19,7 @@ export default async function Home({
 	}
 
 	const { data: session } = await getUser();
+	console.log(session);
 
 	return (
 		<>

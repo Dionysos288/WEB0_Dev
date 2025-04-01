@@ -19,8 +19,8 @@ const tasks = [
 const completedCount = tasks.filter(
 	(t) => t.columnStatus === 'Completed'
 ).length;
-const organizationId = 'VZShwoYCSXFGK95BLqxJO49HDtgpZenu';
-const memberId1 = 'T4SBX9ooNqRj9rnlnNXXXlhDaxTh8qeR';
+const organizationId = 'o91EZetj267iUfhHnYePV0OLZOSppwyq';
+const memberId1 = 'u2onR9hpw0kAxBMJme9gLddEWjUChq5q';
 
 const defaultLabels: Prisma.LabelCreateInput[] = [
 	{

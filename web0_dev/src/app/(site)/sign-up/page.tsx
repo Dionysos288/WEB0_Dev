@@ -145,6 +145,9 @@ export default function Page() {
 						slug: 'test123',
 						logo: 'https://example.com/logo.png',
 					});
+					await authClient.organization.createTeam({
+						name: 'Development Team',
+					});
 				}}
 			>
 				{loading ? 'loading...' : 'Create an account'}

@@ -1,5 +1,5 @@
 import { getUser } from '@/actions/AccountActions';
-import ProfilePage from '@/components/pages/settings/profile/ProfilePage';
+import ProfilePage from '@/components/pages/settings/account/profile/ProfilePage';
 import prisma from '@/lib/db';
 import type { Metadata } from 'next';
 

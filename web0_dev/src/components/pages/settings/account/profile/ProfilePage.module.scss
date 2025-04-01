@@ -4,7 +4,7 @@
 	flex-direction: column;
 	gap: 16px;
 	padding: 24px;
-	width: 650px;
+	width: 950px;
 	border-radius: 16px;
 	background-color: var(--lightBlue);
 	border: 1px solid var(--main-5);
@@ -14,6 +14,36 @@
 		font-size: calc(18 / 16 * 1rem);
 		font-weight: 600;
 		line-height: calc(28 / 16 * 1rem);
+	}
+	.workspaceAccess {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
+		p {
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 400;
+			line-height: calc(20 / 14 * 1rem);
+			color: var(--main-85);
+		}
+		button {
+			color: var(--error-600-90);
+			border: none;
+			border-radius: 8px;
+			padding: 8px 12px;
+			font-size: calc(14 / 16 * 1rem);
+			font-weight: 600;
+			line-height: calc(20 / 14 * 1rem);
+			border: 1px solid transparent;
+			transition: all 0.2s ease;
+
+			&:hover {
+				color: var(--error-600);
+
+				background-color: var(--error-600-10);
+				border: 1px solid var(--error-600-30);
+			}
+		}
 	}
 	.profileDetails {
 		display: flex;

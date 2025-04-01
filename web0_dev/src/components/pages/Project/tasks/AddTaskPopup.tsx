@@ -22,6 +22,7 @@ import PhaseIcon from '@/svgs/Phase';
 import Label from '@/svgs/Label';
 import { getLabels } from '@/actions/LabelActions';
 import Dismiss from '@/svgs/Dismiss';
+import Switch from '@/components/general/ui/switch/Switch';
 
 interface OptionItem {
 	label: string;
@@ -854,13 +855,7 @@ const AddTaskPopup = ({
 								className={styles.toggleWrapper}
 								onClick={() => setCreateAnother(!createAnother)}
 							>
-								<div
-									className={`${styles.toggle} ${
-										createAnother ? styles.active : ''
-									}`}
-								>
-									<div className={styles.circle} />
-								</div>
+								<Switch isActive={createAnother} />
 								<span>Create Another</span>
 							</div>
 						</div>

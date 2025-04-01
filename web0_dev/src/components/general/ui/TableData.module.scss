@@ -6,11 +6,46 @@
 			minmax(150px, 1fr)
 		)
 		40px;
+
+	&.no-checkboxes {
+		--filesAmount: calc(var(--amount) - 2);
+		grid-template-columns:
+			minmax(250px, 1.7fr) minmax(100px, 0.5fr) repeat(
+				var(--filesAmount),
+				minmax(150px, 1fr)
+			)
+			40px;
+	}
+}
+.teams {
+	&.no-checkboxes {
+		--filesAmount: calc(var(--amount) - 2);
+		grid-template-columns:
+			minmax(250px, 1.7fr) minmax(100px, 0.5fr) repeat(
+				var(--filesAmount),
+				minmax(150px, 1fr)
+			)
+			40px;
+		.tableHeader,
+		.tableCell {
+			&:nth-of-type(1) {
+				padding: 8px 16px 8px 4px;
+			}
+			&:nth-of-type(2) {
+				padding: 8px 16px;
+			}
+		}
+	}
 }
 .default {
-	grid-template-columns: 24px repeat(var(--amount), minmax(150px, 1fr)) 40px;
+	--filesAmount: calc(var(--amount) - 2);
+	grid-template-columns:
+		24px minmax(250px, 1.7fr) minmax(100px, 0.5fr) repeat(
+			var(--filesAmount),
+			minmax(150px, 1fr)
+		)
+		40px;
 }
-
 .table {
 	display: grid;
 	align-items: center;
@@ -61,9 +96,7 @@
 		border-right: 1px solid var(--main-15);
 		border-bottom: var(--table-header-bottom);
 		height: 100%;
-		&:nth-of-type(2) {
-			padding: 8px 16px 8px 4px;
-		}
+
 		&.lastHeader {
 			border-right: none;
 		}
@@ -112,10 +145,6 @@
 			gap: 4px;
 			height: 100%;
 			transition: all var(--hover-out);
-
-			&:nth-of-type(2) {
-				padding: 8px 16px 8px 4px;
-			}
 
 			.svg {
 				margin: auto 0;

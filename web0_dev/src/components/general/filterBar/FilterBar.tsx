@@ -10,6 +10,7 @@ import {
 	ModelNames,
 	SortOptions,
 	ExtendedCategory,
+	TeamData,
 } from '@/components/types/types';
 import { updateFilterLibrary } from '@/actions/CRUDLibrary';
 import { updateFilterFiles } from '@/actions/CRUDFile';
@@ -36,10 +37,10 @@ interface FilterBarProps {
 	ExtraFilters?: string[];
 	id?: string;
 	phaseId?: string;
-	data: Library[] | fileType[] | (Task & { phase?: Phase })[];
+	data: Library[] | fileType[] | (Task & { phase?: Phase })[] | TeamData[];
 	setData: React.Dispatch<
 		React.SetStateAction<
-			ExtendedLibrary[] | fileType[] | (Task & { phase?: Phase })[]
+			ExtendedLibrary[] | fileType[] | (Task & { phase?: Phase })[] | TeamData[]
 		>
 	>;
 	favorite?: boolean;
@@ -53,6 +54,7 @@ interface FilterBarProps {
 	orgId?: string;
 	categories?: ExtendedCategory[];
 	projectId?: string;
+	isNoFilter?: boolean;
 }
 
 // Define response type for upload operations
@@ -83,6 +85,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 	orgId = '',
 	categories = [],
 	projectId = '',
+	isNoFilter = false,
 }) => {
 	const [isOpenSort, setIsOpenSort] = useState<boolean>(false);
 	const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
@@ -310,56 +313,68 @@ const FilterBar: React.FC<FilterBarProps> = ({
 							)}
 						</>
 					)}
-					{model !== 'library' && model !== 'task' && model !== 'file' && (
-						<SVG>
-							<PlusStroke fill="var(--main)" width="20" height="20" />
-						</SVG>
+					{model === 'team' && (
+						<button className={styles.buttonCreate}>Create Team</button>
 					)}
-					{ExtraFilters &&
-						ExtraFilters.map((filter, index) => (
-							<button key={index} className={styles.buttons}>
-								{filter}
-								<ArrowLineRight
-									fill={'var(--main-80)'}
-									width="16"
-									height="16"
-									style={{
-										transform: 'translateY(1.5px)',
-									}}
-								/>
-							</button>
-						))}
-					{setIsFilterOpenLibrary ? (
-						<SVG onClick={() => setIsFilterOpenLibrary(!isFilterOpenLibrary)}>
-							<FunnelSimple fill="var(--main)" width="20" height="20" />
-						</SVG>
-					) : (
-						<SVG onClick={() => setIsFilterOpen(!isFilterOpen)}>
-							<FunnelSimple fill="var(--main)" width="20" height="20" />
-						</SVG>
-					)}
-
-					<SVG onClick={() => setIsOpenSort(!isOpenSort)}>
-						<SortArrowsDownUp fill="var(--main)" width="20" height="20" />
-						<AnimatePresence>
-							{isOpenSort && (
-								<SortPopup
-									isOpenSort={isOpenSort}
-									setIsOpenSort={setIsOpenSort}
-									setSortType={setSortType}
-									filters={filters}
-									data={data}
-									setData={setData}
-									id={id}
-									phaseId={phaseId}
-									favorite={favorite}
-									query={query}
-									model={model}
-									options={options}
-								/>
+					{model !== 'library' &&
+						model !== 'task' &&
+						model !== 'file' &&
+						model !== 'team' && (
+							<SVG>
+								<PlusStroke fill="var(--main)" width="20" height="20" />
+							</SVG>
+						)}
+					{!isNoFilter && (
+						<>
+							{ExtraFilters &&
+								ExtraFilters.map((filter, index) => (
+									<button key={index} className={styles.buttons}>
+										{filter}
+										<ArrowLineRight
+											fill={'var(--main-80)'}
+											width="16"
+											height="16"
+											style={{
+												transform: 'translateY(1.5px)',
+											}}
+										/>
+									</button>
+								))}
+							{setIsFilterOpenLibrary ? (
+								<SVG
+									onClick={() => setIsFilterOpenLibrary(!isFilterOpenLibrary)}
+								>
+									<FunnelSimple fill="var(--main)" width="20" height="20" />
+								</SVG>
+							) : (
+								<SVG onClick={() => setIsFilterOpen(!isFilterOpen)}>
+									<FunnelSimple fill="var(--main)" width="20" height="20" />
+								</SVG>
 							)}
-						</AnimatePresence>
-					</SVG>
+
+							<SVG onClick={() => setIsOpenSort(!isOpenSort)}>
+								<SortArrowsDownUp fill="var(--main)" width="20" height="20" />
+								<AnimatePresence>
+									{isOpenSort && (
+										<SortPopup
+											isOpenSort={isOpenSort}
+											setIsOpenSort={setIsOpenSort}
+											setSortType={setSortType}
+											filters={filters}
+											data={data}
+											setData={setData}
+											id={id}
+											phaseId={phaseId}
+											favorite={favorite}
+											query={query}
+											model={model}
+											options={options}
+										/>
+									)}
+								</AnimatePresence>
+							</SVG>
+						</>
+					)}
 				</div>
 				{search && (
 					<div className={styles.inputWrapper}>

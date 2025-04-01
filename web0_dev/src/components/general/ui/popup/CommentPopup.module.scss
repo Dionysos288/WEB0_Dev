@@ -1,0 +1,60 @@
+.leaveWorkspaceModal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: var(--backdrop);
+	backdrop-filter: blur(4px);
+	z-index: 1000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	.popup {
+		position: relative;
+		width: 500px;
+		display: grid;
+		background-color: var(--white);
+		border-radius: 16px;
+		padding: 16px 28px;
+		border: 1px solid var(--main-10);
+		box-shadow: var(--boxShadow-md);
+
+		h2 {
+			font-size: calc(18 / 16 * 1rem);
+			font-weight: 600;
+			line-height: calc(28 / 18 * 1rem);
+			color: var(--main-85);
+		}
+		p {
+			font-size: calc(15 / 16 * 1rem);
+			font-weight: 400;
+			line-height: calc(20 / 14 * 1rem);
+			color: var(--main-80);
+		}
+		.popupButtons {
+			display: flex;
+			gap: 16px;
+			justify-content: flex-end;
+			button {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				padding: 8px 16px;
+				border-radius: 8px;
+				box-shadow: var(--boxShadow-xs);
+				border: 1px solid var(--main-5);
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(20 / 16 * 1rem);
+			}
+			.cancelButton {
+				background-color: var(--lightBlue);
+			}
+			.createButton {
+				background-color: var(--orange);
+				color: var(--whiteSpecial);
+			}
+		}
+	}
+}

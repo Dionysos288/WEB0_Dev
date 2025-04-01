@@ -25,19 +25,19 @@ export async function getOrganization(
 
 export async function setActiveOrganization(
 	organizationSlug: string
-): Promise<{ data: any; error: string | null }> {
+): Promise<{ error: string | null }> {
 	try {
-		const result = await auth.api.setActiveOrganization({
+		await auth.api.setActiveOrganization({
 			headers: await headers(),
 			body: {
 				organizationSlug,
 			},
 		});
 
-		return { data: result, error: null };
+		return { error: null };
 	} catch (error) {
 		console.error('Failed to set active organization:', error);
-		return { data: null, error: 'Failed to set active organization' };
+		return { error: 'Failed to set active organization' };
 	}
 }
 
@@ -57,6 +57,20 @@ export async function getUser(): Promise<{
 	}
 }
 
+export async function getSessions(): Promise<{
+	data: Session[] | null;
+	error: string | null;
+}> {
+	try {
+		const sessions = await auth.api.listSessions({
+			headers: await headers(),
+		});
+		return { data: sessions, error: null };
+	} catch (error) {
+		console.error('Failed to get sessions:', error);
+		return { data: null, error: 'Failed to get sessions' };
+	}
+}
 export async function updateUser(
 	user: User,
 	firstName: string,

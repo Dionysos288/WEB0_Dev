@@ -16,7 +16,7 @@ import {
 } from '@prisma/client';
 import { ReactNode } from 'react';
 
-type TableHeader = [keyof File, string, (string | ReactNode)?];
+type TableHeader = [string, string, (string | ReactNode)?];
 type ModelNames = keyof PrismaClient;
 type ExtendedLibrary = Library & { category: Category | null };
 type ExtendedCategory = Category & { subcategories: ExtendedCategory[] };
@@ -26,7 +26,7 @@ type LibraryData = LibraryType & {
 	categories: ExtendedCategory[];
 	libraries: ExtendedLibrary[];
 };
-type SortOptions = 'date' | 'title' | 'name' | 'size' | 'priority';
+type SortOptions = string;
 interface TaskColumnType {
 	id: number;
 	title: TaskStatus;
@@ -39,7 +39,13 @@ interface TaskColumnType {
 		assignees?: Member[];
 	})[];
 }
-
+type TeamData = {
+	id: string;
+	name: string;
+	createdAt: Date;
+	members: number;
+	issues: number;
+};
 type ClientColumnType = {
 	id: number;
 	title: ClientStatus;
@@ -57,4 +63,5 @@ export type {
 	LibraryData,
 	DataType,
 	fileType,
+	TeamData,
 };

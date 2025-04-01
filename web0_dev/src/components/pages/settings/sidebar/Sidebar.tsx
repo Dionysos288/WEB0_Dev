@@ -91,6 +91,79 @@ const Sidebar = ({ session }: { session: Session }) => {
 							<p>Connnected Accounts</p>
 						</Link>
 					</div>
+					<div className={styles.dashboards}>
+						<h2>Administration</h2>
+						<Link
+							href={`/${session.session.organizationSlug}/settings/administration/workspace`}
+							className={`${styles.hor} ${
+								isActiveLink(
+									`/${session.session.organizationSlug}/settings/administration/workspace`
+								)
+									? styles.active
+									: ''
+							}`}
+						>
+							<ChartPieSlice width="20" height="20" fill="var(--main)" />
+							<p>Workspace</p>
+						</Link>
+
+						<Link
+							href={`/${session.session.organizationSlug}/settings/administration/teams`}
+							className={`${styles.hor} ${
+								isActiveLink(
+									`/${session.session.organizationSlug}/settings/administration/teams`
+								)
+									? styles.active
+									: ''
+							}`}
+						>
+							<FolderV2 width="20" height="20" fill="var(--main)" />
+
+							<p>Teams</p>
+						</Link>
+						<Link
+							href={`/${session.session.organizationSlug}/settings/administration/members`}
+							className={`${styles.hor} ${
+								isActiveLink(
+									`/${session.session.organizationSlug}/settings/administration/members`
+								)
+									? styles.active
+									: ''
+							}`}
+						>
+							<FolderV2 width="20" height="20" fill="var(--main)" />
+
+							<p>Members</p>
+						</Link>
+						<Link
+							href={`/${session.session.organizationSlug}/settings/administration/security`}
+							className={`${styles.hor} ${
+								isActiveLink(
+									`/${session.session.organizationSlug}/settings/administration/security`
+								)
+									? styles.active
+									: ''
+							}`}
+						>
+							<FolderV2 width="20" height="20" fill="var(--main)" />
+
+							<p>Security</p>
+						</Link>
+						<Link
+							href={`/${session.session.organizationSlug}/settings/administration/billing`}
+							className={`${styles.hor} ${
+								isActiveLink(
+									`/${session.session.organizationSlug}/settings/administration/billing`
+								)
+									? styles.active
+									: ''
+							}`}
+						>
+							<FolderV2 width="20" height="20" fill="var(--main)" />
+
+							<p>Billing</p>
+						</Link>
+					</div>
 				</div>
 				<div className={styles.sideBarFooterWrapper}>
 					<div className={styles.infoBanner}></div>

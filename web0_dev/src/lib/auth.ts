@@ -28,7 +28,13 @@ const options = {
 		enabled: true,
 	},
 	plugins: [
-		organization(),
+		organization({
+			teams: {
+				enabled: true,
+				maximumTeams: 10, // Optional: limit teams per organization
+				allowRemovingAllTeams: false, // Optional: prevent removing the last team
+			},
+		}),
 		customSession(async ({ user, session }) => {
 			const typedSession = session as BaseSession;
 			let organizationSlug = null;

@@ -1,0 +1,61 @@
+.profilePageWrapper {
+	display: flex;
+	margin-inline: auto;
+	flex-direction: column;
+	padding: 24px;
+	width: 950px;
+	border-radius: 16px;
+	background-color: var(--lightBlue);
+	border: 1px solid var(--main-5);
+	box-shadow: var(--boxShadow-sm);
+
+	h2 {
+		font-size: calc(18 / 16 * 1rem);
+		font-weight: 600;
+		line-height: calc(28 / 16 * 1rem);
+	}
+	.subInfo {
+		font-size: calc(13 / 16 * 1rem);
+		font-weight: 400;
+		line-height: calc(20 / 16 * 1rem);
+		color: var(--main-60);
+	}
+	.subHeader {
+		font-size: calc(16 / 16 * 1rem);
+		font-weight: 600;
+		line-height: calc(20 / 16 * 1rem);
+		color: var(--main-90);
+	}
+	.notificationItem {
+		cursor: pointer;
+		padding: 16px 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
+		border-bottom: 1px solid var(--main-10);
+		&:last-child {
+			border-bottom: none;
+		}
+		.leftSide {
+			h3 {
+				font-size: calc(14 / 16 * 1rem);
+				font-weight: 600;
+				line-height: calc(20 / 14 * 1rem);
+			}
+			p {
+				font-size: calc(12 / 16 * 1rem);
+				font-weight: 400;
+				line-height: calc(18 / 16 * 1rem);
+				color: var(--main-50);
+			}
+		}
+		.rightSide {
+			padding: 4px;
+		}
+	}
+	.disabled {
+		opacity: 0.6;
+		pointer-events: none;
+	}
+}
