@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.scss';
+import './globals.css';
 import ConsoleLogger from '@/components/general/Consolelogger';
 import LenisWrapper from '@/components/general/LenisWrapper';
 import { Toaster } from 'sonner';

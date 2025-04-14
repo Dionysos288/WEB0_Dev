@@ -8,8 +8,7 @@ import { Project, Task } from '@prisma/client';
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
-type projectAndTasks = Omit<Project, 'budget'> & {
-	budget: number;
+type projectAndTasks = Project & {
 	tasks: Task[];
 };
 const ProjectHeader = ({ project }: { project: projectAndTasks }) => {

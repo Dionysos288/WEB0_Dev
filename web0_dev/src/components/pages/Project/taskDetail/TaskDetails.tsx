@@ -14,10 +14,9 @@ import {
 	getTaskComments,
 	getTaskActivities,
 } from '@/actions/TaskActions';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import Team from '@/svgs/Team';
 import PhaseIcon from '@/svgs/Phase';
-import TiptapEditor from '@/components/editor/TiptapEditor';
 import UrgentPriority from '@/svgs/UrgentPriority';
 import HighPriority from '@/svgs/HighPriority';
 import MediumPriority from '@/svgs/MediumPriority';
@@ -35,6 +34,8 @@ import { getMembers } from '@/actions/AccountActions';
 import SingleDatePicker from '../../../../components/general/ui/date/SingleDatePicker';
 import { useComments } from '@/contexts/CommentsContext';
 import { ActivityWithUser, TaskUpdateData } from '@/types/comment';
+import { SettingsProvider } from '@/components/editor/settings';
+import { PlateEditor } from '@/components/editor/plate-editor';
 
 interface TaskDetailsProps {
 	task: Task & {
@@ -966,27 +967,12 @@ const TaskDetails = ({
 				</div>
 				<Spacing space={28} />
 
-				<div className={styles.contentSection}>
-					<div className={styles.editorWrapper}>
-						<TiptapEditor
-							content={content}
-							onChange={(newContent) => {
-								setContent(newContent);
-								if (contentTimer.current) {
-									clearTimeout(contentTimer.current);
-								}
-								contentTimer.current = setTimeout(() => {
-									handleUpdate(
-										{ content: newContent },
-										'Content',
-										'updated',
-										false
-									);
-								}, 500);
-							}}
-							placeholder="Add your content here..."
-						/>
-					</div>
+				<div className="plate-editor-wrapper w-full">
+					<SettingsProvider>
+						<PlateEditor />
+					</SettingsProvider>
+
+					<Toaster />
 				</div>
 			</div>
 		</div>

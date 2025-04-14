@@ -280,7 +280,11 @@ body {
 *::after {
 	box-sizing: border-box;
 }
-* {
+*:not(
+		.plate-editor-wrapper *,
+		[data-radix-popper-content-wrapper] *,
+		[role='listbox'] *
+	) {
 	margin: 0;
 	padding: 0;
 }
@@ -311,7 +315,11 @@ select {
 	cursor: pointer;
 	font: inherit;
 }
-button {
+button:not(
+		.plate-editor-wrapper *,
+		[data-radix-popper-content-wrapper] *,
+		[role='listbox'] *
+	) {
 	border: 0;
 }
 p,
@@ -331,11 +339,19 @@ h5,
 h6 {
 	text-wrap: balance;
 }
-a {
+a:not(
+		.plate-editor-wrapper *,
+		[data-radix-popper-content-wrapper] *,
+		[role='listbox'] *
+	) {
 	color: inherit;
 	text-decoration: none;
 }
-button {
+button:not(
+		.plate-editor-wrapper *,
+		[data-radix-popper-content-wrapper] *,
+		[role='listbox'] *
+	) {
 	background: none;
 	border: none;
 	cursor: pointer;
